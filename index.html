@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Pitmatics — cook timing for serious pitmasters. Tell us when you want to serve, we tell you when to light the fire.">
+<title>Pitmatics — cook timing for serious pitmasters</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='9' fill='%23C0421C'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8F2E4;
+  --bg-alt: #F1E9D6;
+  --card: #FFFFFF;
+  --text: #1F1A15;
+  --text-muted: #6B5F52;
+  --text-faint: #9C8E7E;
+  --border: #E4D9C2;
+  --border-strong: #C9B999;
+  --ember: #C0421C;
+  --ember-dark: #8F2F0F;
+  --ember-bg: #FBE5D8;
+  --amber: #B07A1F;
+  --amber-bg: #F5E5B8;
+  --amber-text: #5E3F0A;
+  --sage: #4F7438;
+  --sage-bg: #E1ECCF;
+  --sage-text: #2D4318;
+  --smoke: #4A4540;
+  --info-bg: #DCE9F1;
+  --info-text: #1F4860;
+  --shadow: 0 1px 2px rgba(31,26,21,0.04), 0 0 0 0.5px var(--border);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1A1612;
+    --bg-alt: #221D17;
+    --card: #2A241E;
+    --text: #F5EBD9;
+    --text-muted: #B0A492;
+    --text-faint: #7C7264;
+    --border: #3A332B;
+    --border-strong: #524739;
+    --ember: #E2603A;
+    --ember-dark: #C0421C;
+    --ember-bg: #4A1F10;
+    --amber: #E2B554;
+    --amber-bg: #4A3818;
+    --amber-text: #F5DBA0;
+    --sage: #8FB573;
+    --sage-bg: #2C3D1E;
+    --sage-text: #C9DFAE;
+    --smoke: #B0A492;
+    --info-bg: #1F3548;
+    --info-text: #B6D1E5;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 0.5px var(--border);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+.shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+header.brand {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem 0 1.5rem;
+}
+.wordmark {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(48px, 9vw, 76px);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text);
+  display: inline-flex;
+  align-items: baseline;
+}
+.wordmark .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: var(--ember);
+  border-radius: 50%;
+  margin: 0 2px 12px 4px;
+  align-self: flex-end;
+}
+.tagline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2.4vw, 19px);
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-top: 8px;
+  letter-spacing: 0.005em;
+}
+.subtag {
+  font-size: 13px;
+  color: var(--text-faint);
+  margin-top: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mode-toggle {
+  display: flex;
+  background: var(--bg-alt);
+  border-radius: 12px;
+  padding: 4px;
+  margin: 0 auto 2rem;
+  width: fit-content;
+  border: 0.5px solid var(--border);
+}
+.mode-toggle button {
+  background: transparent;
+  border: none;
+  padding: 9px 22px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 9px;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+.mode-toggle button:hover { color: var(--text); }
+.mode-toggle button.active {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.mode-toggle button.advisor-tab { color: var(--amber); }
+.mode-toggle button.advisor-tab.active { color: var(--amber-dark); background: var(--card); box-shadow: var(--shadow); }
+section.mode { display: none; }
+section.mode.active { display: block; }
+.section {
+  margin-bottom: 1.5rem;
+}
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: var(--border-strong);
+}
+.r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.r3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+@media (max-width: 540px) {
+  .r2, .r3 { grid-template-columns: 1fr; }
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.field select, .field input {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  width: 100%;
+  transition: border-color 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236B5F52' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--ember);
+  box-shadow: 0 0 0 3px var(--ember-bg);
+}
+.toggles { display: flex; gap: 8px; flex-wrap: wrap; }
+.tog {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-strong);
+  background: var(--card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tog:hover { color: var(--text); border-color: var(--text-muted); }
+.tog.on {
+  background: var(--sage-bg);
+  color: var(--sage-text);
+  border-color: var(--sage);
+}
+.cta {
+  width: 100%;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.005em;
+  padding: 14px;
+  background: var(--ember);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s, transform 0.1s;
+}
+.cta:hover { background: var(--ember-dark); }
+.cta:active { transform: translateY(1px); }
+.divider {
+  height: 0.5px;
+  background: var(--border);
+  margin: 2rem 0 1.5rem;
+}
+.notice {
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.notice-warn { background: var(--amber-bg); color: var(--amber-text); }
+.notice-info { background: var(--info-bg); color: var(--info-text); }
+.notice-icon { font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 540px) { .summary { grid-template-columns: 1fr; } }
+.met {
+  background: var(--bg-alt);
+  border-radius: 10px;
+  padding: 14px 16px;
+  border: 0.5px solid var(--border);
+}
+.met-l {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.met-v {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.met-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.factors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+.factor {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 0.5px solid var(--border);
+  color: var(--text-muted);
+  background: var(--card);
+}
+.factor span {
+  font-weight: 600;
+  color: var(--text);
+  margin-left: 3px;
+}
+.result-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+.tl { display: flex; flex-direction: column; }
+.tli {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.tli:last-child { border-bottom: none; }
+.tli-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 76px;
+  padding-top: 2px;
+}
+.tli-time .day {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.d-fire { background: #D85A30; }
+.d-on   { background: #D85A30; }
+.d-flip { background: #EF9F27; }
+.d-stall { background: var(--smoke); }
+.d-wrap { background: #BA7517; }
+.d-pull { background: var(--sage); }
+.d-rest { background: #378ADD; }
+.d-serve { background: #7F47B8; }
+.d-sear { background: #A32D2D; }
+.d-flip { background: #EF9F27; }
+.tli-content { flex: 1; min-width: 0; }
+.tli-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.tli-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.badge {
+  display: inline-block;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: 8px;
+  vertical-align: 1px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.b-warn { background: var(--amber-bg); color: var(--amber-text); }
+.b-ok { background: var(--sage-bg); color: var(--sage-text); }
+.b-info { background: var(--info-bg); color: var(--info-text); }
+.mode-banner {
+  background: var(--ember-bg);
+  color: var(--ember-dark);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+.hidden { display: none !important; }
+footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+}
+footer .phase {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--amber-bg);
+  color: var(--amber-text);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+footer p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+footer a {
+  color: var(--ember);
+  text-decoration: none;
+  font-weight: 600;
+}
+footer a:hover { text-decoration: underline; }
+.ctl-btn {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-strong);
+  background: var(--card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ctl-btn:hover { background: var(--bg-alt); }
+
+.finetune { border: 0.5px solid var(--border); border-radius: 10px; background: var(--card); margin-bottom: 1.5rem; }
+.ft-summary { cursor: pointer; list-style: none; padding: 12px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+.ft-summary::-webkit-details-marker { display: none; }
+.ft-summary::before { content: "\25B8"; transition: transform 0.15s; display: inline-block; }
+.finetune[open] .ft-summary::before { transform: rotate(90deg); }
+.ft-opt { font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--text-faint); }
+.ft-body { padding: 0 16px 14px; }
+
+/* ===== Print: strip the UI, keep the cook schedule ===== */
+@media print {
+  :root {
+    --bg: #fff; --bg-alt: #fff; --card: #fff;
+    --text: #000; --text-muted: #333; --text-faint: #666;
+    --border: #ccc; --border-strong: #999; --shadow: none;
+  }
+  body { background: #fff; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .shell { max-width: 100%; padding: 0.4rem 0.5rem; }
+  header.brand { margin: 0 0 0.6rem; padding: 0; }
+  .tagline, .mode-toggle, .mode-banner, .section, .toggles, button, footer { display: none !important; }
+  section.mode:not(.active) { display: none !important; }
+  #ls-result, #hf-result, #adv-result { display: block !important; }
+  .result-card, .summary, .met, .factor, .tli, .notice { box-shadow: none !important; }
+  .result-card, .summary { border: 1px solid #ccc; }
+  a[href^="mailto"] { display: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="brand">
+    <h1 class="wordmark">Pitmatics<span class="dot" aria-hidden="true"></span></h1>
+    <p class="tagline">cook timing for serious pitmasters</p>
+    <p class="subtag">Tell us about your meat and your pit · we'll tell you when to light the fire</p>
+  </header>
+
+  <nav class="mode-toggle" role="tablist" aria-label="Cook mode">
+    <button data-mode="low-slow" class="active" role="tab" aria-selected="true">Low &amp; slow</button>
+    <button data-mode="hot-fast" role="tab" aria-selected="false">Hot &amp; fast</button>
+    <button data-mode="advisor" class="advisor-tab" role="tab" aria-selected="false">Help me choose</button>
+  </nav>
+
+  <!-- ============================== LOW & SLOW ============================== -->
+  <section id="low-slow" class="mode active" role="tabpanel">
+
+    <div class="section">
+      <div class="section-label">The meat</div>
+      <div class="r2">
+        <div class="field">
+          <label for="ls-cut">Cut</label>
+          <select id="ls-cut">
+            <option value="brisket">Brisket (whole packer)</option>
+            <option value="chuck_roast">Chuck roast</option>
+            <option value="tri_tip">Tri tip</option>
+            <option value="beef_ribs">Beef short ribs (plate)</option>
+            <option value="pork_butt">Pork butt / shoulder</option>
+            <option value="spare_ribs">Spare ribs (rack)</option>
+            <option value="st_louis_ribs">St. Louis ribs (rack)</option>
+            <option value="baby_backs">Baby back ribs</option>
+            <option value="pork_belly">Pork belly</option>
+            <option value="whole_chicken">Whole chicken</option>
+            <option value="whole_turkey">Whole turkey</option>
+          </select>
+        </div>
+        <div class="field" id="ls-weight-field">
+          <label for="ls-weight">Weight after trim (lbs) <span id="ls-weight-est" class="badge b-info hidden">est.</span></label>
+          <input type="number" id="ls-weight" value="14" min="1" max="40" step="0.5">
+        </div>
+      </div>
+      <div class="r2" id="ls-racks-row" style="display:none;">
+        <div class="field" id="ls-racks-field">
+          <label for="ls-racks">Number of racks</label>
+          <select id="ls-racks">
+            <option value="1">1 rack</option>
+            <option value="2">2 racks</option>
+            <option value="3">3 racks</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2" id="ls-thickness-row" style="display:none;">
+        <div class="field" id="ls-shape-field" style="display:none;">
+          <label for="ls-shape">Thickness</label>
+          <select id="ls-shape">
+            <option value="thick">Thick &amp; blocky</option>
+            <option value="average" selected>Average</option>
+            <option value="flat">Thin &amp; flat</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">The pit</div>
+      <div class="r2">
+        <div class="field">
+          <label for="ls-smoker">Smoker type</label>
+          <select id="ls-smoker">
+            <option value="pellet">Pellet grill</option>
+            <option value="offset">Stick burner (offset)</option>
+            <option value="kamado">Kamado / ceramic</option>
+            <option value="vertical">Vertical / cabinet</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ls-pit-temp">Pit temp (°F)</label>
+          <input type="number" id="ls-pit-temp" value="250" min="200" max="350" step="5">
+        </div>
+      </div>
+    </div>
+
+    <details class="section finetune" id="ls-finetune">
+      <summary class="ft-summary">Fine-tune <span class="ft-opt">optional</span></summary>
+      <div class="ft-body">
+        <div class="r2" id="ls-grade-trim-row">
+          <div class="field" id="ls-grade-field">
+            <label for="ls-grade">Grade</label>
+            <select id="ls-grade">
+              <option value="none" selected>Not specified</option>
+              <option value="prime">Prime</option>
+              <option value="choice">Choice</option>
+              <option value="select">Select / No-roll</option>
+            </select>
+          </div>
+          <div class="field" id="ls-trim-field">
+            <label for="ls-trim">Fat trim</label>
+            <select id="ls-trim">
+              <option value="none" selected>Not specified</option>
+              <option value="comp">Competition (¼ in)</option>
+              <option value="standard">Standard (½ in)</option>
+              <option value="minimal">Minimal (¾ in+)</option>
+            </select>
+          </div>
+        </div>
+        <div class="r2">
+          <div class="field">
+            <label for="ls-start-temp">Starting temp</label>
+            <select id="ls-start-temp">
+              <option value="0" selected>Not specified</option>
+              <option value="0">Room temp</option>
+              <option value="0.5">Fridge cold</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ls-weather">Conditions outside</label>
+            <select id="ls-weather">
+              <option value="none" selected>Not specified</option>
+              <option value="hot">Hot &amp; calm (80°F+)</option>
+              <option value="mild">Mild &amp; calm (50–80°F)</option>
+              <option value="cool">Cool &amp; breezy (32–50°F)</option>
+              <option value="cold">Cold &amp; windy (below 32°F)</option>
+            </select>
+          </div>
+        </div>
+        <div class="r2">
+          <div class="field">
+            <label for="ls-preheat">Preheat time</label>
+            <select id="ls-preheat">
+              <option value="0.5">30 min</option>
+              <option value="0.75" selected>45 min</option>
+              <option value="1">1 hour</option>
+            </select>
+          </div>
+        </div>
+        <div class="r2" id="ls-inject-row" style="display:none;">
+          <div class="field" id="ls-inject-field" style="display:none;">
+            <label for="ls-inject">Injected?</label>
+            <select id="ls-inject">
+              <option value="none" selected>Not specified</option>
+              <option value="no">No injection</option>
+              <option value="yes">Yes — injected</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <div class="section" id="ls-wrap-section">
+      <div class="section-label">Wrap strategy</div>
+      <div class="toggles" id="ls-wrap-toggles">
+        <button type="button" class="tog" data-wrap="none">No wrap</button>
+        <button type="button" class="tog on" data-wrap="foil">Texas crutch (foil)</button>
+        <button type="button" class="tog" data-wrap="paper">Butcher paper</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Rest method</div>
+      <div class="toggles" id="ls-rest-toggles">
+        <button type="button" class="tog on" data-rest="cooler">Dry cooler + towels</button>
+        <button type="button" class="tog" data-rest="oven">Holding oven / cambro</button>
+        <button type="button" class="tog" data-rest="none">Skip rest</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Serve time</div>
+      <div class="r2">
+        <div class="field">
+          <label for="ls-serve-date">Date</label>
+          <input type="date" id="ls-serve-date">
+        </div>
+        <div class="field">
+          <label for="ls-serve-time">Time on the table</label>
+          <input type="time" id="ls-serve-time" value="18:00">
+        </div>
+      </div>
+    </div>
+
+    <div id="ls-result" class="hidden">
+      <div id="ls-notice-overnight" class="notice notice-warn hidden">
+        <span class="notice-icon">🌙</span>
+        <span id="ls-notice-overnight-text"></span>
+      </div>
+      <div id="ls-notice-weather" class="notice notice-info hidden">
+        <span class="notice-icon">🌬️</span>
+        <span id="ls-notice-weather-text"></span>
+      </div>
+      <div class="summary">
+        <div class="met">
+          <div class="met-l">Light fire at</div>
+          <div class="met-v" id="ls-r-fire">—</div>
+          <div class="met-sub" id="ls-r-fire-date"></div>
+        </div>
+        <div class="met">
+          <div class="met-l">Cook window</div>
+          <div class="met-v" id="ls-r-cook">—</div>
+          <div class="met-sub" id="ls-r-cook-sub">stall included</div>
+        </div>
+        <div class="met">
+          <div class="met-l">Safe hold</div>
+          <div class="met-v" id="ls-r-hold">—</div>
+          <div class="met-sub" id="ls-r-hold-sub">in cooler</div>
+        </div>
+      </div>
+      <div class="factors" id="ls-factor-tags"></div>
+      <div class="result-card">
+        <div class="section-label" style="margin-bottom:12px;">Your cook schedule</div>
+        <div class="tl" id="ls-timeline"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ============================== HOT & FAST ============================== -->
+  <section id="hot-fast" class="mode" role="tabpanel">
+
+    <div class="mode-banner">Hot &amp; fast mode — short cooks, high heat</div>
+
+    <div class="section">
+      <div class="section-label">The protein</div>
+      <div class="r2">
+        <div class="field">
+          <label for="hf-cut">Cut</label>
+          <select id="hf-cut">
+            <option value="ribeye" selected>Ribeye / strip steak</option>
+            <option value="filet">Filet mignon / tenderloin</option>
+            <option value="tomahawk">Tomahawk / bone-in ribeye</option>
+            <option value="tri_tip">Tri tip</option>
+            <option value="flank_skirt">Flank / skirt steak</option>
+            <option value="pork_chop">Pork chop (bone-in)</option>
+            <option value="pork_tenderloin">Pork tenderloin</option>
+            <option value="sausage">Sausage / brats</option>
+            <option value="lamb_chop">Lamb chops</option>
+            <option value="chicken_breast">Chicken breast (boneless)</option>
+            <option value="chicken_thigh">Chicken thigh (bone-in)</option>
+            <option value="chicken_wing">Chicken wings</option>
+            <option value="salmon">Salmon fillet</option>
+            <option value="ahi_tuna">Ahi tuna steak</option>
+            <option value="burger">Burger patty (½ lb)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hf-thickness">Thickness (inches)</label>
+          <select id="hf-thickness">
+            <option value="0.75">¾ in</option>
+            <option value="1" selected>1 in</option>
+            <option value="1.25">1¼ in</option>
+            <option value="1.5">1½ in</option>
+            <option value="2">2 in</option>
+            <option value="2.5">2½ in (tomahawk)</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="field">
+          <label for="hf-start-temp">Starting temp</label>
+          <select id="hf-start-temp">
+            <option value="0">Room temp (rested 30 min)</option>
+            <option value="0.4" selected>Fridge cold</option>
+            <option value="-0.3">Tempered (45 min out)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hf-doneness">Doneness</label>
+          <select id="hf-doneness">
+            <option value="rare">Rare (125°F)</option>
+            <option value="med_rare" selected>Medium rare (130°F)</option>
+            <option value="medium">Medium (140°F)</option>
+            <option value="med_well">Medium well (150°F)</option>
+            <option value="well">Well done (160°F)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Cook method</div>
+      <div class="toggles" id="hf-method-toggles">
+        <button type="button" class="tog on" data-method="direct">Direct hot grill</button>
+        <button type="button" class="tog" data-method="reverse">Reverse sear</button>
+        <button type="button" class="tog" data-method="sous">Sous vide + sear</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">The grill</div>
+      <div class="r2">
+        <div class="field">
+          <label for="hf-smoker">Smoker / grill type</label>
+          <select id="hf-smoker">
+            <option value="pellet" selected>Pellet grill</option>
+            <option value="offset">Stick burner (offset)</option>
+            <option value="kamado">Kamado / ceramic</option>
+            <option value="vertical">Vertical / cabinet</option>
+            <option value="kettle">Kettle / gas grill</option>
+          </select>
+        </div>
+        <div class="field" id="hf-hot-temp-field">
+          <label for="hf-hot-temp">Grill temp (°F)</label>
+          <input type="number" id="hf-hot-temp" value="450" min="300" max="700" step="25">
+        </div>
+      </div>
+      <div class="r2" id="hf-reverse-fields" style="display:none;">
+        <div class="field">
+          <label for="hf-slow-temp">Slow phase temp</label>
+          <input type="number" id="hf-slow-temp" value="225" min="180" max="300" step="5">
+        </div>
+        <div class="field">
+          <label for="hf-sear-temp">Sear temp</label>
+          <input type="number" id="hf-sear-temp" value="500" min="400" max="700" step="25">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Conditions</div>
+      <div class="r2">
+        <div class="field">
+          <label for="hf-weather">Weather outside</label>
+          <select id="hf-weather">
+            <option value="hot">Hot &amp; calm (80°F+)</option>
+            <option value="mild" selected>Mild &amp; calm (50–80°F)</option>
+            <option value="cool">Cool &amp; breezy (32–50°F)</option>
+            <option value="cold">Cold &amp; windy (below 32°F)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hf-start-time">Start time</label>
+          <input type="time" id="hf-start-time" value="18:30">
+        </div>
+      </div>
+    </div>
+
+    <div id="hf-result" class="hidden">
+      <div id="hf-notice" class="notice notice-info hidden">
+        <span class="notice-icon">💡</span>
+        <span id="hf-notice-text"></span>
+      </div>
+      <div class="summary">
+        <div class="met">
+          <div class="met-l">Pull at</div>
+          <div class="met-v" id="hf-r-pull">—</div>
+          <div class="met-sub">internal temp</div>
+        </div>
+        <div class="met">
+          <div class="met-l">Total cook</div>
+          <div class="met-v" id="hf-r-total">—</div>
+          <div class="met-sub" id="hf-r-total-sub">grill to pull</div>
+        </div>
+        <div class="met">
+          <div class="met-l">Final temp</div>
+          <div class="met-v" id="hf-r-final">—</div>
+          <div class="met-sub">after carryover</div>
+        </div>
+      </div>
+      <div class="factors" id="hf-factor-tags"></div>
+      <div class="result-card">
+        <div class="section-label" style="margin-bottom:12px;">Your cook timing</div>
+        <div class="tl" id="hf-timeline"></div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ============================== ADVISOR ============================== -->
+  <section id="advisor" class="mode" role="tabpanel">
+
+    <div class="section">
+      <div class="section-label">Your window</div>
+      <div class="r2">
+        <div class="field">
+          <label for="adv-start-time">I can start at</label>
+          <input type="time" id="adv-start-time" value="12:00">
+        </div>
+        <div class="field">
+          <label for="adv-serve-time">Serve by</label>
+          <input type="time" id="adv-serve-time" value="18:00">
+        </div>
+      </div>
+      <div class="field">
+        <label for="adv-date">Date</label>
+        <input type="date" id="adv-date">
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Your pit</div>
+      <div class="r2">
+        <div class="field">
+          <label for="adv-smoker">Smoker type</label>
+          <select id="adv-smoker">
+            <option value="pellet">Pellet grill</option>
+            <option value="offset">Stick burner (offset)</option>
+            <option value="kamado">Kamado / ceramic</option>
+            <option value="vertical">Vertical / cabinet</option>
+            <option value="kettle">Kettle / gas grill</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="adv-weather">Conditions outside</label>
+          <select id="adv-weather">
+            <option value="hot">Hot &amp; calm (80°F+)</option>
+            <option value="mild" selected>Mild &amp; calm (50-80°F)</option>
+            <option value="cool">Cool &amp; breezy (32-50°F)</option>
+            <option value="cold">Cold &amp; windy (below 32°F)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Any preferences?</div>
+      <div class="toggles" id="adv-protein-toggles" style="margin-bottom:10px;">
+        <button type="button" class="tog on" data-protein="any">No preference</button>
+        <button type="button" class="tog" data-protein="beef">Beef</button>
+        <button type="button" class="tog" data-protein="pork">Pork</button>
+        <button type="button" class="tog" data-protein="poultry">Poultry</button>
+        <button type="button" class="tog" data-protein="lamb">Lamb</button>
+      </div>
+      <div class="toggles" id="adv-style-toggles">
+        <button type="button" class="tog on" data-style="any">Anything</button>
+        <button type="button" class="tog" data-style="low_slow">Low &amp; slow</button>
+        <button type="button" class="tog" data-style="hot_fast">Hot &amp; fast</button>
+      </div>
+    </div>
+
+    <button type="button" class="cta" id="adv-calc-btn">What should I make?</button>
+    <div class="divider"></div>
+
+    <div id="adv-result" class="hidden">
+      <div id="adv-verdict" class="notice" style="margin-bottom:1.25rem;"></div>
+      <div id="adv-recs" style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem;"></div>
+      <div id="adv-no-show" class="hidden">
+        <button type="button" id="adv-no-toggle" class="ctl-btn" style="width:100%;margin-bottom:1.25rem;font-size:13px;">+ Show what won\'t work (and why)</button>
+        <div id="adv-no-list" class="hidden" style="display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem;"></div>
+      </div>
+      <div id="adv-timeline-result" class="hidden">
+        <div class="divider"></div>
+        <div id="adv-chosen-banner" style="background:var(--sage-bg);color:var(--sage-text);border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;font-weight:500;margin-bottom:1.25rem;"></div>
+        <div class="summary" id="adv-summary"></div>
+        <div class="result-card" style="margin-top:1rem;">
+          <div class="section-label" style="margin-bottom:12px;">Your cook schedule</div>
+          <div class="tl" id="adv-timeline"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <span class="phase">Phase 1 · Beta</span>
+    <p>Calibration release · help us tune the math.</p>
+    <!-- TODO (pre-launch): replace feedback@pitmatics.com with a real address you check before recruiting beta testers -->
+    <p>Cook with it · then tell us what was off. <a href="mailto:feedback@pitmatics.com?subject=Pitmatics%20cook%20feedback">Send feedback</a></p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+
+  function $(id){ return document.getElementById(id); }
+  function fmt(dt){ return dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+  function fmtD(dt){ return dt.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }); }
+  function addH(dt, h){ return new Date(dt.getTime() + h * 3600000); }
+  function addM(dt, m){ return new Date(dt.getTime() + m * 60000); }
+
+  document.querySelectorAll('.mode-toggle button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var mode = btn.dataset.mode;
+      document.querySelectorAll('.mode-toggle button').forEach(function(b){
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+      });
+      document.querySelectorAll('section.mode').forEach(function(s){
+        s.classList.toggle('active', s.id === mode);
+      });
+    });
+  });
+
+  /* ====================== LOW & SLOW ====================== */
+  var LS = {
+    wrapMode: 'foil',
+    restMode: 'cooler',
+    weightTouched: false,
+    DATA: {
+      brisket:   { defWeight:14, pph:[1.0,1.4],  restMin:2,    restMax:4,   holdCooler:4, holdOven:10, target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:true  },
+      pork_butt: { defWeight:8, pph:[1.1,1.5],  restMin:1,    restMax:2,   holdCooler:3, holdOven:8,  target:203, hasStall:true,  stallAt:0.40, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:true  },
+      spare_ribs:{ fixed:[4.5,6],  restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      baby_backs:{ fixed:[3.5,5],  restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:190, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      beef_ribs: { defWeight:4, pph:[1.3,1.8],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:false },
+      pork_belly:{ defWeight:5, pph:[1.0,1.35], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:true,  hasShape:false, hasInject:false },
+      chuck_roast:  { defWeight:3, pph:[1.5,2.0],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false },
+      tri_tip:      { defWeight:2, pph:[0.75,1.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:2,  target:135, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
+      st_louis_ribs:{ fixed:[5,6.5],  restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:200, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      whole_chicken:{ defWeight:4.5, pph:[0.5,0.65], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      whole_turkey: { defWeight:14, pph:[0.5,0.65], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
+    },
+    tempMult: function(t){
+      t = Math.max(200, Math.min(350, parseFloat(t) || 250));
+      if (t < 225) return 1.2 + (225 - t) * 0.008;
+      if (t <= 250) return 1.2 + (t - 225) * (1.0 - 1.2) / 25;
+      if (t <= 275) return 1.0 + (t - 250) * (0.85 - 1.0) / 25;
+      if (t <= 300) return 0.85 + (t - 275) * (0.70 - 0.85) / 25;
+      return 0.70 - (t - 300) * 0.003;
+    },
+    WRAP_M:    {none:1.15,foil:0.88,paper:1.0},
+    SMOKER_M:  {pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05},
+    GRADE_M:   {none:1.0,prime:0.92,choice:1.0,select:1.08},
+    TRIM_M:    {none:1.0,comp:0.94,standard:1.0,minimal:1.07},
+    WEATHER_M: {none:1.0,hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+    SHAPE_M:   {thick:1.15,average:1.0,flat:0.88},
+    INJECT_M:  {none:1.0,yes:0.93,no:1.0},
+    WEATHER_NOTES: {
+      hot: null,
+      mild: null,
+      cool: 'Cool and breezy conditions steal heat from your smoker. Schedule padded — check your pit temp more often than usual.',
+      cold: 'Cold and windy is the hardest cook environment. Your smoker will work hard to hold temp. Offset users: consider a welding blanket on the firebox and plan for extra fuel.'
+    },
+    SMOKER_NOTES: {
+      pellet:  'Pellet grills run clean and consistent — times shown are well-calibrated for this cooker.',
+      offset:  'Stick burners run hotter than they look due to convective heat. Schedule adjusted for faster-than-dial-temp cooking.',
+      kamado:  'Ceramic cookers retain heat aggressively. Your BGE or KJ at 250°F cooks closer to 270°F+ — schedule adjusted.',
+      vertical:'Vertical smokers are gentle and very consistent. Slightly longer cook, very forgiving margin.'
+    },
+    GRADE_NOTE: { none: '', prime: 'Prime adds intramuscular fat that buffers the stall and speeds the cook.', choice: '', select: ' Watch this one closely — less fat means it can dry out faster.' },
+    TRIM_NOTE: { none: '', comp: ' Competition trim (¼ in) lets heat in fast.', standard: '', minimal: ' Heavy fat cap insulates the meat — adds time.' },
+
+    setWrap: function(m){
+      this.wrapMode = m;
+      document.querySelectorAll('#ls-wrap-toggles .tog').forEach(function(t){
+        t.classList.toggle('on', t.dataset.wrap === m);
+      });
+      this.calc();
+    },
+    setRest: function(m){
+      this.restMode = m;
+      document.querySelectorAll('#ls-rest-toggles .tog').forEach(function(t){
+        t.classList.toggle('on', t.dataset.rest === m);
+      });
+      this.calc();
+    },
+    onCutChange: function(){
+      var cut = $('ls-cut').value;
+      var d = this.DATA[cut];
+      $('ls-weight-field').style.display      = d.byWeight              ? '' : 'none';
+      $('ls-racks-row').style.display         = !d.byWeight             ? '' : 'none';
+      $('ls-grade-field').style.display       = d.hasGrade              ? '' : 'none';
+      $('ls-trim-field').style.display        = d.hasTrim               ? '' : 'none';
+      $('ls-grade-trim-row').style.display    = (d.hasGrade||d.hasTrim) ? '' : 'none';
+      $('ls-shape-field').style.display       = d.hasShape              ? '' : 'none';
+      $('ls-thickness-row').style.display     = d.hasShape              ? '' : 'none';
+      $('ls-inject-field').style.display      = d.hasInject             ? '' : 'none';
+      $('ls-inject-row').style.display        = d.hasInject             ? '' : 'none';
+      $('ls-wrap-section').style.display      = d.wrapable              ? '' : 'none';
+      if (d.byWeight && !this.weightTouched && d.defWeight) {
+        $('ls-weight').value = d.defWeight;
+      }
+      this.calc();
+    },
+    calc: function(){
+      var cut = $('ls-cut').value;
+      var d = this.DATA[cut];
+      var pitTemp = $('ls-pit-temp').value;
+      var preheat = parseFloat($('ls-preheat').value);
+      var smoker = $('ls-smoker').value;
+      var weather = $('ls-weather').value;
+      var sDate = $('ls-serve-date').value;
+      var sTime = $('ls-serve-time').value;
+      if (!sDate || !sTime) return;
+      var serve = new Date(sDate + 'T' + sTime);
+      if (isNaN(serve.getTime())) return;
+
+      var coldAdd = parseFloat($('ls-start-temp').value || '0');
+      var tM   = this.tempMult(pitTemp);
+      var wM   = d.wrapable ? (this.WRAP_M[this.wrapMode] || 1.0) : 1.0;
+      var sM   = this.SMOKER_M[smoker]  || 1.0;
+      var gM   = d.hasGrade  ? (this.GRADE_M[$('ls-grade').value]  || 1.0) : 1.0;
+      var trM  = d.hasTrim   ? (this.TRIM_M[$('ls-trim').value]    || 1.0) : 1.0;
+      var weM  = this.WEATHER_M[weather] || 1.0;
+      var shM  = d.hasShape  ? (this.SHAPE_M[$('ls-shape').value]  || 1.0) : 1.0;
+      var inM  = d.hasInject ? (this.INJECT_M[$('ls-inject').value] || 1.0) : 1.0;
+
+      var cookLow, cookHigh;
+      if (d.byWeight) {
+        var w = parseFloat($('ls-weight').value) || 10;
+        cookLow  = d.pph[0] * w * tM * wM * sM * gM * trM * weM * shM * inM + coldAdd;
+        cookHigh = d.pph[1] * w * tM * wM * sM * gM * trM * weM * shM * inM + coldAdd;
+      } else {
+        var racks = parseInt($('ls-racks').value || '1');
+        cookLow  = d.fixed[0] * tM * wM * sM * weM * racks + coldAdd;
+        cookHigh = d.fixed[1] * tM * wM * sM * weM * racks + coldAdd;
+      }
+
+      var noRest = this.restMode === 'none';
+      var restHours = noRest ? 0 : d.restMin;
+      var safety = noRest ? 0.15 : (this.restMode === 'oven' ? 0.25 : 0.5);
+      var totalWorst = cookHigh + restHours + preheat + safety;
+      var holdHours = noRest ? 0 : (this.restMode === 'oven' ? d.holdOven : d.holdCooler);
+
+      var fireTime   = addH(serve, -totalWorst);
+      var meatOnTime = addH(fireTime, preheat);
+      var stallTime  = d.hasStall ? addH(meatOnTime, cookLow * d.stallAt) : null;
+      var wrapTime   = (d.wrapable && this.wrapMode !== 'none') ? addH(meatOnTime, cookLow * 0.60) : null;
+      var pullTime   = addH(serve, -(restHours + safety));
+      var serveDay   = fmtD(serve);
+      var fireDay    = fmtD(fireTime);
+
+      $('ls-r-fire').textContent       = fmt(fireTime);
+      $('ls-r-fire-date').textContent  = fireDay !== serveDay ? fireDay : 'same day';
+      var est        = d.byWeight && !this.weightTouched;
+      var dispLow    = est ? cookLow * 0.90 : cookLow;
+      var dispHigh   = est ? cookHigh * 1.10 : cookHigh;
+      $('ls-r-cook').textContent       = Math.round(dispLow) + '–' + Math.round(dispHigh) + ' hrs';
+      $('ls-r-cook-sub').textContent   = est ? 'stall included · est. weight' : 'stall included';
+      $('ls-weight-est').classList.toggle('hidden', !est);
+      $('ls-r-hold').textContent       = noRest ? 'none' : (holdHours + '+ hrs');
+      $('ls-r-hold-sub').textContent   = noRest ? 'straight to serve' : (this.restMode === 'oven' ? 'in holding oven' : 'in dry cooler');
+
+      var no = $('ls-notice-overnight');
+      if (fireDay !== serveDay) {
+        $('ls-notice-overnight-text').textContent = 'Overnight cook — light the fire ' + fireDay + '. Totally normal for this cut.';
+        no.classList.remove('hidden');
+      } else {
+        no.classList.add('hidden');
+      }
+
+      var nw = $('ls-notice-weather');
+      var wNote = this.WEATHER_NOTES[weather];
+      if (wNote) {
+        $('ls-notice-weather-text').textContent = wNote;
+        nw.classList.remove('hidden');
+      } else {
+        nw.classList.add('hidden');
+      }
+
+      var ft = $('ls-factor-tags');
+      ft.innerHTML = '';
+      var cutLabel = $('ls-cut').options[$('ls-cut').selectedIndex].text;
+      var smokerLabel = $('ls-smoker').options[$('ls-smoker').selectedIndex].text.split(' /')[0];
+      var weatherLabel = $('ls-weather').options[$('ls-weather').selectedIndex].text.split(' (')[0];
+      var facts = [
+        { k: 'Smoker', v: smokerLabel },
+        { k: 'Temp', v: pitTemp + '°F' }
+      ];
+      if ($('ls-weather').value !== 'none') facts.push({ k: 'Conditions', v: weatherLabel });
+      if (d.hasGrade && $('ls-grade').value !== 'none') facts.push({ k: 'Grade', v: $('ls-grade').options[$('ls-grade').selectedIndex].text });
+      if (d.hasTrim && $('ls-trim').value !== 'none') facts.push({ k: 'Trim', v: $('ls-trim').options[$('ls-trim').selectedIndex].text.split(' (')[0] });
+      if (d.hasShape) facts.push({ k: 'Shape', v: $('ls-shape').options[$('ls-shape').selectedIndex].text });
+      if (d.hasInject && $('ls-inject').value === 'yes') facts.push({ k: 'Injection', v: 'Yes' });
+      facts.push({ k: 'Wrap', v: this.wrapMode === 'none' ? 'Naked' : this.wrapMode === 'foil' ? 'Texas crutch' : 'Butcher paper' });
+      facts.push({ k: 'Rest', v: this.restMode === 'oven' ? 'Holding oven' : this.restMode === 'none' ? 'No rest' : 'Dry cooler' });
+      facts.forEach(function(f){
+        var el = document.createElement('div');
+        el.className = 'factor';
+        el.innerHTML = f.k + ': <span>' + f.v + '</span>';
+        ft.appendChild(el);
+      });
+
+      var smokerNote = this.SMOKER_NOTES[smoker] || '';
+      var gradeNote  = d.hasGrade ? (this.GRADE_NOTE[$('ls-grade').value] || '') : '';
+      var trimNote   = d.hasTrim  ? (this.TRIM_NOTE[$('ls-trim').value] || '') : '';
+      var injNote    = d.hasInject && $('ls-inject').value === 'yes' ? ' Injection will help buffer the stall and keep moisture through the cook.' : '';
+      var restMethodNote = noRest
+        ? (cut === 'brisket'
+          ? 'Skipping the rest on brisket is bold. Most pitmasters consider an hour minimum non-negotiable — the muscle fibers need time to reabsorb juice. Slicing straight off the smoker means more juice on the cutting board, less in your slice. You\'ve been warned.'
+          : (cut === 'pork_butt'
+            ? 'Pork butt is more forgiving on the no-rest call. Plenty of pitmasters shred straight off the smoker. You\'ll lose some juice but pulled pork can take it.'
+            : 'Slicing straight off the smoker — purist territory. You trade some moisture retention for serving it screaming hot. Some pitmasters swear by it for certain cuts.'))
+        : this.restMode === 'oven'
+          ? 'Set holding oven or Cambro to 150–160°F. Holds safely for ' + holdHours + '+ hours — your pull window is very forgiving.'
+          : 'Foil tight, then old towels, then a dry cooler. Holds safely for ' + holdHours + '+ hours — your buffer if the cook runs long.';
+      var pullNote = this.restMode === 'oven'
+        ? 'With a holding oven, you have more flexibility. Probe for zero resistance — butter through butter. Pull when it\'s ready.'
+        : 'Probe should slide in with zero resistance. Chase feel, not the number. If it drags, give it more time.';
+
+      var tl = $('ls-timeline');
+      tl.innerHTML = '';
+      var events = [
+        { time: fireTime,   dot: 'd-fire', title: 'Light the fire',     sub: smokerNote + ' Allow ' + Math.round(preheat * 60) + ' min to reach stable ' + pitTemp + '°F.' },
+        { time: meatOnTime, dot: 'd-fire', title: 'Meat on the smoker', sub: 'Place your ' + cutLabel + ' on.' + (gradeNote ? gradeNote : '') + (trimNote ? trimNote : '') + injNote }
+      ];
+      if (d.hasStall && stallTime) {
+        var isRibs = (cut === 'spare_ribs' || cut === 'baby_backs' || cut === 'st_louis_ribs');
+        var stallSub = isRibs
+          ? 'Internal temp may plateau briefly around 150–165°F. Ribs power through fast — usually 30–60 min before climbing again. Don\'t panic, don\'t raise pit temp.'
+          : 'Internal temp plateaus around 155–165°F. Can last 1–4 hours. It\'s evaporative cooling — physics, not failure. Hold your nerve. Do not raise pit temp.';
+        events.push({ time: stallTime, dot: 'd-stall', title: 'Stall window begins', badge: { text: 'be patient', cls: 'b-warn' }, sub: stallSub });
+      }
+      if (wrapTime) {
+        var wl = this.wrapMode === 'foil' ? 'Wrap tight in foil (Texas crutch)' : 'Wrap in butcher paper';
+        var matNote = this.wrapMode === 'foil' ? 'Splash of tallow or butter before sealing is optional but worth it.' : 'Paper lets moisture breathe — bark stays crispier, cook runs slightly longer than foil.';
+        var tempWrap = d.byWeight && d.hasStall;
+        var ws = tempWrap
+          ? 'Go by the probe, not the clock — this time is just an estimate. Wrap once the internal temp stalls around 150–165°F and the bark is deep mahogany and set firm. ' + matNote
+          : (this.wrapMode === 'foil' ? 'Bark should be deep mahogany and set firm. ' : '') + matNote;
+        events.push({ time: wrapTime, dot: 'd-wrap', title: wl, badge: tempWrap ? { text: 'go by temp', cls: 'b-info' } : null, sub: ws });
+      }
+      events.push({ time: pullTime, dot: 'd-pull', title: 'Pull off the smoker', badge: { text: 'target ' + d.target + '°F', cls: 'b-ok' }, sub: pullNote });
+      if (!noRest) {
+        events.push({ time: pullTime, dot: 'd-rest', title: this.restMode === 'oven' ? 'Into the holding oven' : 'Into the cooler', badge: { text: holdHours + '+ hr hold', cls: 'b-info' }, sub: restMethodNote });
+      } else {
+        events.push({ time: pullTime, dot: 'd-rest', title: 'Skipping the rest', badge: { text: 'no rest', cls: 'b-warn' }, sub: restMethodNote });
+      }
+      events.push({ time: serve,    dot: 'd-serve', title: 'Slice and serve', badge: { text: 'on time', cls: 'b-ok' }, sub: cut === 'brisket' ? 'Against the grain — point first, then flat. You earned every compliment heading your way.' : 'Pull, slice, or serve. Take the credit.' });
+
+      events.sort(function(a, b){ return a.time - b.time; });
+      events.forEach(function(ev){
+        var dayTag = fmtD(ev.time) !== serveDay ? '<span class="day">' + fmtD(ev.time) + '</span>' : '';
+        var badge  = ev.badge ? '<span class="badge ' + ev.badge.cls + '">' + ev.badge.text + '</span>' : '';
+        var div = document.createElement('div');
+        div.className = 'tli';
+        div.innerHTML = '<div class="tli-time">' + fmt(ev.time) + dayTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        tl.appendChild(div);
+      });
+
+      $('ls-result').classList.remove('hidden');
+    }
+  };
+
+  /* ====================== HOT & FAST ====================== */
+  var HF = {
+    method: 'direct',
+    DATA: {
+      ribeye:          { basePerInch:[9.0,12.0], carryover:[5,8],  minSafe:null, defaultDone:'med_rare', restMin:5, fishLike:false, allowsAll:true,  label:'ribeye' },
+      filet:           { basePerInch:[8.5,11.0], carryover:[4,6],  minSafe:null, defaultDone:'med_rare', restMin:5, fishLike:false, allowsAll:true,  label:'filet' },
+      tomahawk:        { basePerInch:[10.0,13.5],carryover:[6,10], minSafe:null, defaultDone:'med_rare', restMin:8, fishLike:false, allowsAll:true,  label:'tomahawk' },
+      pork_chop:       { basePerInch:[9.5,12.5], carryover:[4,6],  minSafe:145,  defaultDone:'medium',   restMin:5, fishLike:false, allowsAll:false, label:'pork chop' },
+      pork_tenderloin: { basePerInch:[9.0,11.5], carryover:[5,7],  minSafe:145,  defaultDone:'medium',   restMin:5, fishLike:false, allowsAll:false, label:'pork tenderloin' },
+      chicken_breast:  { basePerInch:[10.5,13.0],carryover:[3,5],  minSafe:165,  defaultDone:'well',     restMin:5, fishLike:false, allowsAll:false, label:'chicken breast' },
+      chicken_thigh:   { basePerInch:[11.0,14.5],carryover:[3,5],  minSafe:175,  defaultDone:'well',     restMin:5, fishLike:false, allowsAll:false, label:'chicken thigh' },
+      salmon:          { basePerInch:[7.5,10.0], carryover:[3,5],  minSafe:null, defaultDone:'medium',   restMin:3, fishLike:true,  allowsAll:false, label:'salmon' },
+      ahi_tuna:        { basePerInch:[3.0,4.5],  carryover:[2,3],  minSafe:null, defaultDone:'rare',     restMin:2, fishLike:true,  allowsAll:false, label:'ahi tuna' },
+      burger:          { basePerInch:[8.0,10.5], carryover:[3,5],  minSafe:160,  defaultDone:'medium',   restMin:3, fishLike:false, allowsAll:false, label:'burger' },
+      tri_tip:         { basePerInch:[11.0,14.0],carryover:[5,8],  minSafe:null, defaultDone:'med_rare', restMin:8, fishLike:false, allowsAll:true,  label:'tri tip' },
+      flank_skirt:     { basePerInch:[6.5,9.0],  carryover:[3,5],  minSafe:null, defaultDone:'med_rare', restMin:5, fishLike:false, allowsAll:true,  label:'flank/skirt steak' },
+      lamb_chop:       { basePerInch:[8.5,11.0], carryover:[4,6],  minSafe:null, defaultDone:'med_rare', restMin:5, fishLike:false, allowsAll:true,  label:'lamb chop' },
+      sausage:         { basePerInch:[10.0,13.0],carryover:[3,5],  minSafe:160,  defaultDone:'well',     restMin:3, fishLike:false, allowsAll:false, label:'sausage' },
+      chicken_wing:    { basePerInch:[11.0,14.5],carryover:[3,5],  minSafe:175,  defaultDone:'well',     restMin:3, fishLike:false, allowsAll:false, label:'chicken wing' }
+    },
+    DONENESS:       {rare:125,med_rare:130,medium:140,med_well:150,well:160},
+    DONENESS_LABEL: {rare:'rare',med_rare:'medium rare',medium:'medium',med_well:'medium well',well:'well done'},
+    tempMult: function(t){
+      t = Math.max(300, Math.min(700, parseFloat(t) || 450));
+      if (t < 375) return 1.35 + (375 - t) * 0.004;
+      if (t <= 425) return 1.35 + (t - 375) * (1.12 - 1.35) / 50;
+      if (t <= 450) return 1.12 + (t - 425) * (1.00 - 1.12) / 25;
+      if (t <= 500) return 1.00 + (t - 450) * (0.85 - 1.00) / 50;
+      if (t <= 550) return 0.85 + (t - 500) * (0.72 - 0.85) / 50;
+      return Math.max(0.55, 0.72 - (t - 550) * 0.0015);
+    },
+    SMOKER_M:       {pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+    WEATHER_M:      {none:1.0,hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+    DONENESS_FACTOR:{rare:0.85,med_rare:1.0,medium:1.18,med_well:1.32,well:1.45},
+
+    setMethod: function(m){
+      this.method = m;
+      document.querySelectorAll('#hf-method-toggles .tog').forEach(function(t){
+        t.classList.toggle('on', t.dataset.method === m);
+      });
+      $('hf-reverse-fields').style.display = m === 'reverse' ? '' : 'none';
+      $('hf-hot-temp-field').style.display = m === 'direct' ? '' : 'none';
+      this.calc();
+    },
+    onCutChange: function(){
+      var cut = $('hf-cut').value;
+      var d = this.DATA[cut];
+      if (!d.allowsAll) { $('hf-doneness').value = d.defaultDone; }
+      this.calc();
+    },
+    calc: function(){
+      var cut = $('hf-cut').value;
+      var d = this.DATA[cut];
+      var thickness = parseFloat($('hf-thickness').value);
+      var coldAdd = parseFloat($('hf-start-temp').value || '0');
+      var doneness = $('hf-doneness').value;
+      var smoker = $('hf-smoker').value;
+      var weather = $('hf-weather').value;
+      var sTime = $('hf-start-time').value;
+      if (!sTime) return;
+
+      var pullTemp = this.DONENESS[doneness];
+      if (d.minSafe !== null && pullTemp < d.minSafe) { pullTemp = d.minSafe; }
+
+      var sMult = this.SMOKER_M[smoker] || 1.0;
+      var weM   = this.WEATHER_M[weather] || 1.0;
+      var dF    = this.DONENESS_FACTOR[doneness] || 1.0;
+
+      var today = new Date();
+      var parts = sTime.split(':');
+      var startTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), parseInt(parts[0]), parseInt(parts[1]));
+
+      var totalMinLow, totalMinHigh, events = [];
+
+      if (this.method === 'direct') {
+        var grillTemp = $('hf-hot-temp').value;
+        var tM = this.tempMult(grillTemp);
+        var tFactor = 1 + coldAdd * 0.3;
+        totalMinLow  = d.basePerInch[0] * thickness * tM * sMult * weM * tFactor * dF;
+        totalMinHigh = d.basePerInch[1] * thickness * tM * sMult * weM * tFactor * dF;
+        var perSideLow  = totalMinLow * 0.5;
+        var perSideHigh = totalMinHigh * 0.5;
+
+        events.push({ offset: 0, dot: 'd-fire', title: 'On the grill', sub: 'Grill at stable ' + grillTemp + '°F. Lay ' + d.label + ' on the hottest zone — don\'t move it.' });
+        events.push({ offset: (perSideLow + perSideHigh) / 2, dot: 'd-flip', title: 'Flip', badge: { text: Math.round(perSideLow) + '–' + Math.round(perSideHigh) + ' min per side', cls: 'b-warn' }, sub: 'Once you get clean grill marks and the surface releases easily, flip. If it sticks, give it 30 more seconds.' });
+        if (d.fishLike) {
+          events.push({ offset: (totalMinLow + totalMinHigh) / 2, dot: 'd-pull', title: 'Pull at ' + pullTemp + '°F', badge: { text: 'probe now', cls: 'b-ok' }, sub: 'Fish cooks fast and unforgivingly. Pull on the early side — carryover will finish it.' });
+        } else {
+          events.push({ offset: (totalMinLow + totalMinHigh) / 2, dot: 'd-pull', title: 'Pull at ' + pullTemp + '°F', badge: { text: 'probe internal', cls: 'b-ok' }, sub: 'Insert an instant-read thermometer at the thickest point. Pull immediately when you hit target.' });
+        }
+      }
+
+      if (this.method === 'reverse') {
+        var slowTemp = $('hf-slow-temp').value;
+        var searTemp = $('hf-sear-temp').value;
+        var slowMin = Math.round(d.basePerInch[0] * thickness * 2.2 * sMult * weM * (1 + coldAdd * 0.5) * dF);
+        var slowMax = Math.round(d.basePerInch[1] * thickness * 2.8 * sMult * weM * (1 + coldAdd * 0.5) * dF);
+        var searPerSide = smoker === 'pellet' ? 1.5 : 1.0;
+        totalMinLow  = slowMin + (searPerSide * 2);
+        totalMinHigh = slowMax + (searPerSide * 2);
+
+        events.push({ offset: 0, dot: 'd-fire', title: 'On the smoker (slow phase)', sub: 'Indirect at ' + slowTemp + '°F. Bring internal to about ' + (pullTemp - 15) + '°F — roughly ' + slowMin + '–' + slowMax + ' min.' });
+        events.push({ offset: slowMax, dot: 'd-sear', title: 'Crank the heat / move to sear', sub: 'Get grill or cast iron screaming hot at ' + searTemp + '°F. Pull the ' + d.label + ' to rest while heat builds.' });
+        events.push({ offset: slowMax + searPerSide, dot: 'd-flip', title: 'Flip the sear', sub: 'About ' + (searPerSide * 60) + ' seconds per side. You\'re crusting, not cooking.' });
+        events.push({ offset: (totalMinLow + totalMinHigh) / 2, dot: 'd-pull', title: 'Pull at ' + pullTemp + '°F', badge: { text: 'probe internal', cls: 'b-ok' }, sub: 'Crust is set, internal is dialed. Off the heat immediately.' });
+      }
+
+      if (this.method === 'sous') {
+        var bathMin = Math.round(thickness * 45);
+        var bathMax = Math.round(thickness * 60);
+        var searPerSide = 0.75;
+        totalMinLow = searPerSide * 2;
+        totalMinHigh = searPerSide * 2;
+
+        events.push({ offset: -bathMax, dot: 'd-fire', title: 'Sous vide bath', sub: 'Set bath to ' + pullTemp + '°F. ' + d.label.charAt(0).toUpperCase() + d.label.slice(1) + ' in for ' + bathMin + '–' + bathMax + ' min. Internal temp will equal the bath — overshoot impossible.' });
+        events.push({ offset: 0, dot: 'd-sear', title: 'Pat dry, then sear', sub: 'Remove from bag. Pat fully dry — moisture kills the crust. Screaming-hot cast iron, neutral oil with high smoke point.' });
+        events.push({ offset: searPerSide, dot: 'd-flip', title: 'Flip the sear', sub: '45 seconds per side. Just the crust, that\'s it.' });
+        events.push({ offset: totalMinLow, dot: 'd-pull', title: 'Pull off the sear', badge: { text: 'done', cls: 'b-ok' }, sub: 'Crust is set, interior is already at temp. Rest very briefly — 2 min max.' });
+      }
+
+      var carryLow = d.carryover[0], carryHigh = d.carryover[1];
+      var finalLow = pullTemp + carryLow, finalHigh = pullTemp + carryHigh;
+      var restMin = this.method === 'sous' ? 2 : d.restMin;
+      var totalMid = (totalMinLow + totalMinHigh) / 2;
+      events.push({ offset: totalMid + 0.5, dot: 'd-rest', title: 'Rest ' + restMin + ' min', badge: { text: 'carryover ' + carryLow + '–' + carryHigh + '°F', cls: 'b-warn' }, sub: 'Tent loosely with foil. Internal continues climbing to about ' + finalLow + '–' + finalHigh + '°F. Don\'t slice yet — juice redistribution matters.' });
+      events.push({ offset: totalMid + restMin + 0.5, dot: 'd-serve', title: 'Plate and serve', badge: { text: this.DONENESS_LABEL[doneness], cls: 'b-ok' }, sub: 'Slice against the grain for steak. Show off the doneness on the plate.' });
+
+      var cn = $('hf-notice');
+      var noticeText = '';
+      if (d.minSafe !== null && this.DONENESS[doneness] < d.minSafe) {
+        noticeText = 'Heads up: ' + d.label + ' has a USDA-recommended minimum internal temp of ' + d.minSafe + '°F. We\'ve bumped your pull temp to meet that.';
+      } else if (this.method === 'reverse' && thickness < 1.25) {
+        noticeText = 'Reverse sear shines on thick cuts (1¼ in+). For a ' + thickness + ' in ' + d.label + ', direct hot grill may give you better results.';
+      } else if (smoker === 'pellet' && this.method === 'direct' && parseInt($('hf-hot-temp').value) < 500) {
+        noticeText = 'Pellet grills are convective — they cook more like an oven than a sear station. For a hard crust, consider reverse sear, or crank to max temp for the sear phase.';
+      }
+      if (noticeText) {
+        $('hf-notice-text').textContent = noticeText;
+        cn.classList.remove('hidden');
+      } else {
+        cn.classList.add('hidden');
+      }
+
+      $('hf-r-pull').textContent       = pullTemp + '°F';
+      $('hf-r-total').textContent      = this.method === 'sous' ? '~1.5 min sear' : Math.round(totalMinLow) + '–' + Math.round(totalMinHigh) + ' min';
+      $('hf-r-total-sub').textContent  = this.method === 'sous' ? 'after bath' : 'grill to pull';
+      $('hf-r-final').textContent      = finalLow + '–' + finalHigh + '°F';
+
+      var ft = $('hf-factor-tags');
+      ft.innerHTML = '';
+      var methodLabel = this.method === 'direct' ? 'Direct hot' : this.method === 'reverse' ? 'Reverse sear' : 'Sous vide + sear';
+      var facts = [
+        { k: 'Method', v: methodLabel },
+        { k: 'Thickness', v: thickness + ' in' },
+        { k: 'Doneness', v: this.DONENESS_LABEL[doneness] },
+        { k: 'Grill', v: $('hf-smoker').options[$('hf-smoker').selectedIndex].text.split(' /')[0] }
+      ];
+      facts.forEach(function(f){
+        var el = document.createElement('div');
+        el.className = 'factor';
+        el.innerHTML = f.k + ': <span>' + f.v + '</span>';
+        ft.appendChild(el);
+      });
+
+      var tl = $('hf-timeline');
+      tl.innerHTML = '';
+      events.forEach(function(ev){
+        var t = addM(startTime, ev.offset);
+        var badge = ev.badge ? '<span class="badge ' + ev.badge.cls + '">' + ev.badge.text + '</span>' : '';
+        var offsetTag = ev.offset === 0 ? '' : '<span class="day">' + (ev.offset > 0 ? '+' : '') + Math.round(ev.offset) + ' min</span>';
+        var div = document.createElement('div');
+        div.className = 'tli';
+        div.innerHTML = '<div class="tli-time">' + fmt(t) + offsetTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        tl.appendChild(div);
+      });
+
+      $('hf-result').classList.remove('hidden');
+    }
+  };
+
+  /* event wiring */
+  ['ls-cut','ls-weight','ls-grade','ls-trim','ls-start-temp','ls-racks','ls-shape','ls-inject','ls-smoker','ls-pit-temp','ls-preheat','ls-weather','ls-serve-date','ls-serve-time'].forEach(function(id){
+    var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'ls-cut') LS.onCutChange(); else LS.calc(); });
+  });
+  $('ls-weight').addEventListener('input', function(){ LS.weightTouched = true; LS.calc(); });
+  $('ls-pit-temp').addEventListener('input', function(){ LS.calc(); });
+  document.querySelectorAll('#ls-wrap-toggles .tog').forEach(function(t){
+    t.addEventListener('click', function(){ LS.setWrap(t.dataset.wrap); });
+  });
+  document.querySelectorAll('#ls-rest-toggles .tog').forEach(function(t){
+    t.addEventListener('click', function(){ LS.setRest(t.dataset.rest); });
+  });
+
+  ['hf-cut','hf-thickness','hf-start-temp','hf-doneness','hf-smoker','hf-hot-temp','hf-slow-temp','hf-sear-temp','hf-weather','hf-start-time'].forEach(function(id){
+    var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'hf-cut') HF.onCutChange(); else HF.calc(); });
+  });
+  ['hf-hot-temp','hf-slow-temp','hf-sear-temp'].forEach(function(id){
+    var el = $(id); if (el) el.addEventListener('input', function(){ HF.calc(); });
+  });
+  document.querySelectorAll('#hf-method-toggles .tog').forEach(function(t){
+    t.addEventListener('click', function(){ HF.setMethod(t.dataset.method); });
+  });
+
+  /* init */
+  var d = new Date(); d.setDate(d.getDate() + 7);
+  $('ls-serve-date').value = d.toISOString().split('T')[0];
+  LS.onCutChange();
+  LS.calc();
+  HF.onCutChange();
+  HF.calc();
+
+
+  /* ====================== ADVISOR ====================== */
+  var ADV = {
+    proteinPref: 'any',
+    stylePref:   'any',
+
+    CUTS: [
+      {
+        id:'baby_backs', name:'Baby back ribs', type:'low_slow', protein:'pork',
+        cookLow:3.5, cookHigh:5.5, restHours:0.5, preheat:0.75,
+        pitTemp:250, wrap:'foil', target:190,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Born for a 4-6 hour window. 3-2-1 method on the pellet is practically foolproof. Done with time to rest and crack a beer before guests arrive.',
+        tightBlurb:'Doable but no margin for error. If they run long — and they might — dinner\'s late.',
+        noBlurb:'Not enough time for ribs to do what ribs need to do. The collagen hasn\'t even said hello yet.',
+        overnightBlurb:'Baby backs in 14 hours? You\'d be eating breakfast. This window is built for brisket.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 250°F before meat goes on.'},
+            {time:meatOn,  dot:'d-fire', title:'Baby backs on',         sub:'Bone side down. Resist the urge to peek.'},
+            {time:addH(meatOn,2), dot:'d-stall', title:'Stall window', badge:{text:'brief plateau',cls:'b-warn'}, sub:'Ribs may plateau briefly around 150-165°F. Power through fast — 30-60 min.'},
+            {time:addH(meatOn,3), dot:'d-wrap', title:'Wrap in foil',  sub:'Meat side down in foil with a splash of apple juice or butter. Seal tight.'},
+            {time:addH(meatOn,5), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 190°F',cls:'b-ok'}, sub:'Bend test: pick up the rack from one end — it should bow and the meat crack. That\'s done.'},
+            {time:addH(serve,-0.4), dot:'d-rest', title:'Rest 20-30 min', sub:'Loosely tented. They\'ll hold heat well.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve',      badge:{text:'on time',cls:'b-ok'}, sub:'Between the bones. Sauce on the side — let the bark speak first.'}
+          ];
+        }
+      },
+      {
+        id:'spare_ribs', name:'Spare ribs', type:'low_slow', protein:'pork',
+        cookLow:4.5, cookHigh:6.5, restHours:0.5, preheat:0.75,
+        pitTemp:250, wrap:'foil', target:195,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'More meat, more fat, more flavor than baby backs. The 3-2-1 method at 250°F is the move. Give yourself a comfortable window.',
+        tightBlurb:'Possible, but spare ribs punish you for rushing. One long stall and dinner\'s late. Baby backs are the safer bet in a tight window.',
+        noBlurb:'Spare ribs in this window would be a crime scene. They need time to break down properly.',
+        overnightBlurb:'Spare ribs don\'t need an overnight. Save that energy for brisket.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 250°F.'},
+            {time:meatOn,  dot:'d-fire', title:'Spare ribs on',         sub:'Bone side down. Remove the membrane first if you haven\'t already.'},
+            {time:addH(meatOn,1.5), dot:'d-stall', title:'Stall window', badge:{text:'be patient',cls:'b-warn'}, sub:'May plateau around 155-165°F. Hold steady.'},
+            {time:addH(meatOn,3), dot:'d-wrap', title:'Wrap in foil (3-2-1)', sub:'Foil with apple juice or butter. Meat side down. Back on for 2 hours.'},
+            {time:addH(meatOn,5), dot:'d-pull', title:'Unwrap and finish',    sub:'Back on naked for the final hour to firm the bark back up.'},
+            {time:addH(meatOn,5.75), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 195°F',cls:'b-ok'}, sub:'Bones should twist out with light pressure.'},
+            {time:addH(serve,-0.4), dot:'d-rest', title:'Rest 20-30 min', sub:'Loosely tented.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Between the bones. Take every compliment.'}
+          ];
+        }
+      },
+      {
+        id:'pork_belly', name:'Pork belly', type:'low_slow', protein:'pork',
+        cookLow:4.0, cookHigh:6.0, restHours:0.5, preheat:0.75,
+        pitTemp:250, wrap:'none', target:195,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Underrated and underused. 4-6 hours, forgiving, and impressive. Less expected than ribs — makes you look creative without working harder.',
+        tightBlurb:'Possible in a tighter window but watch it closely. Belly can dry out if you rush the finish.',
+        noBlurb:'Not enough time for belly fat to render properly. you\'d be serving chewy rather than melt-in-your-mouth.',
+        overnightBlurb:'Pork belly doesn\'t need an overnight. It\'ll be done well before midnight.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable at 250°F.'},
+            {time:meatOn,  dot:'d-fire', title:'Pork belly on',    sub:'Fat cap up. Score the fat cap in a crosshatch if you haven\'t already.'},
+            {time:addH(meatOn,4.5), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 195°F',cls:'b-ok'}, sub:'Probe should slide in with zero resistance. Fat cap should be golden and starting to crisp.'},
+            {time:addH(serve,-0.4), dot:'d-rest', title:'Rest 20-30 min', sub:'Loosely tented. The fat needs a moment to set.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Slice thick — 1 inch or more. Serve fat cap up.'}
+          ];
+        }
+      },
+      {
+        id:'brisket', name:'Brisket (whole packer)', type:'low_slow', protein:'beef',
+        cookLow:12, cookHigh:18, restHours:2, preheat:0.75,
+        pitTemp:250, wrap:'foil', target:203,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The overnight OG. Light the fire late, stall hits around 7am, wrap and hold, slice at dinner. Fourteen hours of patience that produces something people talk about for years.',
+        tightBlurb:'At 300°F hot-and-fast you can push a brisket into 8-10 hours. It\'s a different brisket — less bark, more braise-y. Some people love it. don\'t try it for the first time when guests are coming.',
+        noBlurb:'You can absolutely do brisket in this window. Your dog will be the only one that enjoys it — and honestly, he won\'t even finish it.',
+        overnightBlurb:'This is exactly what brisket was born for. Light at midnight, sleep a few hours, manage the stall at dawn, rest all afternoon. Pure pitmaster ritual.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Get smoker stable at 250°F. Oak or hickory. This is the long game.'},
+            {time:meatOn,  dot:'d-fire', title:'Brisket on',            sub:'Fat side up. Get some sleep.'},
+            {time:addH(meatOn,6), dot:'d-stall', title:'Stall window begins', badge:{text:'be patient',cls:'b-warn'}, sub:'Internal temp will plateau around 155-165°F for 1-4 hours. This is normal. Do not raise pit temp. Do not panic.'},
+            {time:addH(meatOn,10), dot:'d-wrap', title:'Wrap in foil',  sub:'Once bark is deep mahogany and set firm. Add a knob of tallow before sealing.'},
+            {time:addH(serve,-2.25), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 203°F',cls:'b-ok'}, sub:'Probe slides in like warm butter. Chase feel, not the number.'},
+            {time:addH(serve,-2), dot:'d-rest', title:'Into the cooler', badge:{text:'2+ hr rest',cls:'b-info'}, sub:'Foil tight, towels, dry cooler. Holds safely for 4+ hours.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Against the grain — point first, then flat. You earned every compliment.'}
+          ];
+        }
+      },
+      {
+        id:'beef_ribs', name:'Beef short ribs', type:'low_slow', protein:'beef',
+        cookLow:8, cookHigh:12, restHours:1, preheat:0.75,
+        pitTemp:275, wrap:'none', target:203,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The brisket of ribs. Low and slow, no wrap needed, pull when they probe like butter. An all-day cook that produces something genuinely special.',
+        tightBlurb:'Beef ribs need time to break down collagen. In a tight window you\re risking tough rather than tender.',
+        noBlurb:'Beef short ribs in this window would just be expensive, chewy beef. They need a long day.',
+        overnightBlurb:'Beef ribs don\'t need an overnight — a long day is plenty. Save the all-nighter for brisket.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable at 275°F. Beef ribs love a slightly hotter pit.'},
+            {time:meatOn,  dot:'d-fire', title:'Beef ribs on',     sub:'Bone side down. No wrap — let the bark build all day.'},
+            {time:addH(meatOn,4), dot:'d-stall', title:'Stall window', badge:{text:'be patient',cls:'b-warn'}, sub:'May plateau 1-2 hours around 160°F. Hold steady.'},
+            {time:addH(serve,-1.25), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 203°F',cls:'b-ok'}, sub:'Probe should slide in between the bones with zero resistance. Bark will be nearly black — that\'s correct.'},
+            {time:addH(serve,-1), dot:'d-rest', title:'Rest 45-60 min', sub:'Foil loosely. These need time to reabsorb.'},
+            {time:serve,   dot:'d-serve', title:'Serve',           badge:{text:'on time',cls:'b-ok'}, sub:'Between the bones. One bone per person is a full meal.'}
+          ];
+        }
+      },
+      {
+        id:'ribeye', name:'Ribeye / strip steak', type:'hot_fast', protein:'beef',
+        cookLow:0.25, cookHigh:0.5, restHours:0.1, preheat:0.5,
+        pitTemp:450, wrap:'none', target:130,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Hot and fast at its finest. 10-14 minutes total at 450°F, 5-minute rest, done. If you have any window at all — you have time for steak.',
+        tightBlurb:'A ribeye fits in basically any window. 20 minutes start to finish.',
+        noBlurb:'Even in this window you have time for steak. You always have time for steak.',
+        overnightBlurb:'You\'re thinking way too hard about this. It\'s steak. 20 minutes.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Crank the heat',   sub:'Get grill to stable 450°F. Cast iron or grill grates screaming hot.'},
+            {time:meatOn,  dot:'d-on',   title:'Steak on',         sub:'don\'t move it. Let it sear.'},
+            {time:addM(meatOn,6), dot:'d-flip', title:'Flip', badge:{text:'5-7 min per side',cls:'b-warn'}, sub:'Once it releases cleanly and has grill marks. If it sticks, give it 30 more seconds.'},
+            {time:addM(meatOn,12), dot:'d-pull', title:'Pull at 125°F', badge:{text:'probe internal',cls:'b-ok'}, sub:'Pull 5°F below your target — carryover will finish it.'},
+            {time:addM(meatOn,17), dot:'d-rest', title:'Rest 5 min', badge:{text:'carryover 5-8°F',cls:'b-warn'}, sub:'Tent loosely. Internal temp continues to climb to 130-133°F medium rare.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'medium rare',cls:'b-ok'}, sub:'Against the grain. Show the cut.'}
+          ];
+        }
+      },
+      {
+        id:'chicken_thigh', name:'Chicken thighs (bone-in)', type:'hot_fast', protein:'poultry',
+        cookLow:0.75, cookHigh:1.25, restHours:0.1, preheat:0.5,
+        pitTemp:375, wrap:'none', target:175,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The most forgiving cut on any grill. 45-75 minutes at 375°F, hard to mess up, crowd-pleasing. Great when you want smoke flavor without the time commitment.',
+        tightBlurb:'Chicken thighs fit almost any window and are genuinely hard to ruin. Solid call.',
+        noBlurb:'Even in this window chicken thighs work. they\'re fast.',
+        overnightBlurb:'Chicken thighs do not need an overnight. Nobody needs chicken thighs at 3am.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable at 375°F.'},
+            {time:meatOn,  dot:'d-fire', title:'Thighs on',        sub:'Skin side up to start. Let the fat render slowly.'},
+            {time:addM(meatOn,40), dot:'d-flip', title:'Flip skin side down', sub:'Crisp the skin for the final 15-20 min.'},
+            {time:addM(meatOn,60), dot:'d-pull', title:'Pull at 175°F', badge:{text:'probe thickest part',cls:'b-ok'}, sub:'Thighs are forgiving — anywhere from 170-185°F is excellent. Juices run clear.'},
+            {time:addM(meatOn,65), dot:'d-rest', title:'Rest 5 min', sub:'Brief rest. they\'ll hold heat well.'},
+            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'on time',cls:'b-ok'}, sub:'Crispy skin up. don\'t hide the best part.'}
+          ];
+        }
+      },
+      {
+        id:'pork_shoulder', name:'Pork shoulder (Boston butt)', type:'low_slow', protein:'pork',
+        cookLow:12, cookHigh:18, restHours:1, preheat:0.75,
+        pitTemp:225, wrap:'foil', target:203,
+        smokerM:{pellet:1.0,offset:0.95,kamado:0.88,vertical:1.08,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The pulled pork king. Low and slow renders the fat and connective tissue into something magical. 12-18 hours at 225°F produces the most forgiving, rewarding cook. This is what BBQ was made for.',
+        tightBlurb:'Risky in a tight window. Pork shoulder has thick collagen — rushing it means tough, chewy meat. If you must, push to 250°F and hope.',
+        noBlurb:'Pork shoulder needs the time. You\'re not getting tender pulled pork in this window. Pick a faster cut.',
+        overnightBlurb:'This is exactly what the overnight cook was invented for. Light at midnight, sleep, wake to the smell of smoking pork. Pure pitmaster heaven.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Get to 225°F stable. Oak or hickory. This is the long game.'},
+            {time:meatOn,  dot:'d-fire', title:'Pork on',               sub:'Fat cap up. Inject if you like — it won\'t hurt.'},
+            {time:addH(meatOn,6), dot:'d-stall', title:'Stall window begins', badge:{text:'be patient',cls:'b-warn'}, sub:'Internal temp will plateau around 155-165°F for 2-6 hours. Physics, not failure. Hold your nerve.'},
+            {time:addH(meatOn,10), dot:'d-wrap', title:'Wrap in foil',  sub:'Once it\'s dark and set. Add a cup of apple juice or cider before sealing.'},
+            {time:addH(serve,-1.5), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 203°F',cls:'b-ok'}, sub:'Probe slides in like butter. Let it rest in the foil.'},
+            {time:addH(serve,-1), dot:'d-rest', title:'Rest 1 hour', badge:{text:'foil + cooler',cls:'b-info'}, sub:'Wrap in towels and rest in a cooler. Holds safely for 4+ hours.'},
+            {time:serve,   dot:'d-serve', title:'Pull and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Pull into chunks or shreds. Sauce on the side. You earned every compliment.'}
+          ];
+        }
+      },
+      {
+        id:'tri_tip', name:'Tri tip', type:'low_slow', protein:'beef',
+        cookLow:4, cookHigh:6, restHours:0.5, preheat:0.75,
+        pitTemp:225, wrap:'foil', target:135,
+        smokerM:{pellet:1.0,offset:0.92,kamado:0.87,vertical:1.06,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The West Coast classic. Santa Maria style at 225°F for 4-6 hours produces a perfect bark and smoke ring. Medium-rare inside, crispy outside. Fast enough for lunch, slow enough to build flavor.',
+        tightBlurb:'Tri tip is forgiving in a tight window. At 275°F you can push it to 2.5-3 hours. Medium-rare is achievable.',
+        noBlurb:'Not enough time. You need at least 2.5 hours at a hard push. Pick a faster cut or come back later.',
+        overnightBlurb:'Tri tip doesn\'t need an overnight — 4-6 hours is plenty. Light the fire in the morning, serve at dinner.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 225°F. Oak is traditional for Santa Maria.'},
+            {time:meatOn,  dot:'d-fire', title:'Tri tip on',            sub:'Fat cap up. Season simple — salt, pepper, garlic. Let the meat speak.'},
+            {time:addH(meatOn,2), dot:'d-stall', title:'Stall window', badge:{text:'usually brief',cls:'b-warn'}, sub:'May plateau briefly around 130-140°F. Usually just 30-60 min. Power through.'},
+            {time:addH(serve,-0.75), dot:'d-pull', title:'Pull at 135°F', badge:{text:'target 135°F',cls:'b-ok'}, sub:'Medium-rare is the goal. Probe slides in easy. Pull while it\'s still got juice.'},
+            {time:addH(serve,-0.5), dot:'d-rest', title:'Rest 20-30 min', sub:'Loosely tented. The meat needs a moment to redistribute juices.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Slice against the grain — there\'s a visible grain line running through it. You\'ll know when you find it.'}
+          ];
+        }
+      },
+      {
+        id:'whole_chicken', name:'Whole chicken', type:'low_slow', protein:'poultry',
+        cookLow:1.5, cookHigh:2.5, restHours:0.25, preheat:0.5,
+        pitTemp:250, wrap:'none', target:165,
+        smokerM:{pellet:1.0,offset:0.92,kamado:0.87,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.15},
+        blurb:'The beginner\'s gateway drug. A whole chicken cooks fast, forgives mistakes, and teaches you the basics. 1.5-2.5 hours at 250°F and you\'ve got lunch. Moist meat, crispy skin, pure satisfaction.',
+        tightBlurb:'Whole chicken is your friend in a tight window. Even in 1.5-2 hours at 250°F, it\'ll be done. Hard to mess up.',
+        noBlurb:'A whole chicken will cook in as little as 1.5 hours. This window is actually too generous — chicken will be overdone.',
+        overnightBlurb:'Whole chicken doesn\'t need an overnight. You\'ll be eating at 6am.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 250°F. Fruit wood pairs great — apple or cherry.'},
+            {time:meatOn,  dot:'d-fire', title:'Chicken on',            sub:'Breast side up. Stuff the cavity with apple or lemon if you like.'},
+            {time:addH(meatOn,1), dot:'d-stall', title:'Check progress', badge:{text:'peek only',cls:'b-info'}, sub:'Skin should be taking color. Flip to breast side down if it\'s getting too dark on top.'},
+            {time:addH(meatOn,1.75), dot:'d-pull', title:'Pull at 165°F', badge:{text:'probe thickest part',cls:'b-ok'}, sub:'Check temp in the thickest part of the thigh, away from bone. 165°F and you\'re done.'},
+            {time:addH(serve,-0.2), dot:'d-rest', title:'Rest 10-15 min', sub:'Loosely tented. Carryover cooking will push internal temp up a few degrees.'},
+            {time:serve,   dot:'d-serve', title:'Carve and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Separate thighs from breasts. Serve with the pan drippings. Simple, perfect, delicious.'}
+          ];
+        }
+      },
+      {
+        id:'chuck_roast', name:'Chuck roast', type:'low_slow', protein:'beef',
+        cookLow:5, cookHigh:8, restHours:0.5, preheat:0.75,
+        pitTemp:250, wrap:'foil', target:205,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The poor man\'s brisket — cheaper, faster, and almost as rewarding. 5-8 hours at 250°F breaks the chuck down into rich, shreddable beef. Forgiving enough for a first timer, tasty enough for a veteran.',
+        tightBlurb:'Possible if you push to 275°F, but chuck has serious collagen to break down. Rushing it risks tough, pot-roast-y results. Give it room if you can.',
+        noBlurb:'Chuck roast needs hours to render. In this window you\'d be carving a hockey puck. Pick something faster.',
+        overnightBlurb:'Chuck doesn\'t need a full overnight like brisket, but an early-morning start with a long afternoon rest is a beautiful, low-stress cook.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 250°F. Oak or hickory carries chuck well.'},
+            {time:meatOn,  dot:'d-fire', title:'Chuck on',              sub:'Fat side up. Season heavy — chuck can take it.'},
+            {time:addH(meatOn,3), dot:'d-stall', title:'Stall window', badge:{text:'be patient',cls:'b-warn'}, sub:'Plateaus around 155-165°F. Normal. Do not raise the pit temp.'},
+            {time:addH(meatOn,4.5), dot:'d-wrap', title:'Wrap in foil', sub:'Once the bark is set and dark. A splash of beef broth before sealing keeps it moist.'},
+            {time:addH(serve,-0.75), dot:'d-pull', title:'Pull at 205°F', badge:{text:'target 205°F',cls:'b-ok'}, sub:'Probe slides in like butter. This is where chuck turns shreddable.'},
+            {time:addH(serve,-0.5), dot:'d-rest', title:'Rest 30-45 min', badge:{text:'foil + towel',cls:'b-info'}, sub:'Let it relax in the foil. The juices redistribute and the texture sets.'},
+            {time:serve,   dot:'d-serve', title:'Shred and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Pull into chunks or shred fully. Spoon over the juices. Nobody will guess it was not brisket.'}
+          ];
+        }
+      },
+      {
+        id:'whole_turkey', name:'Whole turkey', type:'low_slow', protein:'poultry',
+        cookLow:6, cookHigh:9, restHours:0.5, preheat:0.75,
+        pitTemp:275, wrap:'none', target:165,
+        smokerM:{pellet:1.0,offset:0.92,kamado:0.87,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The holiday showstopper. A whole bird smoked at 275°F takes roughly 6-9 hours and comes out with crispy skin and deep flavor no oven can match. Brine it first and you\'ll never roast a turkey again.',
+        tightBlurb:'A smaller bird can squeak into a tight window at 300°F+, but big turkeys need time. Spatchcock it to speed things up if you are pressed.',
+        noBlurb:'A whole turkey will not finish in this window. Spatchcock it, smoke a breast instead, or pick a faster protein.',
+        overnightBlurb:'You can start a turkey very early, but it does not need a true overnight. Light before dawn and you\'ll have it resting by mid-afternoon.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 275°F. Fruit wood or pecan is perfect for poultry.'},
+            {time:meatOn,  dot:'d-fire', title:'Turkey on',             sub:'Breast up. Pat the skin dry for the crispiest result.'},
+            {time:addH(meatOn,3), dot:'d-flip', title:'Check the breast', badge:{text:'tent if needed',cls:'b-info'}, sub:'If the breast is browning too fast, tent it loosely with foil while the thighs catch up.'},
+            {time:addH(serve,-0.75), dot:'d-pull', title:'Pull at 165°F', badge:{text:'probe the breast',cls:'b-ok'}, sub:'Breast at 165°F, thighs 175°F+. Pull and the carryover finishes the job.'},
+            {time:addH(serve,-0.5), dot:'d-rest', title:'Rest 30 min', sub:'Tent loosely. A proper rest keeps the white meat juicy.'},
+            {time:serve,   dot:'d-serve', title:'Carve and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Carve breast against the grain. Save the carcass for stock.'}
+          ];
+        }
+      },
+      {
+        id:'st_louis_ribs', name:'St. Louis ribs', type:'low_slow', protein:'pork',
+        cookLow:5, cookHigh:6.5, restHours:0.5, preheat:0.75,
+        pitTemp:250, wrap:'foil', target:200,
+        smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Spare ribs trimmed competition-style — uniform, meaty, and beautiful on the plate. 5-6.5 hours at 250°F with the 3-2-1 method is the gold standard. More forgiving than they look.',
+        tightBlurb:'Doable with a tighter 2-2-1 schedule, but ribs reward patience. If the clock is tight, watch them closely and trust the bend test over the timer.',
+        noBlurb:'Ribs need time to render and tenderize. This window would leave them tough and chewy. Come back when you have a few more hours.',
+        overnightBlurb:'St. Louis ribs do not need an overnight — a long afternoon is plenty. Save the all-nighter for brisket.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',        sub:'Stable at 250°F. Apple or hickory.'},
+            {time:meatOn,  dot:'d-fire', title:'Ribs on',               sub:'Bone side down. Pull the membrane first if you have not already.'},
+            {time:addH(meatOn,1.5), dot:'d-stall', title:'Stall window', badge:{text:'ribs push through',cls:'b-warn'}, sub:'A brief plateau around 155-165°F. Ribs clear it fast — hold steady.'},
+            {time:addH(meatOn,3), dot:'d-wrap', title:'Wrap in foil (the 2)', sub:'Foil with butter, brown sugar, and a splash of juice. Meat side down for 2 hours.'},
+            {time:addH(meatOn,5), dot:'d-pull', title:'Unwrap and firm up', sub:'Back on naked, sauce if you like, for the final hour to set the bark.'},
+            {time:addH(serve,-0.4), dot:'d-rest', title:'Rest 15-20 min', sub:'Loosely tented. Lets the racks settle before slicing.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'on time',cls:'b-ok'}, sub:'Slice between the bones. Bend test should show a gentle crack on the surface.'}
+          ];
+        }
+      },
+      {
+        id:'flank_skirt', name:'Flank / skirt steak', type:'hot_fast', protein:'beef',
+        cookLow:0.2, cookHigh:0.4, restHours:0.1, preheat:0.5,
+        pitTemp:500, wrap:'none', target:130,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Fast, flavorful, and built for tacos and fajitas. A hot grill and 6-10 minutes total is all it takes. Thin and forgiving — just do not overcook it and always slice against the grain.',
+        tightBlurb:'Flank and skirt fit basically any window. 10 minutes start to finish.',
+        noBlurb:'Even in this window you have time. These steaks cook in minutes.',
+        overnightBlurb:'These cook in minutes. An overnight would be a strange and lonely thing to do to a skirt steak.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Crank the heat',   sub:'Get the grill screaming — 500°F+. These want a fast, hard sear.'},
+            {time:meatOn,  dot:'d-on',   title:'Steak on',         sub:'Lay it over the hottest zone. Do not move it.'},
+            {time:addM(meatOn,3), dot:'d-flip', title:'Flip', badge:{text:'2-4 min per side',cls:'b-warn'}, sub:'Once it has a deep char and releases cleanly.'},
+            {time:addM(meatOn,6), dot:'d-pull', title:'Pull at 125°F', badge:{text:'probe internal',cls:'b-ok'}, sub:'Thin cuts climb fast. Pull a touch early for medium rare.'},
+            {time:addM(meatOn,11), dot:'d-rest', title:'Rest 5 min', sub:'A short rest is essential on thin steaks.'},
+            {time:serve,   dot:'d-serve', title:'Slice and serve', badge:{text:'against the grain',cls:'b-ok'}, sub:'Slice thin and hard against the grain — it is the difference between tender and chewy.'}
+          ];
+        }
+      },
+      {
+        id:'lamb_chop', name:'Lamb chops', type:'hot_fast', protein:'lamb',
+        cookLow:0.25, cookHigh:0.5, restHours:0.1, preheat:0.5,
+        pitTemp:450, wrap:'none', target:135,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'Restaurant-quality off your own grill. Lamb chops sear in 10-15 minutes and pair beautifully with smoke. Medium rare to medium is the sweet spot — pink, juicy, and rich.',
+        tightBlurb:'Lamb chops fit nearly any window. 15 minutes and you are plating.',
+        noBlurb:'You have time — lamb chops cook in minutes. Fire it up.',
+        overnightBlurb:'Lamb chops are a minutes-long cook. No overnight required, ever.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Crank the heat',   sub:'Stable 450°F. A little rosemary on the coals is a nice touch.'},
+            {time:meatOn,  dot:'d-on',   title:'Chops on',         sub:'Sear over direct heat. Stand them on the fat edge first if you can.'},
+            {time:addM(meatOn,4), dot:'d-flip', title:'Flip', badge:{text:'3-5 min per side',cls:'b-warn'}, sub:'Deep color, clean release. Lamb fat loves the flame.'},
+            {time:addM(meatOn,9), dot:'d-pull', title:'Pull at 130°F', badge:{text:'probe internal',cls:'b-ok'}, sub:'Pull 5°F under target. Carryover brings it to a perfect medium rare.'},
+            {time:addM(meatOn,14), dot:'d-rest', title:'Rest 5 min', sub:'Tent loosely. Lets the juices settle.'},
+            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'medium rare',cls:'b-ok'}, sub:'Serve hot with mint or a squeeze of lemon.'}
+          ];
+        }
+      },
+      {
+        id:'sausage', name:'Sausage / brats', type:'hot_fast', protein:'pork',
+        cookLow:0.4, cookHigh:0.6, restHours:0.1, preheat:0.5,
+        pitTemp:375, wrap:'none', target:160,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The backyard MVP. Sausages and brats are nearly impossible to ruin — 25-35 minutes over medium heat to a safe 160°F. Great filler for a cook, great star for a tailgate.',
+        tightBlurb:'Sausages fit almost any window. Half an hour and they are done.',
+        noBlurb:'Even here you have time. Sausages cook fast and forgive a lot.',
+        overnightBlurb:'Sausages cook in under an hour. An overnight is wildly unnecessary.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable around 375°F. Medium heat — too hot splits the casings.'},
+            {time:meatOn,  dot:'d-fire', title:'Sausages on',      sub:'Indirect to start so they cook through without bursting.'},
+            {time:addM(meatOn,15), dot:'d-flip', title:'Turn and color', sub:'Roll them a quarter turn. Move to direct heat for color if you like.'},
+            {time:addM(meatOn,28), dot:'d-pull', title:'Pull at 160°F', badge:{text:'probe the center',cls:'b-ok'}, sub:'160°F internal. Casings snappy, juices clear.'},
+            {time:addM(meatOn,31), dot:'d-rest', title:'Rest 3 min', sub:'A brief rest keeps the first bite from scalding.'},
+            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'on time',cls:'b-ok'}, sub:'Buns, mustard, kraut. You know what to do.'}
+          ];
+        }
+      },
+      {
+        id:'chicken_wing', name:'Chicken wings', type:'hot_fast', protein:'poultry',
+        cookLow:0.75, cookHigh:1.25, restHours:0.1, preheat:0.5,
+        pitTemp:400, wrap:'none', target:175,
+        smokerM:{pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
+        weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
+        blurb:'The undefeated crowd-pleaser. Wings cooked hot at 400°F for 45-75 minutes come out crispy outside and juicy inside. Toss in sauce at the end and watch them vanish.',
+        tightBlurb:'Wings fit most windows comfortably. Crank the heat and they crisp up fast.',
+        noBlurb:'A little tight, but wings move quick at high heat. Push the temp and they will make it.',
+        overnightBlurb:'Wings are an hour, tops. No overnight — just an appetite.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable 400°F. Higher heat is the secret to crispy skin.'},
+            {time:meatOn,  dot:'d-fire', title:'Wings on',         sub:'Spread them out. Dry brine with salt and baking powder for extra crunch.'},
+            {time:addM(meatOn,30), dot:'d-flip', title:'Flip', sub:'Turn for even color. They should be rendering and crisping.'},
+            {time:addM(meatOn,55), dot:'d-pull', title:'Pull at 175°F+', badge:{text:'probe a meaty wing',cls:'b-ok'}, sub:'Wings are best at 175-185°F — the connective tissue melts and the skin crisps.'},
+            {time:addM(meatOn,58), dot:'d-rest', title:'Toss in sauce', badge:{text:'optional',cls:'b-info'}, sub:'Toss hot wings in sauce right off the grill so it clings.'},
+            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'on time',cls:'b-ok'}, sub:'Pile high. Provide napkins. Accept the applause.'}
+          ];
+        }
+      }
+    ],
+
+    SMOKER_M: {pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
+    WEATHER_M:{none:1.0,hot:0.95,mild:1.0,cool:1.08,cold:1.18},
+
+    setProtein: function(p){
+      this.proteinPref = p;
+      document.querySelectorAll('#adv-protein-toggles .tog').forEach(function(t){
+        t.classList.toggle('on', t.dataset.protein === p);
+      });
+    },
+    setStyle: function(s){
+      this.stylePref = s;
+      document.querySelectorAll('#adv-style-toggles .tog').forEach(function(t){
+        t.classList.toggle('on', t.dataset.style === s);
+      });
+    },
+
+    getFit: function(cut, windowHrs, smoker, weather){
+      var sM = cut.smokerM[smoker] || 1.0;
+      var wM = cut.weatherM[weather] || 1.0;
+      var adjLow  = (cut.cookLow  * sM * wM) + cut.restHours + cut.preheat + 0.5;
+      var adjHigh = (cut.cookHigh * sM * wM) + cut.restHours + cut.preheat + 0.5;
+      var midpoint = (adjLow + adjHigh) / 2;
+      if (windowHrs >= adjHigh + 1) return { rating:'yes',   score: 3 - Math.abs(midpoint - windowHrs * 0.75) };
+      if (windowHrs >= adjLow)      return { rating:'tight', score: 1 };
+      return                               { rating:'no',    score: -1 };
+    },
+
+    buildTimeline: function(cut, fireTime, meatOnTime, serveTime, smoker, weather){
+      var tl = $('adv-timeline');
+      tl.innerHTML = '';
+      var serveDay = fmtD(serveTime);
+      var events = cut.events(fireTime, meatOnTime, serveTime);
+      events.sort(function(a,b){ return a.time - b.time; });
+      events.forEach(function(ev){
+        var dayTag = fmtD(ev.time) !== serveDay ? '<span class="day">(' + fmtD(ev.time) + ')</span>' : '';
+        var badge  = ev.badge ? '<span class="badge ' + ev.badge.cls + '">' + ev.badge.text + '</span>' : '';
+        var div = document.createElement('div');
+        div.className = 'tli';
+        div.innerHTML = '<div class="tli-time">' + fmt(ev.time) + dayTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        tl.appendChild(div);
+      });
+    },
+
+    selectCut: function(cut, fireTime, meatOnTime, serveTime){
+      var banner = $('adv-chosen-banner');
+      banner.textContent = cut.name + ' — ' + (cut.type === 'low_slow' ? 'low & slow' : 'hot & fast') + ' · ' + cut.pitTemp + '°F · ' + (cut.wrap === 'none' ? 'no wrap' : cut.wrap + ' wrap');
+
+      var summ = $('adv-summary');
+      summ.innerHTML = '';
+      var metrics = [
+        { l:'Light fire at', v: fmt(fireTime), s: fmtD(fireTime) !== fmtD(serveTime) ? fmtD(fireTime) : 'same day' },
+        { l:'Cook window',   v: cut.cookLow + '–' + cut.cookHigh + ' hrs', s: 'estimated' },
+        { l:'Serve',         v: fmt(serveTime), s: 'your target' }
+      ];
+      metrics.forEach(function(m){
+        var el = document.createElement('div');
+        el.className = 'met';
+        el.innerHTML = '<div class="met-l">' + m.l + '</div><div class="met-v">' + m.v + '</div><div class="met-sub">' + m.s + '</div>';
+        summ.appendChild(el);
+      });
+
+      this.buildTimeline(cut, fireTime, meatOnTime, serveTime);
+      $('adv-timeline-result').classList.remove('hidden');
+      setTimeout(function(){ $('adv-timeline-result').scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+    },
+
+    calc: function(){
+      var startT  = $('adv-start-time').value;
+      var serveT  = $('adv-serve-time').value;
+      var dateV   = $('adv-date').value;
+      var smoker  = $('adv-smoker').value;
+      var weather = $('adv-weather').value;
+      if (!startT || !serveT || !dateV) return;
+
+      var startMs = new Date(dateV + 'T' + startT).getTime();
+      var serveMs = new Date(dateV + 'T' + serveT).getTime();
+      if (serveMs <= startMs) { serveMs += 86400000; }
+      var windowHrs = (serveMs - startMs) / 3600000;
+      var serveTime = new Date(serveMs);
+      var prot = this.proteinPref;
+      var style = this.stylePref;
+
+      var scored = [];
+      this.CUTS.forEach(function(cut){
+        if (prot !== 'any' && cut.protein !== prot) return;
+        if (style === 'low_slow' && cut.type !== 'low_slow') return;
+        if (style === 'hot_fast' && cut.type !== 'hot_fast') return;
+        var fit = ADV.getFit(cut, windowHrs, smoker, weather);
+        scored.push({ cut:cut, fit:fit });
+      });
+      scored.sort(function(a,b){ return b.fit.score - a.fit.score; });
+
+      var yes   = scored.filter(function(x){ return x.fit.rating === 'yes'; });
+      var tight = scored.filter(function(x){ return x.fit.rating === 'tight'; });
+      var no    = scored.filter(function(x){ return x.fit.rating === 'no'; });
+
+      var hrs = Math.round(windowHrs * 10) / 10;
+      var verdict = $('adv-verdict');
+      verdict.className = 'notice';
+      if (yes.length > 0) {
+        verdict.classList.add('notice-info');
+        verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> you\ve got solid options. here\'s what fits well — and what doesn\'t.';
+      } else if (tight.length > 0) {
+        verdict.classList.add('notice-warn');
+        verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> Tight but workable. These cuts fit — but don\'t expect much cushion.';
+      } else {
+        verdict.classList.add('notice-warn');
+        if (windowHrs < 2) {
+          verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> You can absolutely do brisket in this window. Your dog will be the only one that enjoys it — and honestly, he won\'t even finish it. Consider a hot-and-fast cut or order pizza.';
+        } else {
+          verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> Nothing fits cleanly in this time. Try widening your window, picking hot & fast, or adjusting your serve time.';
+        }
+      }
+
+      var recs = $('adv-recs');
+      recs.innerHTML = '';
+      var allRecs = yes.concat(tight);
+      allRecs.forEach(function(item, idx){
+        var cut = item.cut;
+        var fit = item.fit;
+        var sM = cut.smokerM[smoker] || 1.0;
+        var wM = cut.weatherM[weather] || 1.0;
+        var totalWorst = (cut.cookHigh * sM * wM) + cut.restHours + cut.preheat + 0.5;
+        var fireTime   = new Date(serveMs - totalWorst * 3600000);
+        var meatOnTime = addH(fireTime, cut.preheat);
+
+        var card = document.createElement('div');
+        card.className = 'result-card' + (idx === 0 && fit.rating === 'yes' ? ' best-rec' : '');
+        if (idx === 0 && fit.rating === 'yes') card.style.border = '2px solid var(--sage)';
+
+        var badgeCls = fit.rating === 'yes' ? 'b-ok' : 'b-warn';
+        var badgeTxt = idx === 0 && fit.rating === 'yes' ? 'best fit' : fit.rating === 'yes' ? 'solid fit' : 'tight fit';
+        var blurb    = fit.rating === 'yes' ? cut.blurb : cut.tightBlurb;
+        var fireStr  = fmtD(fireTime) !== fmtD(serveTime) ? fmtD(fireTime) + ' at ' + fmt(fireTime) : fmt(fireTime);
+
+        card.innerHTML =
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
+            '<div class="tli-title">' + cut.name + '<span class="badge ' + badgeCls + '" style="margin-left:8px;">' + badgeTxt + '</span></div>' +
+          '</div>' +
+          '<div class="tli-sub" style="margin-bottom:8px;">' + blurb + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Light fire at ' + fireStr + ' · serve at ' + fmt(serveTime) + '</div>' +
+          '<button type="button" class="cta" style="padding:9px;font-size:13px;" onclick="ADV.selectCut(ADV.CUTS.find(function(c){return c.id===' + JSON.stringify(cut.id) + ';}),new Date(' + fireTime.getTime() + '),new Date(' + meatOnTime.getTime() + '),new Date(' + serveMs + '))">Use this schedule</button>';
+
+        recs.appendChild(card);
+      });
+
+      var noList  = $('adv-no-list');
+      var noShow  = $('adv-no-show');
+      noList.innerHTML = '';
+      if (no.length > 0) {
+        noShow.classList.remove('hidden');
+        no.forEach(function(item){
+          var cut = item.cut;
+          var div = document.createElement('div');
+          div.className = 'result-card';
+          div.style.opacity = '0.7';
+          div.innerHTML =
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">' +
+              '<div class="tli-title">' + cut.name + '<span class="badge b-warn" style="margin-left:8px;">won\'t work</span></div>' +
+            '</div>' +
+            '<div class="tli-sub">' + cut.noBlurb + '</div>';
+          noList.appendChild(div);
+        });
+      } else {
+        noShow.classList.add('hidden');
+      }
+
+      $('adv-timeline-result').classList.add('hidden');
+      $('adv-result').classList.remove('hidden');
+    }
+  };
+
+  document.querySelectorAll('#adv-protein-toggles .tog').forEach(function(t){
+    t.addEventListener('click', function(){ ADV.setProtein(t.dataset.protein); });
+  });
+  document.querySelectorAll('#adv-style-toggles .tog').forEach(function(t){
+    t.addEventListener('click', function(){ ADV.setStyle(t.dataset.style); });
+  });
+  $('adv-calc-btn').addEventListener('click', function(){ ADV.calc(); });
+  $('adv-no-toggle').addEventListener('click', function(){
+    var list = $('adv-no-list');
+    var hidden = list.classList.toggle('hidden');
+    $('adv-no-toggle').textContent = hidden ? '+ Show what won\'t work (and why)' : '- Hide these';
+  });
+
+  (function initAdv(){
+    var d = new Date(); d.setDate(d.getDate() + 7);
+    $('adv-date').value = d.toISOString().split('T')[0];
+  })();
+
+})();
+</script>
+</body>
+</html>
+
