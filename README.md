@@ -31,13 +31,13 @@ Optional **Fine-tune drawer** for grade, trim, weather, injection if you want to
 
 ## Accuracy
 
-Phase 1: Testing. You can help. Use the **calibration template** to log your cooks (actual fire time vs. predicted, stall behavior, wrap timing, serve time). Send feedback to [jt.jordan@me.com](mailto:jt.jordan@me.com).
+Phase 1: Testing. You can help. Use the **calibration template** to log your cooks (actual fire time vs. predicted, stall behavior, wrap timing, serve time). Send feedback to [jtbasecamp@gmail.com](mailto:jtbasecamp@gmail.com).
 
 Goal for Phase 1: ±30 min accuracy. Goal for Phase 2: a learning loop that adjusts the math based on your actual cooks.
 
 ## Feedback
 
-If you try this, **please log your cooks** using the calibration template and send results to jt.jordan@me.com. Photos of the timeline during the cook are especially valuable.
+If you try this, **please log your cooks** using the calibration template and send results to jtbasecamp@gmail.com. Photos of the timeline during the cook are especially valuable.
 
 ---
 
