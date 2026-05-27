@@ -34,7 +34,7 @@
   --shadow: 0 1px 2px rgba(31,26,21,0.04), 0 0 0 0.5px var(--border);
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #1A1612;
     --bg-alt: #221D17;
     --card: #2A241E;
@@ -58,6 +58,45 @@
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 0.5px var(--border);
   }
 }
+[data-theme="dark"] {
+  --bg: #1A1612;
+  --bg-alt: #221D17;
+  --card: #2A241E;
+  --text: #F5EBD9;
+  --text-muted: #B0A492;
+  --text-faint: #7C7264;
+  --border: #3A332B;
+  --border-strong: #524739;
+  --ember: #E2603A;
+  --ember-dark: #C0421C;
+  --ember-bg: #4A1F10;
+  --amber: #E2B554;
+  --amber-bg: #4A3818;
+  --amber-text: #F5DBA0;
+  --sage: #8FB573;
+  --sage-bg: #2C3D1E;
+  --sage-text: #C9DFAE;
+  --smoke: #B0A492;
+  --info-bg: #1F3548;
+  --info-text: #B6D1E5;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 0 0 0.5px var(--border);
+}
+.theme-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: 0.5px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: border-color 0.15s;
+  line-height: 1;
+}
+.theme-btn:hover { border-color: var(--ember); }
+.shell { position: relative; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -451,6 +490,17 @@ footer a:hover { text-decoration: underline; }
 .ft-opt { font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--text-faint); }
 .ft-body { padding: 0 16px 14px; }
 .ft-tip { font-size: 12px; color: var(--text-muted); line-height: 1.5; padding-top: 10px; border-top: 0.5px solid var(--border); margin-top: 6px; }
+.fb-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.fb-row label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.01em; }
+.fb-row input, .fb-row select, .fb-row textarea { font-family: inherit; font-size: 14px; padding: 9px 12px; border: 0.5px solid var(--border-strong); border-radius: 8px; background: var(--card); color: var(--text); width: 100%; }
+.fb-row textarea { resize: vertical; min-height: 60px; }
+.fb-radio-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.fb-radio-row label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text); font-weight: 400; cursor: pointer; padding: 8px 12px; border: 0.5px solid var(--border-strong); border-radius: 8px; background: var(--card); transition: border-color 0.15s; }
+.fb-radio-row input[type="radio"] { accent-color: var(--ember); }
+.fb-radio-row label:has(input:checked) { border-color: var(--ember); background: var(--ember-bg); }
+.fb-pre { font-size: 12px; color: var(--text-faint); background: var(--bg-alt); border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; line-height: 1.6; }
+.fb-history { font-size: 12px; color: var(--text-muted); margin-top: 10px; border-top: 0.5px solid var(--border); padding-top: 10px; }
+.fb-history strong { color: var(--text); }
 
 /* ===== Print: strip the UI, keep the cook schedule ===== */
 @media print {
@@ -474,6 +524,8 @@ footer a:hover { text-decoration: underline; }
 <body>
 <div class="shell">
 
+  <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode">🌙</button>
+
   <header class="brand">
     <h1 class="wordmark">Pitmatics<span class="dot" aria-hidden="true"></span></h1>
     <p class="tagline">cook timing for serious pitmasters</p>
@@ -495,7 +547,7 @@ footer a:hover { text-decoration: underline; }
         <div class="field">
           <label for="ls-cut">Cut</label>
           <select id="ls-cut">
-            <option value="brisket">Brisket (whole packer)</option>
+            <option value="brisket">Brisket</option>
             <option value="chuck_roast">Chuck roast</option>
             <option value="tri_tip">Tri tip</option>
             <option value="beef_ribs">Beef short ribs (plate)</option>
@@ -511,6 +563,15 @@ footer a:hover { text-decoration: underline; }
         <div class="field" id="ls-weight-field">
           <label for="ls-weight">Weight after trim (lbs) <span id="ls-weight-est" class="badge b-info hidden">est.</span></label>
           <input type="number" id="ls-weight" value="14" min="1" max="40" step="0.5">
+        </div>
+      </div>
+      <div class="r2" id="ls-brisket-type-row" style="display:none;">
+        <div class="field">
+          <label for="ls-brisket-type">Style</label>
+          <select id="ls-brisket-type">
+            <option value="packer">Whole packer (12–16 lb)</option>
+            <option value="flat">Flat only (6–10 lb)</option>
+          </select>
         </div>
       </div>
       <div class="r2" id="ls-racks-row" style="display:none;">
@@ -654,7 +715,15 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
 
+    <div class="section">
+      <div class="field">
+        <label for="ls-notes">Cook notes <span style="font-weight:400;color:var(--text-faint);">optional — appears on your printed schedule</span></label>
+        <input type="text" id="ls-notes" placeholder="e.g. Graduation party · 16 lb packer from Costco">
+      </div>
+    </div>
+
     <div id="ls-result" class="hidden">
+      <div id="ls-result-notes" style="display:none;font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:10px;padding:8px 12px;background:var(--bg-alt);border-radius:8px;"></div>
       <div id="ls-notice-overnight" class="notice notice-warn hidden">
         <span class="notice-icon">🌙</span>
         <span id="ls-notice-overnight-text"></span>
@@ -685,8 +754,44 @@ footer a:hover { text-decoration: underline; }
         <div class="section-label" style="margin-bottom:12px;">Your cook schedule</div>
         <div class="tl" id="ls-timeline"></div>
       </div>
-      <button type="button" class="ctl-btn" style="width:100%;margin-top:4px;" onclick="window.print()">🖨️ Print schedule</button>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button type="button" class="ctl-btn" style="flex:1;" onclick="window.print()">🖨️ Print schedule</button>
+        <button type="button" class="ctl-btn" style="flex:1;" id="ls-share-btn" onclick="shareLS()">🔗 Share this cook</button>
+      </div>
     </div>
+
+    <details class="section finetune" id="ls-feedback" style="margin-top:1rem;">
+      <summary class="ft-summary">Log this cook <span class="ft-opt">after you're done · helps tune the math</span></summary>
+      <div class="ft-body">
+        <div class="fb-pre" id="ls-fb-pre">Fill out the schedule above to pre-fill this form.</div>
+        <div class="fb-row">
+          <label>How accurate was the predicted fire time?</label>
+          <div class="fb-radio-row">
+            <label><input type="radio" name="ls-fb-accuracy" value="early"> Started early — had extra time</label>
+            <label><input type="radio" name="ls-fb-accuracy" value="spot_on" checked> Spot on (±30 min)</label>
+            <label><input type="radio" name="ls-fb-accuracy" value="late_30"> Ran late ~30 min</label>
+            <label><input type="radio" name="ls-fb-accuracy" value="late_1h"> Ran late ~1 hr</label>
+            <label><input type="radio" name="ls-fb-accuracy" value="late_2h"> Ran late 2+ hrs</label>
+          </div>
+        </div>
+        <div class="fb-row">
+          <label for="ls-fb-actual-fire">Actual time you lit the fire <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
+          <input type="time" id="ls-fb-actual-fire">
+        </div>
+        <div class="fb-row">
+          <label for="ls-fb-notes">Notes <span style="font-weight:400;color:var(--text-faint);">optional — what happened? stall behavior, weather surprises, etc.</span></label>
+          <textarea id="ls-fb-notes" placeholder="The stall lasted 3 hours. Wind picked up around hour 8..."></textarea>
+        </div>
+        <div class="fb-row">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="ls-fb-share" style="accent-color:var(--ember);" checked>
+            <span>Share this log with Pitmatics to help improve the math for everyone</span>
+          </label>
+        </div>
+        <button type="button" class="cta" style="width:100%;padding:12px;" onclick="logCook()">Save cook log</button>
+        <div class="fb-history" id="ls-fb-history"></div>
+      </div>
+    </details>
 
   </section>
 
@@ -1019,6 +1124,10 @@ footer a:hover { text-decoration: underline; }
     onCutChange: function(){
       var cut = $('ls-cut').value;
       var d = this.DATA[cut];
+      $('ls-brisket-type-row').style.display  = (cut === 'brisket')      ? '' : 'none';
+      if (cut === 'brisket' && !this.weightTouched) {
+        $('ls-weight').value = $('ls-brisket-type').value === 'flat' ? 8 : 14;
+      }
       $('ls-weight-field').style.display      = d.byWeight              ? '' : 'none';
       $('ls-racks-row').style.display         = !d.byWeight             ? '' : 'none';
       $('ls-grade-field').style.display       = d.hasGrade              ? '' : 'none';
@@ -1038,6 +1147,10 @@ footer a:hover { text-decoration: underline; }
     calc: function(){
       var cut = $('ls-cut').value;
       var d = this.DATA[cut];
+      if (cut === 'brisket' && $('ls-brisket-type').value === 'flat') {
+        d = Object.assign({}, d, { pph:[0.85,1.1] });
+        if (!this.weightTouched) $('ls-weight').value = 8;
+      }
       var pitTemp = $('ls-pit-temp').value;
       var preheat = parseFloat($('ls-preheat').value);
       var smoker = $('ls-smoker').value;
@@ -1190,6 +1303,26 @@ footer a:hover { text-decoration: underline; }
         div.className = 'tli';
         div.innerHTML = '<div class="tli-time">' + fmt(ev.time) + dayTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
         tl.appendChild(div);
+      });
+
+      var notesEl = $('ls-result-notes');
+      var notesVal = ($('ls-notes').value || '').trim();
+      notesEl.style.display = notesVal ? '' : 'none';
+      notesEl.textContent = notesVal;
+
+      updateFeedbackPre({
+        cut: cut,
+        cutLabel: cutLabel,
+        weight: d.byWeight ? (parseFloat($('ls-weight').value) || null) : null,
+        smoker: smoker,
+        pitTemp: pitTemp,
+        wrap: this.wrapMode,
+        weather: weather,
+        fireStr: fireDay !== serveDay ? fireDay + ' at ' + fmt(fireTime) : fmt(fireTime),
+        cookLow: Math.round(cookLow * 10) / 10,
+        cookHigh: Math.round(cookHigh * 10) / 10,
+        cookLowStr: (Math.round(cookLow * 10) / 10).toString(),
+        cookHighStr: (Math.round(cookHigh * 10) / 10).toString()
       });
 
       $('ls-result').classList.remove('hidden');
@@ -1377,11 +1510,12 @@ footer a:hover { text-decoration: underline; }
   };
 
   /* event wiring */
-  ['ls-cut','ls-weight','ls-grade','ls-trim','ls-start-temp','ls-racks','ls-shape','ls-inject','ls-smoker','ls-pit-temp','ls-preheat','ls-weather','ls-serve-date','ls-serve-time'].forEach(function(id){
-    var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'ls-cut') LS.onCutChange(); else LS.calc(); });
+  ['ls-cut','ls-brisket-type','ls-weight','ls-grade','ls-trim','ls-start-temp','ls-racks','ls-shape','ls-inject','ls-smoker','ls-pit-temp','ls-preheat','ls-weather','ls-serve-date','ls-serve-time','ls-notes'].forEach(function(id){
+    var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'ls-cut') LS.onCutChange(); else if (id === 'ls-brisket-type') LS.onCutChange(); else LS.calc(); });
   });
   $('ls-weight').addEventListener('input', function(){ LS.weightTouched = true; LS.calc(); });
   $('ls-pit-temp').addEventListener('input', function(){ LS.calc(); });
+  $('ls-notes').addEventListener('input', function(){ LS.calc(); });
   document.querySelectorAll('#ls-wrap-toggles .tog').forEach(function(t){
     t.addEventListener('click', function(){ LS.setWrap(t.dataset.wrap); });
   });
@@ -1977,7 +2111,200 @@ footer a:hover { text-decoration: underline; }
     $('adv-serve-date').value = todayStr;
   })();
 
+  /* expose to global scope so external utility functions can reach LS/HF */
+  window.$ = $;
+  window.LS = LS;
+  window.HF = HF;
+
 })();
+
+/* ===== Cook history (learning loop groundwork) ===== */
+var COOK_HISTORY_KEY = 'pitmatics_cooks_v1';
+
+function getCookHistory(){
+  try { return JSON.parse(localStorage.getItem(COOK_HISTORY_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+
+function saveCookLog(entry){
+  var h = getCookHistory();
+  h.push(entry);
+  localStorage.setItem(COOK_HISTORY_KEY, JSON.stringify(h));
+}
+
+/* Per-user multiplier adjustment (groundwork — Phase 2 wires this into calc) */
+function getCutAccuracySummary(cut){
+  var history = getCookHistory().filter(function(c){ return c.cut === cut; });
+  if (history.length === 0) return null;
+  var accurate = history.filter(function(c){ return c.accuracy === 'spot_on'; }).length;
+  return { total: history.length, accurate: accurate };
+}
+
+/* Pre-fill the feedback form pre-block from last calc result */
+var _lastCalcMeta = null;
+
+function updateFeedbackPre(meta){
+  _lastCalcMeta = meta;
+  var pre = $('ls-fb-pre');
+  if (!pre) return;
+  pre.innerHTML =
+    '<strong>' + meta.cutLabel + '</strong>' +
+    (meta.weight ? ' · ' + meta.weight + ' lb' : '') +
+    ' · ' + meta.smoker + ' · ' + meta.pitTemp + '°F' +
+    (meta.wrap !== 'none' ? ' · ' + meta.wrap + ' wrap' : '') +
+    '<br>Predicted fire time: <strong>' + meta.fireStr + '</strong>' +
+    ' · Cook window: ' + meta.cookLowStr + '–' + meta.cookHighStr + ' hrs';
+}
+
+function logCook(){
+  if (!_lastCalcMeta) { alert('Run a calculation first, then log your cook after it\'s done.'); return; }
+  var accuracy = document.querySelector('input[name="ls-fb-accuracy"]:checked');
+  var actualFire = $('ls-fb-actual-fire').value;
+  var notes = ($('ls-fb-notes').value || '').trim();
+  var share = $('ls-fb-share').checked;
+
+  var entry = {
+    id: Date.now(),
+    date: new Date().toISOString().split('T')[0],
+    cut: _lastCalcMeta.cut,
+    cutLabel: _lastCalcMeta.cutLabel,
+    weight: _lastCalcMeta.weight,
+    smoker: _lastCalcMeta.smoker,
+    pitTemp: _lastCalcMeta.pitTemp,
+    wrap: _lastCalcMeta.wrap,
+    weather: _lastCalcMeta.weather,
+    predictedFireStr: _lastCalcMeta.fireStr,
+    predictedCookLow: _lastCalcMeta.cookLow,
+    predictedCookHigh: _lastCalcMeta.cookHigh,
+    actualFireTime: actualFire,
+    accuracy: accuracy ? accuracy.value : 'spot_on',
+    notes: notes,
+    appVersion: '1.1'
+  };
+  saveCookLog(entry);
+  renderCookHistory();
+
+  if (share) {
+    var subject = encodeURIComponent('Pitmatics cook log — ' + entry.cutLabel);
+    var body = encodeURIComponent(
+      'Cut: ' + entry.cutLabel + '\n' +
+      'Weight: ' + (entry.weight || 'N/A') + ' lb\n' +
+      'Smoker: ' + entry.smoker + ' · Temp: ' + entry.pitTemp + '°F\n' +
+      'Wrap: ' + entry.wrap + ' · Weather: ' + entry.weather + '\n' +
+      'Predicted fire time: ' + entry.predictedFireStr + '\n' +
+      'Actual fire time: ' + (entry.actualFireTime || 'not logged') + '\n' +
+      'Accuracy: ' + entry.accuracy + '\n' +
+      'Notes: ' + (entry.notes || 'none')
+    );
+    window.location.href = 'mailto:jtbasecamp@gmail.com?subject=' + subject + '&body=' + body;
+  } else {
+    var btn = document.querySelector('#ls-feedback .cta');
+    if (btn){ btn.textContent = '✓ Cook logged'; btn.disabled = true; }
+  }
+}
+
+function renderCookHistory(){
+  var el = $('ls-fb-history');
+  if (!el) return;
+  var h = getCookHistory();
+  if (h.length === 0){ el.innerHTML = ''; return; }
+  var total = h.length;
+  var recent = h.slice(-5).reverse();
+  var html = '<strong>' + total + ' cook' + (total === 1 ? '' : 's') + ' logged</strong><br>';
+  recent.forEach(function(c){
+    var acc = {early:'started early',spot_on:'spot on',late_30:'~30 min late',late_1h:'~1 hr late',late_2h:'2+ hrs late'}[c.accuracy] || c.accuracy;
+    html += '<span style="color:var(--text-faint);">' + c.date + ' — ' + c.cutLabel + (c.weight ? ' ' + c.weight + ' lb' : '') + ' — ' + acc + '</span><br>';
+  });
+  el.innerHTML = html;
+}
+
+/* ===== URL state + share ===== */
+function getStateParams(){
+  var p = new URLSearchParams();
+  var mode = (document.querySelector('.mode-toggle button.active') || {}).dataset || {};
+  p.set('m', mode.mode || 'low-slow');
+  var lsFields = ['ls-cut','ls-brisket-type','ls-weight','ls-smoker','ls-pit-temp','ls-preheat',
+    'ls-weather','ls-grade','ls-trim','ls-shape','ls-inject','ls-start-temp','ls-racks',
+    'ls-serve-date','ls-serve-time','ls-notes'];
+  lsFields.forEach(function(id){
+    var el = $(id); if (el && el.value) p.set(id, el.value);
+  });
+  p.set('ls-wrap', LS.wrapMode);
+  p.set('ls-rest', LS.restMode);
+  if (LS.weightTouched) p.set('ls-wt','1');
+  var hfFields = ['hf-cut','hf-thickness','hf-smoker','hf-weather','hf-doneness','hf-start-time','hf-start-temp'];
+  hfFields.forEach(function(id){ var el=$(id); if(el && el.value) p.set(id, el.value); });
+  p.set('hf-method', HF.method);
+  var advFields = ['adv-start-time','adv-start-date','adv-serve-time','adv-serve-date','adv-smoker','adv-weather'];
+  advFields.forEach(function(id){ var el=$(id); if(el && el.value) p.set(id, el.value); });
+  return p;
+}
+
+function loadStateFromURL(){
+  var p = new URLSearchParams(window.location.search);
+  if (!p.has('m')) return;
+  var mode = p.get('m');
+  document.querySelectorAll('.mode-toggle button').forEach(function(b){
+    var active = (b.dataset.mode === mode);
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active);
+  });
+  document.querySelectorAll('section.mode').forEach(function(s){
+    s.classList.toggle('active', s.id === mode);
+  });
+  ['ls-cut','ls-brisket-type','ls-smoker','ls-pit-temp','ls-preheat','ls-weather',
+   'ls-grade','ls-trim','ls-shape','ls-inject','ls-start-temp','ls-racks',
+   'ls-serve-date','ls-serve-time','ls-notes'].forEach(function(id){
+    var v = p.get(id); var el = $(id); if (el && v !== null) el.value = v;
+  });
+  if (p.has('ls-weight')){ $('ls-weight').value = p.get('ls-weight'); }
+  if (p.get('ls-wt')) LS.weightTouched = true;
+  if (p.has('ls-wrap')) LS.setWrap(p.get('ls-wrap'));
+  if (p.has('ls-rest')) LS.setRest(p.get('ls-rest'));
+  ['hf-cut','hf-thickness','hf-smoker','hf-weather','hf-doneness','hf-start-time','hf-start-temp'].forEach(function(id){
+    var v = p.get(id); var el=$(id); if(el && v!==null) el.value=v;
+  });
+  if (p.has('hf-method')) HF.setMethod(p.get('hf-method'));
+  ['adv-start-time','adv-start-date','adv-serve-time','adv-serve-date','adv-smoker','adv-weather'].forEach(function(id){
+    var v=p.get(id); var el=$(id); if(el && v!==null) el.value=v;
+  });
+}
+
+function shareLS(){
+  var p = getStateParams();
+  var url = window.location.origin + window.location.pathname + '?' + p.toString();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function(){
+      var btn = $('ls-share-btn');
+      if (btn){ btn.textContent = '✓ Link copied!'; setTimeout(function(){ btn.textContent = '🔗 Share this cook'; }, 2500); }
+    });
+  } else {
+    prompt('Copy this link to share your cook configuration:', url);
+  }
+}
+
+/* ===== Theme toggle ===== */
+function toggleTheme(){
+  var curr = document.documentElement.getAttribute('data-theme');
+  var sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var isDark = curr === 'dark' || (!curr && sysDark);
+  var next = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('pitmatics_theme', next);
+  document.getElementById('theme-toggle').textContent = next === 'dark' ? '☀️' : '🌙';
+}
+(function initTheme(){
+  var saved = localStorage.getItem('pitmatics_theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    var btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+  }
+})();
+
+/* restore state from a shared URL, then show any saved cook history */
+loadStateFromURL();
+renderCookHistory();
 </script>
 </body>
 </html>
