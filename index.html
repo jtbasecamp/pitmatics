@@ -1533,6 +1533,11 @@ footer a:hover { text-decoration: underline; }
     t.addEventListener('click', function(){ HF.setMethod(t.dataset.method); });
   });
 
+  /* expose to global scope before init so external functions (updateFeedbackPre, etc.) can use window.$ */
+  window.$ = $;
+  window.LS = LS;
+  window.HF = HF;
+
   /* init */
   var d = new Date(); d.setDate(d.getDate() + 7);
   $('ls-serve-date').value = d.toISOString().split('T')[0];
@@ -2110,11 +2115,6 @@ footer a:hover { text-decoration: underline; }
     $('adv-start-date').value = todayStr;
     $('adv-serve-date').value = todayStr;
   })();
-
-  /* expose to global scope so external utility functions can reach LS/HF */
-  window.$ = $;
-  window.LS = LS;
-  window.HF = HF;
 
 })();
 
