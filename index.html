@@ -728,6 +728,10 @@ footer a:hover { text-decoration: underline; }
 
     <div id="ls-result" class="hidden">
       <div id="ls-result-notes" style="display:none;font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:10px;padding:8px 12px;background:var(--bg-alt);border-radius:8px;"></div>
+      <div id="ls-notice-toosoon" class="notice notice-warn hidden">
+        <span class="notice-icon">⏰</span>
+        <span id="ls-notice-toosoon-text"></span>
+      </div>
       <div id="ls-notice-overnight" class="notice notice-warn hidden">
         <span class="notice-icon">🌙</span>
         <span id="ls-notice-overnight-text"></span>
@@ -1075,11 +1079,11 @@ footer a:hover { text-decoration: underline; }
       baby_backs:{ fixed:[3.5,4.5], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:190, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
       beef_ribs: { defWeight:4, pph:[1.3,1.8],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:false, hasFatCap:true  },
       pork_belly:{ defWeight:5, pph:[1.2,1.8], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:true,  hasShape:false, hasInject:false },
-      chuck_roast:  { defWeight:3, pph:[1.0,1.5],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false, hasFatCap:true  },
+      chuck_roast:  { defWeight:3, pph:[1.5,2.0],   restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false, hasFatCap:true  },
       tri_tip:      { defWeight:2, pph:[1.25,1.75], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:2,  target:135, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
       st_louis_ribs:{ fixed:[4.0,5.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:200, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_chicken:{ defWeight:4.5, pph:[0.35,0.50], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_turkey: { defWeight:14, pph:[0.30,0.45], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
+      whole_chicken:{ defWeight:4.5, pph:[0.55,0.80], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      whole_turkey: { defWeight:14, pph:[0.40,0.60], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
     },
     tempMult: function(t){
       t = Math.max(200, Math.min(350, parseFloat(t) || 250));
@@ -1126,6 +1130,7 @@ footer a:hover { text-decoration: underline; }
       this.calc();
     },
     onCutChange: function(){
+      this.weightTouched = false;
       var cut = $('ls-cut').value;
       var d = this.DATA[cut];
       $('ls-brisket-type-row').style.display  = (cut === 'brisket')      ? '' : 'none';
@@ -1200,6 +1205,24 @@ footer a:hover { text-decoration: underline; }
       var pullTime   = addH(serve, -(restHours + safety));
       var serveDay   = fmtD(serve);
       var fireDay    = fmtD(fireTime);
+
+      /* too-soon check — is there physically enough time? */
+      var now = new Date();
+      var minsUntilFire = (fireTime.getTime() - now.getTime()) / 60000;
+      var nts = $('ls-notice-toosoon');
+      if (minsUntilFire < -30) {
+        var hoursShort = Math.abs(minsUntilFire / 60);
+        var shortLabel = hoursShort >= 2
+          ? Math.round(hoursShort) + ' hours'
+          : hoursShort >= 1 ? 'about an hour'
+          : Math.round(Math.abs(minsUntilFire)) + ' minutes';
+        var earliestServe = new Date(now.getTime() + totalWorst * 3600000);
+        var serveStr = fmt(earliestServe) + (fmtD(earliestServe) !== fmtD(now) ? ' (' + fmtD(earliestServe) + ')' : '');
+        $('ls-notice-toosoon-text').textContent = 'Not enough time — the fire should have started ' + shortLabel + ' ago for this serve time. Earliest you can realistically serve: ' + serveStr + '. Push your serve time later, or pick a faster cut.';
+        nts.classList.remove('hidden');
+      } else {
+        nts.classList.add('hidden');
+      }
 
       $('ls-r-fire').textContent       = fmt(fireTime);
       $('ls-r-fire-date').textContent  = fireDay !== serveDay ? fireDay : 'same day';
@@ -1752,13 +1775,13 @@ footer a:hover { text-decoration: underline; }
       },
       {
         id:'whole_chicken', name:'Whole chicken', type:'low_slow', protein:'poultry',
-        cookLow:1.5, cookHigh:2.5, restHours:0.25, preheat:0.5,
+        cookLow:2.5, cookHigh:3.5, restHours:0.25, preheat:0.5,
         pitTemp:250, wrap:'none', target:165,
         smokerM:{pellet:1.0,offset:0.92,kamado:0.87,vertical:1.05,kettle:1.0},
         weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.15},
-        blurb:'The beginner\'s gateway drug. A whole chicken cooks fast, forgives mistakes, and teaches you the basics. 1.5-2.5 hours at 250°F and you\'ve got lunch. Moist meat, crispy skin, pure satisfaction.',
-        tightBlurb:'Whole chicken is your friend in a tight window. Even in 1.5-2 hours at 250°F, it\'ll be done. Hard to mess up.',
-        noBlurb:'A whole chicken will cook in as little as 1.5 hours. This window is actually too generous — chicken will be overdone.',
+        blurb:'The beginner\'s gateway drug. A whole chicken teaches you the basics without the all-night commitment. 2.5-3.5 hours at 250°F and you\'ve got crispy skin, moist meat, and a lot of confidence.',
+        tightBlurb:'Whole chicken fits a tighter window well. 2.5-3 hours at 250°F is plenty.',
+        noBlurb:'A whole chicken needs at least 2.5 hours. This window is too tight — the bird won\'t be safe.',
         overnightBlurb:'Whole chicken doesn\'t need an overnight. You\'ll be eating at 6am.',
         events:function(fire,meatOn,serve){
           return [
