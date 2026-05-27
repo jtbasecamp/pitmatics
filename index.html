@@ -581,8 +581,7 @@ footer a:hover { text-decoration: underline; }
           <div class="field">
             <label for="ls-start-temp">Starting temp</label>
             <select id="ls-start-temp">
-              <option value="0" selected>Not specified</option>
-              <option value="0">Room temp</option>
+              <option value="0" selected>Room temp</option>
               <option value="0.5">Fridge cold</option>
             </select>
           </div>
@@ -686,6 +685,7 @@ footer a:hover { text-decoration: underline; }
         <div class="section-label" style="margin-bottom:12px;">Your cook schedule</div>
         <div class="tl" id="ls-timeline"></div>
       </div>
+      <button type="button" class="ctl-btn" style="width:100%;margin-top:4px;" onclick="window.print()">🖨️ Print schedule</button>
     </div>
 
   </section>
@@ -837,6 +837,7 @@ footer a:hover { text-decoration: underline; }
         <div class="section-label" style="margin-bottom:12px;">Your cook timing</div>
         <div class="tl" id="hf-timeline"></div>
       </div>
+      <button type="button" class="ctl-btn" style="width:100%;margin-top:4px;" onclick="window.print()">🖨️ Print schedule</button>
     </div>
 
   </section>
@@ -965,11 +966,11 @@ footer a:hover { text-decoration: underline; }
       baby_backs:{ fixed:[3.5,4.5], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:190, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
       beef_ribs: { defWeight:4, pph:[1.3,1.8],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:false, hasFatCap:true  },
       pork_belly:{ defWeight:5, pph:[1.2,1.8], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:true,  hasShape:false, hasInject:false },
-      chuck_roast:  { defWeight:3, pph:[1.5,2.0],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false, hasFatCap:true  },
-      tri_tip:      { defWeight:2, pph:[0.5,1.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:2,  target:135, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
+      chuck_roast:  { defWeight:3, pph:[1.0,1.5],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false, hasFatCap:true  },
+      tri_tip:      { defWeight:2, pph:[1.25,1.75], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:2,  target:135, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
       st_louis_ribs:{ fixed:[4.0,5.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:200, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_chicken:{ defWeight:4.5, pph:[0.70,0.85], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_turkey: { defWeight:14, pph:[0.5,0.65], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
+      whole_chicken:{ defWeight:4.5, pph:[0.35,0.50], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
+      whole_turkey: { defWeight:14, pph:[0.30,0.45], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
     },
     tempMult: function(t){
       t = Math.max(200, Math.min(350, parseFloat(t) || 250));
@@ -977,10 +978,10 @@ footer a:hover { text-decoration: underline; }
       if (t <= 250) return 1.2 + (t - 225) * (1.0 - 1.2) / 25;
       if (t <= 275) return 1.0 + (t - 250) * (0.75 - 1.0) / 25;
       if (t <= 300) return 0.75 + (t - 275) * (0.60 - 0.75) / 25;
-      return 0.70 - (t - 300) * 0.003;
+      return Math.max(0.45, 0.60 - (t - 300) * 0.004);
     },
     WRAP_M:    {none:1.15,foil:0.93,paper:1.0},
-    SMOKER_M:  {pellet:1.0,offset:1.15,kamado:0.95,vertical:1.05},
+    SMOKER_M:  {pellet:1.0,offset:0.95,kamado:0.95,vertical:1.05},
     GRADE_M:   {none:1.0,prime:0.92,choice:1.0,select:1.08},
     TRIM_M:    {none:1.0,comp:0.94,standard:1.0,minimal:1.07},
     WEATHER_M: {none:1.0,hot:0.95,mild:1.0,cool:1.08,cold:1.18},
@@ -1064,13 +1065,14 @@ footer a:hover { text-decoration: underline; }
         cookHigh = d.pph[1] * w * tM * wM * sM * gM * trM * weM * shM * inM + coldAdd;
       } else {
         var racks = parseInt($('ls-racks').value || '1');
-        cookLow  = d.fixed[0] * tM * wM * sM * weM * racks + coldAdd;
-        cookHigh = d.fixed[1] * tM * wM * sM * weM * racks + coldAdd;
+        var rackM = 1 + (racks - 1) * 0.08;
+        cookLow  = d.fixed[0] * tM * wM * sM * weM * rackM + coldAdd;
+        cookHigh = d.fixed[1] * tM * wM * sM * weM * rackM + coldAdd;
       }
 
       var noRest = this.restMode === 'none';
       var restHours = noRest ? 0 : d.restMin;
-      var safety = noRest ? 0.15 : (this.restMode === 'oven' ? 0.25 : 0.5);
+      var safety = noRest ? 0.15 : 0.5;
       var totalWorst = cookHigh + restHours + preheat + safety;
       var holdHours = noRest ? 0 : (this.restMode === 'oven' ? d.holdOven : d.holdCooler);
 
@@ -1484,7 +1486,7 @@ footer a:hover { text-decoration: underline; }
         smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
         weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
         blurb:'The overnight OG. Light the fire late, stall hits around 7am, wrap and hold, slice at dinner. Fourteen hours of patience that produces something people talk about for years.',
-        tightBlurb:'At 300°F hot-and-fast you can push a brisket into 8-10 hours. It\'s a different brisket — less bark, more braise-y. Some people love it. don\'t try it for the first time when guests are coming.',
+        tightBlurb:'At 300°F hot-and-fast you can push a brisket into 8-10 hours. It\'s a different brisket — less bark, more braise-y. Some people love it. Don\'t try it for the first time when guests are coming.',
         noBlurb:'You can absolutely do brisket in this window. Your dog will be the only one that enjoys it — and honestly, he won\'t even finish it.',
         overnightBlurb:'This is exactly what brisket was born for. Light at midnight, sleep a few hours, manage the stall at dawn, rest all afternoon. Pure pitmaster ritual.',
         events:function(fire,meatOn,serve){
@@ -1506,7 +1508,7 @@ footer a:hover { text-decoration: underline; }
         smokerM:{pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
         weatherM:{hot:0.95,mild:1.0,cool:1.08,cold:1.18},
         blurb:'The brisket of ribs. Low and slow, no wrap needed, pull when they probe like butter. An all-day cook that produces something genuinely special.',
-        tightBlurb:'Beef ribs need time to break down collagen. In a tight window you\re risking tough rather than tender.',
+        tightBlurb:'Beef ribs need time to break down collagen. In a tight window you\'re risking tough rather than tender.',
         noBlurb:'Beef short ribs in this window would just be expensive, chewy beef. They need a long day.',
         overnightBlurb:'Beef ribs don\'t need an overnight — a long day is plenty. Save the all-nighter for brisket.',
         events:function(fire,meatOn,serve){
@@ -1533,7 +1535,7 @@ footer a:hover { text-decoration: underline; }
         events:function(fire,meatOn,serve){
           return [
             {time:fire,    dot:'d-fire', title:'Crank the heat',   sub:'Get grill to stable 450°F. Cast iron or grill grates screaming hot.'},
-            {time:meatOn,  dot:'d-on',   title:'Steak on',         sub:'don\'t move it. Let it sear.'},
+            {time:meatOn,  dot:'d-on',   title:'Steak on',         sub:'Don\'t move it. Let it sear.'},
             {time:addM(meatOn,6), dot:'d-flip', title:'Flip', badge:{text:'5-7 min per side',cls:'b-warn'}, sub:'Once it releases cleanly and has grill marks. If it sticks, give it 30 more seconds.'},
             {time:addM(meatOn,12), dot:'d-pull', title:'Pull at 125°F', badge:{text:'probe internal',cls:'b-ok'}, sub:'Pull 5°F below your target — carryover will finish it.'},
             {time:addM(meatOn,17), dot:'d-rest', title:'Rest 5 min', badge:{text:'carryover 5-8°F',cls:'b-warn'}, sub:'Tent loosely. Internal temp continues to climb to 130-133°F medium rare.'},
@@ -1549,7 +1551,7 @@ footer a:hover { text-decoration: underline; }
         weatherM:{hot:0.96,mild:1.0,cool:1.08,cold:1.18},
         blurb:'The most forgiving cut on any grill. 45-75 minutes at 375°F, hard to mess up, crowd-pleasing. Great when you want smoke flavor without the time commitment.',
         tightBlurb:'Chicken thighs fit almost any window and are genuinely hard to ruin. Solid call.',
-        noBlurb:'Even in this window chicken thighs work. they\'re fast.',
+        noBlurb:'Even in this window chicken thighs work. They\'re fast.',
         overnightBlurb:'Chicken thighs do not need an overnight. Nobody needs chicken thighs at 3am.',
         events:function(fire,meatOn,serve){
           return [
@@ -1557,8 +1559,8 @@ footer a:hover { text-decoration: underline; }
             {time:meatOn,  dot:'d-fire', title:'Thighs on',        sub:'Skin side up to start. Let the fat render slowly.'},
             {time:addM(meatOn,40), dot:'d-flip', title:'Flip skin side down', sub:'Crisp the skin for the final 15-20 min.'},
             {time:addM(meatOn,60), dot:'d-pull', title:'Pull at 175°F', badge:{text:'probe thickest part',cls:'b-ok'}, sub:'Thighs are forgiving — anywhere from 170-185°F is excellent. Juices run clear.'},
-            {time:addM(meatOn,65), dot:'d-rest', title:'Rest 5 min', sub:'Brief rest. they\'ll hold heat well.'},
-            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'on time',cls:'b-ok'}, sub:'Crispy skin up. don\'t hide the best part.'}
+            {time:addM(meatOn,65), dot:'d-rest', title:'Rest 5 min', sub:'Brief rest. They\'ll hold heat well.'},
+            {time:serve,   dot:'d-serve', title:'Serve', badge:{text:'on time',cls:'b-ok'}, sub:'Crispy skin up. Don\'t hide the best part.'}
           ];
         }
       },
@@ -1878,7 +1880,7 @@ footer a:hover { text-decoration: underline; }
       verdict.className = 'notice';
       if (yes.length > 0) {
         verdict.classList.add('notice-info');
-        verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> you\ve got solid options. here\'s what fits well — and what doesn\'t.';
+        verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> You\'ve got solid options. Here\'s what fits well — and what doesn\'t.';
       } else if (tight.length > 0) {
         verdict.classList.add('notice-warn');
         verdict.innerHTML = '<strong>Your window: ' + hrs + ' hours.</strong> Tight but workable. These cuts fit — but don\'t expect much cushion.';
@@ -1917,8 +1919,15 @@ footer a:hover { text-decoration: underline; }
             '<div class="tli-title">' + cut.name + '<span class="badge ' + badgeCls + '" style="margin-left:8px;">' + badgeTxt + '</span></div>' +
           '</div>' +
           '<div class="tli-sub" style="margin-bottom:8px;">' + blurb + '</div>' +
-          '<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Light fire at ' + fireStr + ' · serve at ' + fmt(serveTime) + '</div>' +
-          '<button type="button" class="cta" style="padding:9px;font-size:13px;" onclick="ADV.selectCut(ADV.CUTS.find(function(c){return c.id===' + JSON.stringify(cut.id) + ';}),new Date(' + fireTime.getTime() + '),new Date(' + meatOnTime.getTime() + '),new Date(' + serveMs + '))">Use this schedule</button>';
+          '<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Light fire at ' + fireStr + ' · serve at ' + fmt(serveTime) + '</div>';
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cta';
+        btn.style.cssText = 'padding:9px;font-size:13px;';
+        btn.textContent = 'Use this schedule';
+        (function(c, f, m, sv){ btn.addEventListener('click', function(){ ADV.selectCut(c, f, m, sv); }); })(cut, fireTime, meatOnTime, new Date(serveMs));
+        card.appendChild(btn);
 
         recs.appendChild(card);
       });
