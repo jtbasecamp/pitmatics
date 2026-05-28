@@ -4,7 +4,7 @@
 
 A free, offline BBQ timing calculator that takes your cut, weight, smoker, wrap method, and target serve time, then tells you exactly when to fire up. Includes the stall, the wrap window, the rest — all of it.
 
-**[→ Try it live](https://pitmatics.netlify.app/)**
+**[→ Try it live](https://jtbasecamp.github.io/pitmatics/)**
 
 ## How it works
 
