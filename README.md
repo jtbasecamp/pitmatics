@@ -31,7 +31,7 @@ Optional **Fine-tune drawer** for grade, trim, weather, injection if you want to
 
 ## Accuracy
 
-Phase 1: Testing. You can help. Use the **calibration template** to log your cooks (actual fire time vs. predicted, stall behavior, wrap timing, serve time). Send feedback to [jtbasecamp@gmail.com](mailto:jtbasecamp@gmail.com). I'm not trying to mess up your cooks. Do what you'd normally do...just follow along with pitmatics and document the differences. This feedback, over time, will help fine tune pitmatics!
+Phase 1: Testing. You can help. Use the **calibration template** to log your cooks (actual fire time vs. predicted, stall behavior, wrap timing, serve time). Send feedback to [jtbasecamp@gmail.com](mailto:jtbasecamp@gmail.com). *We're not trying to mess up your cooks. Do what you'd normally do...just follow along with pitmatics and document the differences. This feedback, over time, will help fine tune pitmatics!
 
 Goal for Phase 1: ±30 min accuracy. Goal for Phase 2: a learning loop that adjusts the math based on your actual cooks.
 
