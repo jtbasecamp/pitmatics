@@ -99,8 +99,6 @@ class TileNode: SKNode {
     private let topFace: SKShapeNode
     private let leftFace: SKShapeNode
     private let rightFace: SKShapeNode
-    private var fogNode: SKShapeNode?
-
     var tileData: TileData {
         didSet { updateAppearance() }
     }
@@ -128,6 +126,8 @@ class TileNode: SKNode {
 
         addChildren(leftFace, rightFace, topFace)
         updateAppearance()
+
+        if data.isFogOfWar { alpha = 0 }
     }
 
     required init?(coder aDecoder: NSCoder) { fatalError() }
@@ -136,29 +136,15 @@ class TileNode: SKNode {
         topFace.fillColor   = tileData.type.topColor
         leftFace.fillColor  = tileData.type.leftFaceColor
         rightFace.fillColor = tileData.type.rightFaceColor
-
-        if tileData.isFogOfWar {
-            if fogNode == nil {
-                let fog = SKShapeNode(path: (scene as? SKScene).map { _ in SKShapeNode() }?.path ?? CGPath(rect: .zero, transform: nil))
-                fogNode = fog
-            }
-        } else {
-            fogNode?.removeFromParent()
-            fogNode = nil
-        }
     }
 
     func reveal(animated: Bool = true) {
         guard tileData.isFogOfWar else { return }
         tileData.isFogOfWar = false
         if animated {
-            topFace.alpha = 0
-            leftFace.alpha = 0
-            rightFace.alpha = 0
-            let fadeIn = SKAction.fadeIn(withDuration: 0.4)
-            topFace.run(fadeIn)
-            leftFace.run(fadeIn)
-            rightFace.run(fadeIn)
+            run(SKAction.fadeIn(withDuration: 0.4))
+        } else {
+            alpha = 1
         }
     }
 

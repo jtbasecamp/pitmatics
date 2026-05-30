@@ -65,8 +65,8 @@ extension GameScene {
     private func trySelectPitfolk(at scenePoint: CGPoint) -> Bool {
         let selectionRadius: CGFloat = 35
         for pf in pitfolk where pf.isAlive {
-            let pfScreenPoint = convertPoint(fromView: pf.node.position)
-            if scenePoint.distance(to: pf.node.scene?.convertPoint(fromView: pfScreenPoint) ?? .zero) < selectionRadius {
+            let pfScenePos = worldMap.entityLayer.convert(pf.node.position, to: self)
+            if scenePoint.distance(to: pfScenePos) < selectionRadius {
                 selectPitfolk(pf)
                 return true
             }

@@ -134,12 +134,12 @@ class GameScene: SKScene {
 
     private func setupHUD() {
         guard let view = view else { return }
-        let hud = HUDScene(size: view.bounds.size)
-        hud.scaleMode   = .resizeFill
+        let hud = HUDScene()
+        hud.configure(size: view.bounds.size)
         hud.hudDelegate = self
-        view.presentScene(hud, transition: SKTransition.fade(withDuration: 0))
-        // HUD is a separate scene presented alongside (overlay)
-        // We keep a reference to drive updates
+        hud.position = CGPoint(x: -view.bounds.width / 2, y: -view.bounds.height / 2)
+        hud.isUserInteractionEnabled = true
+        cameraNode.addChild(hud)
         hudScene = hud
     }
 

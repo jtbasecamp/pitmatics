@@ -120,7 +120,7 @@ class EnemyEntity: GameEntity {
         case .crystalGolem: size = 28
         }
 
-        bodyNode = makeBody(type: type, size: size)
+        bodyNode = EnemyEntity.makeBody(type: type, size: size)
         bodyNode.zPosition = 1
 
         healthBarBg = SKShapeNode(rectOf: CGSize(width: size * 2, height: 3), cornerRadius: 1)
@@ -139,7 +139,7 @@ class EnemyEntity: GameEntity {
         node.zPosition = GameConstants.ZPositions.entity + 10
     }
 
-    private func makeBody(type: EnemyType, size: CGFloat) -> SKShapeNode {
+    private static func makeBody(type: EnemyType, size: CGFloat) -> SKShapeNode {
         let shape: SKShapeNode
         switch type {
         case .slimeRat:

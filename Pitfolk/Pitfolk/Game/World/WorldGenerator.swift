@@ -4,15 +4,14 @@ import Foundation
 struct WorldGenerator {
     let columns: Int
     let rows: Int
-    private var rng: RandomNumberGenerator
+    private var rng: SeededRNG
 
     init(columns: Int = GameConstants.Grid.columns,
          rows: Int = GameConstants.Grid.rows,
          seed: UInt64 = UInt64.random(in: 0...UInt64.max)) {
         self.columns = columns
         self.rows = rows
-        var seeded = SeededRNG(seed: seed)
-        self.rng = seeded
+        self.rng = SeededRNG(seed: seed)
     }
 
     mutating func generate() -> [[TileData]] {

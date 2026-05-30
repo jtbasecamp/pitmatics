@@ -9,9 +9,10 @@ protocol HUDDelegate: AnyObject {
     func hudDidTapPause()
 }
 
-// Rendered as an overlay scene (presentedWithoutTransition on top of GameScene)
-class HUDScene: SKScene {
+// HUD rendered as an SKNode child of the camera so it stays screen-fixed.
+class HUDScene: SKNode {
     weak var hudDelegate: HUDDelegate?
+    var sceneSize: CGSize = .zero
 
     // Top bar
     private var dayLabel:    SKLabelNode!
@@ -39,8 +40,8 @@ class HUDScene: SKScene {
     private var warningLabel: SKLabelNode!
     private var warningTimer: TimeInterval = 0
 
-    override func didMove(to view: SKView) {
-        backgroundColor = .clear
+    func configure(size: CGSize) {
+        sceneSize = size
         isUserInteractionEnabled = true
         buildTopBar()
         buildNarratorBox()
@@ -51,36 +52,36 @@ class HUDScene: SKScene {
     // MARK: - Layout
     private func buildTopBar() {
         let barH: CGFloat = 52
-        let bar = SKShapeNode(rect: CGRect(x: 0, y: size.height - barH, width: size.width, height: barH))
+        let bar = SKShapeNode(rect: CGRect(x: 0, y: sceneSize.height - barH, width: sceneSize.width, height: barH))
         bar.fillColor   = .hudBg
         bar.strokeColor = .clear
         bar.zPosition   = 10
         addChild(bar)
 
         dayLabel = makeLabel("Day 1", size: 18, bold: true)
-        dayLabel.position  = CGPoint(x: 70, y: size.height - 32)
+        dayLabel.position  = CGPoint(x: 70, y: sceneSize.height - 32)
         dayLabel.zPosition = 11
         addChild(dayLabel)
 
         phaseLabel = makeLabel("Day", size: 13)
         phaseLabel.fontColor = .hudAccent
-        phaseLabel.position  = CGPoint(x: 70, y: size.height - 48)
+        phaseLabel.position  = CGPoint(x: 70, y: sceneSize.height - 48)
         phaseLabel.zPosition = 11
         addChild(phaseLabel)
 
         // Resources
-        let resourceStartX: CGFloat = size.width / 2 - 150
-        foodLabel    = makeResourceLabel("🍗 15",  x: resourceStartX,       y: size.height - 30)
-        woodLabel    = makeResourceLabel("🪵 25",  x: resourceStartX + 80,  y: size.height - 30)
-        stoneLabel   = makeResourceLabel("🪨 0",   x: resourceStartX + 160, y: size.height - 30)
-        featherLabel = makeResourceLabel("✨ 0",   x: resourceStartX + 230, y: size.height - 30)
+        let resourceStartX: CGFloat = sceneSize.width / 2 - 150
+        foodLabel    = makeResourceLabel("🍗 15",  x: resourceStartX,       y: sceneSize.height - 30)
+        woodLabel    = makeResourceLabel("🪵 25",  x: resourceStartX + 80,  y: sceneSize.height - 30)
+        stoneLabel   = makeResourceLabel("🪨 0",   x: resourceStartX + 160, y: sceneSize.height - 30)
+        featherLabel = makeResourceLabel("✨ 0",   x: resourceStartX + 230, y: sceneSize.height - 30)
         [foodLabel, woodLabel, stoneLabel, featherLabel].forEach { lbl in
             lbl.zPosition = 11
             addChild(lbl)
         }
 
         // Pause button
-        let pauseBtn = makeButton("⏸", at: CGPoint(x: size.width - 35, y: size.height - 26), action: #selector(pauseTapped))
+        let pauseBtn = makeButton("⏸", at: CGPoint(x: sceneSize.width - 35, y: sceneSize.height - 26), action: #selector(pauseTapped))
         pauseBtn.zPosition = 12
         addChild(pauseBtn)
     }
@@ -92,10 +93,10 @@ class HUDScene: SKScene {
     }
 
     private func buildNarratorBox() {
-        let boxW: CGFloat = min(size.width * 0.72, 480)
+        let boxW: CGFloat = min(sceneSize.width * 0.72, 480)
         let boxH: CGFloat = 60
-        let boxX: CGFloat = (size.width - boxW) / 2
-        let boxY: CGFloat = size.height - 120
+        let boxX: CGFloat = (sceneSize.width - boxW) / 2
+        let boxY: CGFloat = sceneSize.height - 120
 
         narratorBox = SKShapeNode(rect: CGRect(x: 0, y: 0, width: boxW, height: boxH), cornerRadius: 10)
         narratorBox.fillColor   = .hudBg
@@ -121,22 +122,22 @@ class HUDScene: SKScene {
 
     private func buildBottomBar() {
         let barH: CGFloat = 90
-        let bar = SKShapeNode(rect: CGRect(x: 0, y: 0, width: size.width, height: barH))
+        let bar = SKShapeNode(rect: CGRect(x: 0, y: 0, width: sceneSize.width, height: barH))
         bar.fillColor   = .hudBg
         bar.strokeColor = .clear
         bar.zPosition   = 10
         addChild(bar)
 
-        buildMenu = BuildMenuNode(width: size.width * 0.55, delegate: self)
+        buildMenu = BuildMenuNode(width: sceneSize.width * 0.55, delegate: self)
         buildMenu.position  = CGPoint(x: 10, y: 5)
         buildMenu.zPosition = 11
         addChild(buildMenu)
 
-        let storeBtn = makeButton("🛍 Store", at: CGPoint(x: size.width - 60, y: 55), action: #selector(storeTapped))
+        let storeBtn = makeButton("🛍 Store", at: CGPoint(x: sceneSize.width - 60, y: 55), action: #selector(storeTapped))
         storeBtn.zPosition = 12
         addChild(storeBtn)
 
-        countdownBar = PhaseBarNode(width: size.width - 20)
+        countdownBar = PhaseBarNode(width: sceneSize.width - 20)
         countdownBar.position  = CGPoint(x: 10, y: barH + 2)
         countdownBar.zPosition = 11
         addChild(countdownBar)
@@ -145,15 +146,10 @@ class HUDScene: SKScene {
     private func buildWarningLabel() {
         warningLabel = makeLabel("", size: 22, bold: true)
         warningLabel.fontColor = .criticalRed
-        warningLabel.position  = CGPoint(x: size.width / 2, y: size.height / 2)
+        warningLabel.position  = CGPoint(x: sceneSize.width / 2, y: sceneSize.height / 2)
         warningLabel.zPosition = 50
         warningLabel.alpha     = 0
         addChild(warningLabel)
-    }
-
-    // MARK: - Update
-    override func update(_ currentTime: TimeInterval) {
-        updateNarrator(dt: 0.016)
     }
 
     func tick(deltaTime: TimeInterval, resources: ResourceSystem, wave: WaveSystem, day: Int) {
@@ -164,6 +160,7 @@ class HUDScene: SKScene {
         stoneLabel.text = "🪨 \(resources.stone)"
         featherLabel.text = "✨ \(resources.feathers)"
         countdownBar.update(phase: wave.phase, progress: wave.phaseProgress)
+        updateNarrator(dt: deltaTime)
     }
 
     // MARK: - Narrator
@@ -218,7 +215,7 @@ class HUDScene: SKScene {
     func showPitfolkPanel(_ pitfolk: PitfolkEntity) {
         selectedPitfolkPanel?.removeFromParent()
         let panel = PitfolkPanelNode(pitfolk: pitfolk, delegate: self)
-        panel.position  = CGPoint(x: size.width - 175, y: 100)
+        panel.position  = CGPoint(x: sceneSize.width - 175, y: 100)
         panel.zPosition = 15
         addChild(panel)
         selectedPitfolkPanel = panel
