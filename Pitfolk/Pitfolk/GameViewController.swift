@@ -17,8 +17,12 @@ class GameViewController: UIViewController {
         AdManager.shared.initialize()
     }
 
+    override func loadView() {
+        self.view = SKView()
+    }
+
     private func setupSpriteKitView() {
-        guard let skView = view as? SKView else { return }
+        let skView = view as! SKView
         skView.ignoresSiblingOrder = true
         skView.showsFPS    = false
         skView.showsNodeCount = false
