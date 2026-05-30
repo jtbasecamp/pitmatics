@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA000000000000000000BB01 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR01 /* AppDelegate.swift */; };
+		AA000000000000000000BB33 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR33 /* SceneDelegate.swift */; };
 		AA000000000000000000BB02 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR02 /* GameViewController.swift */; };
 		AA000000000000000000BB03 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR03 /* Constants.swift */; };
 		AA000000000000000000BB04 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR04 /* Extensions.swift */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		AA000000000000000000FR01 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR33 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		AA000000000000000000FR02 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		AA000000000000000000FR03 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		AA000000000000000000FR04 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000000000000000000FR01 /* AppDelegate.swift */,
+				AA000000000000000000FR33 /* SceneDelegate.swift */,
 				AA000000000000000000FR02 /* GameViewController.swift */,
 				AA000000000000000000FR26 /* Assets.xcassets */,
 				AA000000000000000000FR27 /* Info.plist */,
@@ -282,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000000000000000000BB01 /* AppDelegate.swift in Sources */,
+				AA000000000000000000BB33 /* SceneDelegate.swift in Sources */,
 				AA000000000000000000BB02 /* GameViewController.swift in Sources */,
 				AA000000000000000000BB03 /* Constants.swift in Sources */,
 				AA000000000000000000BB04 /* Extensions.swift in Sources */,
