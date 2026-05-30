@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000000000000000000BB01 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR01 /* AppDelegate.swift */; };
+		AA000000000000000000BB02 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR02 /* GameViewController.swift */; };
+		AA000000000000000000BB03 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR03 /* Constants.swift */; };
+		AA000000000000000000BB04 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR04 /* Extensions.swift */; };
+		AA000000000000000000BB05 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR05 /* GameState.swift */; };
+		AA000000000000000000BB06 /* IsometricMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR06 /* IsometricMath.swift */; };
+		AA000000000000000000BB07 /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR07 /* Tile.swift */; };
+		AA000000000000000000BB08 /* IsometricMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR08 /* IsometricMap.swift */; };
+		AA000000000000000000BB09 /* WorldGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR09 /* WorldGenerator.swift */; };
+		AA000000000000000000BB10 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR10 /* Entity.swift */; };
+		AA000000000000000000BB11 /* PitfolkEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR11 /* PitfolkEntity.swift */; };
+		AA000000000000000000BB12 /* EnemyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR12 /* EnemyEntity.swift */; };
+		AA000000000000000000BB13 /* BuildingEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR13 /* BuildingEntity.swift */; };
+		AA000000000000000000BB14 /* NeedsSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR14 /* NeedsSystem.swift */; };
+		AA000000000000000000BB15 /* ResourceSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR15 /* ResourceSystem.swift */; };
+		AA000000000000000000BB16 /* WaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR16 /* WaveSystem.swift */; };
+		AA000000000000000000BB17 /* BuildingSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR17 /* BuildingSystem.swift */; };
+		AA000000000000000000BB18 /* CombatSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR18 /* CombatSystem.swift */; };
+		AA000000000000000000BB19 /* Narrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR19 /* Narrator.swift */; };
+		AA000000000000000000BB20 /* MonetizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR20 /* MonetizationManager.swift */; };
+		AA000000000000000000BB21 /* AdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR21 /* AdManager.swift */; };
+		AA000000000000000000BB22 /* HUDScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR22 /* HUDScene.swift */; };
+		AA000000000000000000BB23 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR23 /* GameScene.swift */; };
+		AA000000000000000000BB24 /* GameScene+Touch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR24 /* GameScene+Touch.swift */; };
+		AA000000000000000000BB25 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR25 /* MainMenuScene.swift */; };
+		AA000000000000000000BB26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR26 /* Assets.xcassets */; };
+		AA000000000000000000BB30 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR30 /* SpriteKit.framework */; };
+		AA000000000000000000BB31 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR31 /* StoreKit.framework */; };
+		AA000000000000000000BB32 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FR32 /* GameKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000000000000000000FR01 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR02 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR03 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR04 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR05 /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR06 /* IsometricMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsometricMath.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR07 /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR08 /* IsometricMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsometricMap.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR09 /* WorldGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGenerator.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR10 /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR11 /* PitfolkEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitfolkEntity.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR12 /* EnemyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnemyEntity.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR13 /* BuildingEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingEntity.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR14 /* NeedsSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedsSystem.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR15 /* ResourceSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSystem.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR16 /* WaveSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveSystem.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR17 /* BuildingSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingSystem.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR18 /* CombatSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombatSystem.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR19 /* Narrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Narrator.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR20 /* MonetizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonetizationManager.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR21 /* AdManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdManager.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR22 /* HUDScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDScene.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR23 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR24 /* GameScene+Touch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+Touch.swift"; sourceTree = "<group>"; };
+		AA000000000000000000FR25 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
+		AA000000000000000000FR26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000000000000000000FR27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000000000000000000FR28 /* Pitfolk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pitfolk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000000000000000000FR30 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		AA000000000000000000FR31 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		AA000000000000000000FR32 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000000000000000000PH02 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000BB30 /* SpriteKit.framework in Frameworks */,
+				AA000000000000000000BB31 /* StoreKit.framework in Frameworks */,
+				AA000000000000000000BB32 /* GameKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA000000000000000000GR00 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000GR01 /* Pitfolk */,
+				AA000000000000000000GR99 /* Frameworks */,
+				AA000000000000000000GR98 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR98 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR28 /* Pitfolk.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR99 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR30 /* SpriteKit.framework */,
+				AA000000000000000000FR31 /* StoreKit.framework */,
+				AA000000000000000000FR32 /* GameKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR01 /* Pitfolk */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR01 /* AppDelegate.swift */,
+				AA000000000000000000FR02 /* GameViewController.swift */,
+				AA000000000000000000FR26 /* Assets.xcassets */,
+				AA000000000000000000FR27 /* Info.plist */,
+				AA000000000000000000GR02 /* Game */,
+			);
+			path = Pitfolk;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR02 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000GR03 /* Core */,
+				AA000000000000000000GR04 /* Scenes */,
+				AA000000000000000000GR05 /* World */,
+				AA000000000000000000GR06 /* Entities */,
+				AA000000000000000000GR07 /* Systems */,
+				AA000000000000000000GR08 /* Narrator */,
+				AA000000000000000000GR09 /* Monetization */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR03 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR03 /* Constants.swift */,
+				AA000000000000000000FR04 /* Extensions.swift */,
+				AA000000000000000000FR05 /* GameState.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR04 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR25 /* MainMenuScene.swift */,
+				AA000000000000000000FR23 /* GameScene.swift */,
+				AA000000000000000000FR24 /* GameScene+Touch.swift */,
+				AA000000000000000000FR22 /* HUDScene.swift */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR05 /* World */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR06 /* IsometricMath.swift */,
+				AA000000000000000000FR07 /* Tile.swift */,
+				AA000000000000000000FR08 /* IsometricMap.swift */,
+				AA000000000000000000FR09 /* WorldGenerator.swift */,
+			);
+			path = World;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR06 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR10 /* Entity.swift */,
+				AA000000000000000000FR11 /* PitfolkEntity.swift */,
+				AA000000000000000000FR12 /* EnemyEntity.swift */,
+				AA000000000000000000FR13 /* BuildingEntity.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR07 /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR14 /* NeedsSystem.swift */,
+				AA000000000000000000FR15 /* ResourceSystem.swift */,
+				AA000000000000000000FR16 /* WaveSystem.swift */,
+				AA000000000000000000FR17 /* BuildingSystem.swift */,
+				AA000000000000000000FR18 /* CombatSystem.swift */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR08 /* Narrator */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR19 /* Narrator.swift */,
+			);
+			path = Narrator;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000GR09 /* Monetization */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FR20 /* MonetizationManager.swift */,
+				AA000000000000000000FR21 /* AdManager.swift */,
+			);
+			path = Monetization;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000000000000000000TG01 /* Pitfolk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000000000000000000CL02 /* Build configuration list for PBXNativeTarget "Pitfolk" */;
+			buildPhases = (
+				AA000000000000000000PH01 /* Sources */,
+				AA000000000000000000PH02 /* Frameworks */,
+				AA000000000000000000PH03 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pitfolk;
+			productName = Pitfolk;
+			productReference = AA000000000000000000FR28 /* Pitfolk.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000000000000000000PJ01 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "JT Jordan";
+				TargetAttributes = {
+					AA000000000000000000TG01 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA000000000000000000CL01 /* Build configuration list for PBXProject "Pitfolk" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA000000000000000000GR00;
+			productRefGroup = AA000000000000000000GR98 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000000000000000000TG01 /* Pitfolk */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000000000000000000PH03 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000BB26 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000000000000000000PH01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000BB01 /* AppDelegate.swift in Sources */,
+				AA000000000000000000BB02 /* GameViewController.swift in Sources */,
+				AA000000000000000000BB03 /* Constants.swift in Sources */,
+				AA000000000000000000BB04 /* Extensions.swift in Sources */,
+				AA000000000000000000BB05 /* GameState.swift in Sources */,
+				AA000000000000000000BB06 /* IsometricMath.swift in Sources */,
+				AA000000000000000000BB07 /* Tile.swift in Sources */,
+				AA000000000000000000BB08 /* IsometricMap.swift in Sources */,
+				AA000000000000000000BB09 /* WorldGenerator.swift in Sources */,
+				AA000000000000000000BB10 /* Entity.swift in Sources */,
+				AA000000000000000000BB11 /* PitfolkEntity.swift in Sources */,
+				AA000000000000000000BB12 /* EnemyEntity.swift in Sources */,
+				AA000000000000000000BB13 /* BuildingEntity.swift in Sources */,
+				AA000000000000000000BB14 /* NeedsSystem.swift in Sources */,
+				AA000000000000000000BB15 /* ResourceSystem.swift in Sources */,
+				AA000000000000000000BB16 /* WaveSystem.swift in Sources */,
+				AA000000000000000000BB17 /* BuildingSystem.swift in Sources */,
+				AA000000000000000000BB18 /* CombatSystem.swift in Sources */,
+				AA000000000000000000BB19 /* Narrator.swift in Sources */,
+				AA000000000000000000BB20 /* MonetizationManager.swift in Sources */,
+				AA000000000000000000BB21 /* AdManager.swift in Sources */,
+				AA000000000000000000BB22 /* HUDScene.swift in Sources */,
+				AA000000000000000000BB23 /* GameScene.swift in Sources */,
+				AA000000000000000000BB24 /* GameScene+Touch.swift in Sources */,
+				AA000000000000000000BB25 /* MainMenuScene.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA000000000000000000BC01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA000000000000000000BC02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA000000000000000000BC03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Pitfolk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pitmatics.pitfolk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000000000000000000BC04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Pitfolk/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pitmatics.pitfolk;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000000000000000000CL01 /* Build configuration list for PBXProject "Pitfolk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000BC01 /* Debug */,
+				AA000000000000000000BC02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000000000000000000CL02 /* Build configuration list for PBXNativeTarget "Pitfolk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000000000000000000BC03 /* Debug */,
+				AA000000000000000000BC04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AA000000000000000000PJ01 /* Project object */;
+}
