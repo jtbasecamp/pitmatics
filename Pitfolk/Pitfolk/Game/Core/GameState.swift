@@ -105,7 +105,7 @@ class GameStateManager {
     static let shared = GameStateManager()
     private let saveKey = "pitfolk_meta_progress"
 
-    private(set) var meta: MetaProgress = MetaProgress()
+    var meta: MetaProgress = MetaProgress()
     var run: RunState = RunState()
 
     private init() { load() }
