@@ -1,4 +1,5 @@
 import SpriteKit
+import GameKit
 
 class MainMenuScene: SKScene {
     weak var viewController: GameViewController?
