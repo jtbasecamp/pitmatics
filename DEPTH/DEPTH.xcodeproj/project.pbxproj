@@ -56,12 +56,12 @@
 		DD000000000000000000FR21 /* DebriefScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebriefScene.swift; sourceTree = "<group>"; };
 		DD000000000000000000FR22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD000000000000000000FR23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD000000000000000000FR28 /* DEPTH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DEPTH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD000000000000000000FR30 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
-		DD000000000000000000FR99 /* DEPTH.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DEPTH.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		DD000000000000000000PH10 /* Frameworks */ = {
+		DD000000000000000000PH02 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,20 +76,20 @@
 			isa = PBXGroup;
 			children = (
 				DD000000000000000000GR01 /* DEPTH */,
-				DD000000000000000000GR50 /* Frameworks */,
-				DD000000000000000000GR99 /* Products */,
+				DD000000000000000000GR99 /* Frameworks */,
+				DD000000000000000000GR98 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		DD000000000000000000GR99 /* Products */ = {
+		DD000000000000000000GR98 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DD000000000000000000FR99 /* DEPTH.app */,
+				DD000000000000000000FR28 /* DEPTH.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DD000000000000000000GR50 /* Frameworks */ = {
+		DD000000000000000000GR99 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				DD000000000000000000FR30 /* SpriteKit.framework */,
@@ -121,7 +121,7 @@
 				DD000000000000000000GR08 /* UI */,
 				DD000000000000000000GR09 /* Scenes */,
 			);
-			name = Game;
+			path = Game;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR03 /* Core */ = {
@@ -130,8 +130,7 @@
 				DD000000000000000000FR04 /* Constants.swift */,
 				DD000000000000000000FR05 /* Extensions.swift */,
 			);
-			name = Core;
-			path = Game/Core;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR04 /* Models */ = {
@@ -141,8 +140,7 @@
 				DD000000000000000000FR07 /* BunkerRoom.swift */,
 				DD000000000000000000FR08 /* GameEvent.swift */,
 			);
-			name = Models;
-			path = Game/Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR05 /* Systems */ = {
@@ -153,8 +151,7 @@
 				DD000000000000000000FR11 /* EventSystem.swift */,
 				DD000000000000000000FR12 /* DaySystem.swift */,
 			);
-			name = Systems;
-			path = Game/Systems;
+			path = Systems;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR06 /* World */ = {
@@ -163,8 +160,7 @@
 				DD000000000000000000FR13 /* BunkerMap.swift */,
 				DD000000000000000000FR14 /* RoomNode.swift */,
 			);
-			name = World;
-			path = Game/World;
+			path = World;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR07 /* Entities */ = {
@@ -172,8 +168,7 @@
 			children = (
 				DD000000000000000000FR15 /* SurvivorNode.swift */,
 			);
-			name = Entities;
-			path = Game/Entities;
+			path = Entities;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR08 /* UI */ = {
@@ -182,8 +177,7 @@
 				DD000000000000000000FR16 /* HUDNode.swift */,
 				DD000000000000000000FR17 /* EventCardNode.swift */,
 			);
-			name = UI;
-			path = Game/UI;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		DD000000000000000000GR09 /* Scenes */ = {
@@ -194,8 +188,7 @@
 				DD000000000000000000FR20 /* GameScene+Input.swift */,
 				DD000000000000000000FR21 /* DebriefScene.swift */,
 			);
-			name = Scenes;
-			path = Game/Scenes;
+			path = Scenes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,11 +196,11 @@
 /* Begin PBXNativeTarget section */
 		DD000000000000000000TG01 /* DEPTH */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DD000000000000000000CL01 /* Build configuration list for PBXNativeTarget "DEPTH" */;
+			buildConfigurationList = DD000000000000000000CL02 /* Build configuration list for PBXNativeTarget "DEPTH" */;
 			buildPhases = (
 				DD000000000000000000PH01 /* Sources */,
-				DD000000000000000000PH10 /* Frameworks */,
-				DD000000000000000000PH20 /* Resources */,
+				DD000000000000000000PH02 /* Frameworks */,
+				DD000000000000000000PH03 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -215,24 +208,26 @@
 			);
 			name = DEPTH;
 			productName = DEPTH;
-			productReference = DD000000000000000000FR99 /* DEPTH.app */;
+			productReference = DD000000000000000000FR28 /* DEPTH.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		DD000000000000000000PROJ /* Project object */ = {
+		DD000000000000000000PJ01 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "JT Jordan";
 				TargetAttributes = {
 					DD000000000000000000TG01 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = DD000000000000000000CL00 /* Build configuration list for PBXProject "DEPTH" */;
+			buildConfigurationList = DD000000000000000000CL01 /* Build configuration list for PBXProject "DEPTH" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -241,7 +236,7 @@
 				Base,
 			);
 			mainGroup = DD000000000000000000GR00;
-			productRefGroup = DD000000000000000000GR99 /* Products */;
+			productRefGroup = DD000000000000000000GR98 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -251,7 +246,7 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		DD000000000000000000PH20 /* Resources */ = {
+		DD000000000000000000PH03 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -293,14 +288,44 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		DD000000000000000000CF01 /* Debug */ = {
+		DD000000000000000000BC01 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -315,23 +340,54 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		DD000000000000000000CF02 /* Release */ = {
+		DD000000000000000000BC02 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -340,21 +396,27 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		DD000000000000000000CF03 /* Debug */ = {
+		DD000000000000000000BC03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DEPTH/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -364,18 +426,23 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pitmatics.depth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		DD000000000000000000CF04 /* Release */ = {
+		DD000000000000000000BC04 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DEPTH/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -385,6 +452,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.pitmatics.depth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -393,25 +461,26 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DD000000000000000000CL00 /* Build configuration list for PBXProject "DEPTH" */ = {
+		DD000000000000000000CL01 /* Build configuration list for PBXProject "DEPTH" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DD000000000000000000CF01 /* Debug */,
-				DD000000000000000000CF02 /* Release */,
+				DD000000000000000000BC01 /* Debug */,
+				DD000000000000000000BC02 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DD000000000000000000CL01 /* Build configuration list for PBXNativeTarget "DEPTH" */ = {
+		DD000000000000000000CL02 /* Build configuration list for PBXNativeTarget "DEPTH" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DD000000000000000000CF03 /* Debug */,
-				DD000000000000000000CF04 /* Release */,
+				DD000000000000000000BC03 /* Debug */,
+				DD000000000000000000BC04 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
 	};
-	rootObject = DD000000000000000000PROJ /* Project object */;
+	rootObject = DD000000000000000000PJ01 /* Project object */;
 }
