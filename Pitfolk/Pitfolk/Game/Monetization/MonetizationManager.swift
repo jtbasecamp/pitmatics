@@ -140,23 +140,25 @@ class MonetizationManager: ObservableObject {
     }
 
     private func applyPurchasesToGameState() {
-        let meta = GameStateManager.shared
+        let state = GameStateManager.shared
+        var updated = state.meta
         if purchasedProductIDs.contains(PitfolkProduct.noAds.rawValue) ||
            purchasedProductIDs.contains(PitfolkProduct.founderBundle.rawValue) {
-            meta.meta.hasRemovedAds = true
+            updated.hasRemovedAds = true
         }
         if purchasedProductIDs.contains(PitfolkProduct.duckPack1.rawValue) ||
            purchasedProductIDs.contains(PitfolkProduct.founderBundle.rawValue) {
-            meta.meta.ownsDuckPack1 = true
+            updated.ownsDuckPack1 = true
         }
         if purchasedProductIDs.contains(PitfolkProduct.duckPack2.rawValue) ||
            purchasedProductIDs.contains(PitfolkProduct.founderBundle.rawValue) {
-            meta.meta.ownsDuckPack2 = true
+            updated.ownsDuckPack2 = true
         }
         if purchasedProductIDs.contains(PitfolkProduct.founderBundle.rawValue) {
-            meta.meta.ownsFounderBundle = true
+            updated.ownsFounderBundle = true
         }
-        meta.save()
+        state.meta = updated
+        state.save()
     }
 
     // MARK: - Ownership Checks
