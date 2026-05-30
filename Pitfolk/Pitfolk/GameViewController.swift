@@ -138,12 +138,28 @@ class GameViewController: UIViewController {
         present(nav, animated: true)
     }
 
-    // MARK: - Game Center Score
+    // MARK: - Game Center
     private func submitScore(daysSurvived: Int) {
         guard GKLocalPlayer.local.isAuthenticated else { return }
-        let score = GKScore(leaderboardIdentifier: "com.pitmatics.pitfolk.bestday")
-        score.value = Int64(daysSurvived)
-        GKScore.report([score])
+        Task {
+            do {
+                try await GKLeaderboard.submitScore(
+                    daysSurvived, context: 0, player: GKLocalPlayer.local,
+                    leaderboardIDs: ["com.pitmatics.pitfolk.bestday"]
+                )
+            } catch {
+                print("[GameCenter] Score submission failed: \(error)")
+            }
+        }
+    }
+
+    func showLeaderboard() {
+        guard GKLocalPlayer.local.isAuthenticated else { return }
+        let vc = GKGameCenterViewController(leaderboardID: "com.pitmatics.pitfolk.bestday",
+                                            playerScope: .global,
+                                            timeScope: .allTime)
+        vc.gameCenterDelegate = self
+        present(vc, animated: true)
     }
 }
 
