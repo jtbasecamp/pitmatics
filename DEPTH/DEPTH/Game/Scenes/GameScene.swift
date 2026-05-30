@@ -202,28 +202,18 @@ class GameScene: SKScene {
         resources.adjustWater(choice.waterDelta)
         resources.adjustMedicine(choice.medicineDelta)
 
-        // Apply stress
-        if let stressID = choice.stressTarget,
-           let target = survivors.first(where: { $0.id == stressID }) {
-            target.stress = (target.stress + Float(choice.stressDelta)).clamped(to: 0...100)
-        } else {
-            // Default: apply to involved survivor
-            if let sid = event.involvedSurvivorID,
-               let target = survivors.first(where: { $0.id == sid }) {
-                target.stress = (target.stress + Float(choice.stressDelta)).clamped(to: 0...100)
-            } else {
-                // Apply to player
-                player?.stress = ((player?.stress ?? 0) + Float(choice.stressDelta)).clamped(to: 0...100)
-            }
-        }
+        // Apply stress — to involved survivor, or player if none
+        let stressTarget: Survivor? = {
+            if let sid = event.involvedSurvivorID { return survivors.first { $0.id == sid } }
+            return player
+        }()
+        stressTarget?.stress = ((stressTarget?.stress ?? 0) + Float(choice.stressDelta)).clamped(to: 0...100)
 
-        // Apply health
-        if let healthID = choice.healthTarget,
-           let target = survivors.first(where: { $0.id == healthID }) {
-            target.health = (target.health + Float(choice.healthDelta)).clamped(to: 0...100)
-        } else if let sid = event.involvedSurvivorID, choice.healthDelta != 0,
-                  let target = survivors.first(where: { $0.id == sid }) {
-            target.health = (target.health + Float(choice.healthDelta)).clamped(to: 0...100)
+        // Apply health — to involved survivor only if delta is non-zero
+        if choice.healthDelta != 0,
+           let sid = event.involvedSurvivorID,
+           let healthTarget = survivors.first(where: { $0.id == sid }) {
+            healthTarget.health = (healthTarget.health + Float(choice.healthDelta)).clamped(to: 0...100)
         }
 
         // Apply trust

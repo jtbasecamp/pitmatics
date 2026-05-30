@@ -18,9 +18,7 @@ struct EventChoice {
     var foodDelta: Int
     var waterDelta: Int
     var medicineDelta: Int
-    var stressTarget: UUID?
     var stressDelta: Int
-    var healthTarget: UUID?
     var healthDelta: Int
     var trustDelta: Int
     var narratorLine: String
@@ -29,22 +27,18 @@ struct EventChoice {
          foodDelta: Int = 0,
          waterDelta: Int = 0,
          medicineDelta: Int = 0,
-         stressTarget: UUID? = nil,
          stressDelta: Int = 0,
-         healthTarget: UUID? = nil,
          healthDelta: Int = 0,
          trustDelta: Int = 0,
          narratorLine: String) {
-        self.text             = text
-        self.foodDelta        = foodDelta
-        self.waterDelta       = waterDelta
-        self.medicineDelta    = medicineDelta
-        self.stressTarget     = stressTarget
-        self.stressDelta      = stressDelta
-        self.healthTarget     = healthTarget
-        self.healthDelta      = healthDelta
-        self.trustDelta       = trustDelta
-        self.narratorLine     = narratorLine
+        self.text          = text
+        self.foodDelta     = foodDelta
+        self.waterDelta    = waterDelta
+        self.medicineDelta = medicineDelta
+        self.stressDelta   = stressDelta
+        self.healthDelta   = healthDelta
+        self.trustDelta    = trustDelta
+        self.narratorLine  = narratorLine
     }
 }
 
