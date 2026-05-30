@@ -1,31 +1,51 @@
-// DEPTH — GameEvent.swift
+// GameEvent.swift
+// DEPTH — Event data model
+
 import Foundation
 
-// MARK: - EventCategory
+// MARK: - Event Category
 
 enum EventCategory: String {
-    case resource
-    case social
-    case external
-    case personal
-    case crisis
+    case resource, social, external, personal, crisis
 
-    var label: String { rawValue.uppercased() }
+    var displayName: String { rawValue.uppercased() }
 }
 
-// MARK: - EventChoice
+// MARK: - Event Choice
 
 struct EventChoice {
     let text: String
-    var foodDelta: Int          = 0
-    var waterDelta: Int         = 0
-    var medicineDelta: Int      = 0
+    var foodDelta: Int
+    var waterDelta: Int
+    var medicineDelta: Int
     var stressTarget: UUID?
-    var stressDelta: Float      = 0
+    var stressDelta: Float
     var healthTarget: UUID?
-    var healthDelta: Float      = 0
-    var trustDelta: Float       = 0
-    var narratorLine: String    = ""
+    var healthDelta: Float
+    var trustDelta: Float
+    var narratorLine: String
+
+    init(text: String,
+         foodDelta: Int = 0,
+         waterDelta: Int = 0,
+         medicineDelta: Int = 0,
+         stressTarget: UUID? = nil,
+         stressDelta: Float = 0,
+         healthTarget: UUID? = nil,
+         healthDelta: Float = 0,
+         trustDelta: Float = 0,
+         narratorLine: String) {
+        self.text             = text
+        self.foodDelta        = foodDelta
+        self.waterDelta       = waterDelta
+        self.medicineDelta    = medicineDelta
+        self.stressTarget     = stressTarget
+        self.stressDelta      = stressDelta
+        self.healthTarget     = healthTarget
+        self.healthDelta      = healthDelta
+        self.trustDelta       = trustDelta
+        self.narratorLine     = narratorLine
+    }
 }
 
 // MARK: - GameEvent
@@ -35,24 +55,22 @@ struct GameEvent {
     let title: String
     let body: String
     let category: EventCategory
-    let choices: [EventChoice]
+    var choices: [EventChoice]
     var involvedSurvivorID: UUID?
     var day: Int
 
-    init(
-        title: String,
-        body: String,
-        category: EventCategory,
-        choices: [EventChoice],
-        involvedSurvivorID: UUID? = nil,
-        day: Int = 0
-    ) {
-        self.id                  = UUID()
-        self.title               = title
-        self.body                = body
-        self.category            = category
-        self.choices             = choices
-        self.involvedSurvivorID  = involvedSurvivorID
-        self.day                 = day
+    init(title: String,
+         body: String,
+         category: EventCategory,
+         choices: [EventChoice],
+         involvedSurvivorID: UUID? = nil,
+         day: Int = 0) {
+        self.id                 = UUID()
+        self.title              = title
+        self.body               = body
+        self.category           = category
+        self.choices            = choices
+        self.involvedSurvivorID = involvedSurvivorID
+        self.day                = day
     }
 }
