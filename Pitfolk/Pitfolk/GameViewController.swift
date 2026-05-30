@@ -18,7 +18,7 @@ class GameViewController: UIViewController {
     }
 
     override func loadView() {
-        self.view = SKView()
+        self.view = SKView(frame: UIScreen.main.bounds)
     }
 
     private func setupSpriteKitView() {

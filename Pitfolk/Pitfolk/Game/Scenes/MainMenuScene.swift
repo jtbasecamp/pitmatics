@@ -158,9 +158,10 @@ class MainMenuScene: SKScene {
     }
 
     private func buildAnimatedDucks() {
+        let safeWidth = max(200, size.width)
         for i in 0..<5 {
             let duck = makeDuckNode(colorIndex: i)
-            let startX = CGFloat.random(in: 40...(size.width - 40))
+            let startX = CGFloat.random(in: 40...(safeWidth - 40))
             let startY = CGFloat.random(in: 100...200)
             duck.position  = CGPoint(x: startX, y: startY)
             duck.zPosition = 5
@@ -169,7 +170,7 @@ class MainMenuScene: SKScene {
             duckNodes.append(duck)
 
             let duration = Double.random(in: 8...16)
-            let destX    = CGFloat.random(in: 40...(size.width - 40))
+            let destX    = CGFloat.random(in: 40...(safeWidth - 40))
             duck.run(SKAction.repeatForever(SKAction.sequence([
                 SKAction.moveTo(x: destX, duration: duration),
                 SKAction.moveTo(x: startX, duration: duration)
