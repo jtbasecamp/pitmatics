@@ -243,8 +243,8 @@ class EventSystem {
             choices: [
                 EventChoice(text: "Use medicine to treat.",
                             medicineDelta: -2,
-                            healthDelta: 15,
                             stressDelta: -10,
+                            healthDelta: 15,
                             trustDelta: 15,
                             narratorLine: "You spent what you had. They recovered. A small debt between you."),
                 EventChoice(text: "Monitor without medicating.",
@@ -252,8 +252,8 @@ class EventSystem {
                             trustDelta: -5,
                             narratorLine: "You watched. It was the hardest kind of care."),
                 EventChoice(text: "Isolate them in medical bay.",
-                            healthDelta: -5,
                             stressDelta: 15,
+                            healthDelta: -5,
                             trustDelta: -10,
                             narratorLine: "They were alone with the fever for two days. They didn't forgive you for a while.")
             ]
