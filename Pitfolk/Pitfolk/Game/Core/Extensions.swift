@@ -52,6 +52,12 @@ extension Float {
     }
 }
 
+extension CGFloat {
+    func clamped(to range: ClosedRange<CGFloat>) -> CGFloat {
+        Swift.max(range.lowerBound, Swift.min(range.upperBound, self))
+    }
+}
+
 extension SKNode {
     func addChildren(_ nodes: SKNode...) {
         nodes.forEach { addChild($0) }
