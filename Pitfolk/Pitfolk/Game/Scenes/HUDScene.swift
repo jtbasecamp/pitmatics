@@ -357,15 +357,16 @@ class PhaseBarNode: SKNode {
         bg.position    = CGPoint(x: width/2, y: 0)
         fill.fillColor   = .hudAccent
         fill.strokeColor = .clear
-        fill.position    = CGPoint(x: width/2, y: 0)
-        fill.anchorPoint = CGPoint(x: 0, y: 0.5)
+        fill.position    = CGPoint(x: 0, y: 0)
         addChildren(bg, fill)
     }
     required init?(coder aDecoder: NSCoder) { fatalError() }
 
     func update(phase: GamePhase, progress: Double) {
         currentPhase = phase
-        fill.xScale = CGFloat(progress)
+        let s = CGFloat(max(0, min(1, progress)))
+        fill.xScale    = s
+        fill.position  = CGPoint(x: width * s / 2, y: 0)
         fill.fillColor = {
             switch phase {
             case .day:   return SKColor(red: 0.9, green: 0.8, blue: 0.3, alpha: 1)
