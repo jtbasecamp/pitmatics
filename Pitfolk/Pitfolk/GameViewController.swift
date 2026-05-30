@@ -11,7 +11,8 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         setupSpriteKitView()
         setupGestures()
-        authenticateGameCenter()
+        // Game Center requires a paid developer account — enable before App Store submission
+        // authenticateGameCenter()
         AdManager.shared.provider = NoOpAdProvider()  // Replace with real provider before shipping
         AdManager.shared.initialize()
     }
