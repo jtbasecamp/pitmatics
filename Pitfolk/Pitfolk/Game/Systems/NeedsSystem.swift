@@ -16,7 +16,7 @@ class NeedsSystem {
         guard timeSinceLastCheck >= checkInterval else { return }
         timeSinceLastCheck = 0
 
-        let decayMult = state.meta.needsDecayMultiplier
+        let decayMult = state.needsDecayMultiplier
 
         for pf in pitfolk where pf.isAlive && !pf.isQuarantined {
             decayNeeds(pf, decayMult: decayMult, buildings: buildings, resources: resources)
