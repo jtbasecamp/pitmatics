@@ -19,10 +19,10 @@ struct EventChoice {
     var waterDelta: Int
     var medicineDelta: Int
     var stressTarget: UUID?
-    var stressDelta: Float
+    var stressDelta: Int
     var healthTarget: UUID?
-    var healthDelta: Float
-    var trustDelta: Float
+    var healthDelta: Int
+    var trustDelta: Int
     var narratorLine: String
 
     init(text: String,
@@ -30,10 +30,10 @@ struct EventChoice {
          waterDelta: Int = 0,
          medicineDelta: Int = 0,
          stressTarget: UUID? = nil,
-         stressDelta: Float = 0,
+         stressDelta: Int = 0,
          healthTarget: UUID? = nil,
-         healthDelta: Float = 0,
-         trustDelta: Float = 0,
+         healthDelta: Int = 0,
+         trustDelta: Int = 0,
          narratorLine: String) {
         self.text             = text
         self.foodDelta        = foodDelta

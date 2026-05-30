@@ -205,31 +205,31 @@ class GameScene: SKScene {
         // Apply stress
         if let stressID = choice.stressTarget,
            let target = survivors.first(where: { $0.id == stressID }) {
-            target.stress = (target.stress + choice.stressDelta).clamped(to: 0...100)
+            target.stress = (target.stress + Float(choice.stressDelta)).clamped(to: 0...100)
         } else {
             // Default: apply to involved survivor
             if let sid = event.involvedSurvivorID,
                let target = survivors.first(where: { $0.id == sid }) {
-                target.stress = (target.stress + choice.stressDelta).clamped(to: 0...100)
+                target.stress = (target.stress + Float(choice.stressDelta)).clamped(to: 0...100)
             } else {
                 // Apply to player
-                player?.stress = ((player?.stress ?? 0) + choice.stressDelta).clamped(to: 0...100)
+                player?.stress = ((player?.stress ?? 0) + Float(choice.stressDelta)).clamped(to: 0...100)
             }
         }
 
         // Apply health
         if let healthID = choice.healthTarget,
            let target = survivors.first(where: { $0.id == healthID }) {
-            target.health = (target.health + choice.healthDelta).clamped(to: 0...100)
+            target.health = (target.health + Float(choice.healthDelta)).clamped(to: 0...100)
         } else if let sid = event.involvedSurvivorID, choice.healthDelta != 0,
                   let target = survivors.first(where: { $0.id == sid }) {
-            target.health = (target.health + choice.healthDelta).clamped(to: 0...100)
+            target.health = (target.health + Float(choice.healthDelta)).clamped(to: 0...100)
         }
 
         // Apply trust
         if let sid = event.involvedSurvivorID, let pid = player?.id {
-            relationships.modify(from: pid, to: sid, delta: choice.trustDelta)
-            relationships.modify(from: sid, to: pid, delta: choice.trustDelta * 0.7)
+            relationships.modify(from: pid, to: sid, delta: Float(choice.trustDelta))
+            relationships.modify(from: sid, to: pid, delta: Float(choice.trustDelta) * 0.7)
         }
 
         // Record moment
