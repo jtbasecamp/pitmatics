@@ -5,41 +5,41 @@ import GameKit
 class GameScene: SKScene {
 
     // MARK: - Sub-systems
-    private(set) var worldMap:       IsometricMap!
-    private(set) var needsSystem:    NeedsSystem!
-    private(set) var resourceSystem: ResourceSystem!
-    private(set) var waveSystem:     WaveSystem!
-    private(set) var buildingSystem: BuildingSystem!
-    private(set) var combatSystem:   CombatSystem!
-    private(set) var narrator:       Narrator = .shared
+    var worldMap:       IsometricMap!
+    var needsSystem:    NeedsSystem!
+    var resourceSystem: ResourceSystem!
+    var waveSystem:     WaveSystem!
+    var buildingSystem: BuildingSystem!
+    var combatSystem:   CombatSystem!
+    var narrator:       Narrator = .shared
 
     // MARK: - Game Objects
-    private(set) var pitfolk: [PitfolkEntity] = []
-    private(set) var enemies: [EnemyEntity]   = []
-    private var mapGrid: [[TileData]] = []
+    var pitfolk: [PitfolkEntity] = []
+    var enemies: [EnemyEntity]   = []
+    var mapGrid: [[TileData]] = []
     let math = IsometricMath()
 
     // MARK: - HUD
-    private(set) var hudScene: HUDScene?
+    var hudScene: HUDScene?
     weak var gameViewController: GameViewController?
 
     // MARK: - Camera
-    private var cameraNode: SKCameraNode!
-    private var lastTouchPos: CGPoint?
-    private var cameraScale: CGFloat = 1.0
-    private let minScale: CGFloat = 0.4
-    private let maxScale: CGFloat = 2.0
+    var cameraNode: SKCameraNode!
+    var lastTouchPos: CGPoint?
+    var cameraScale: CGFloat = 1.0
+    let minScale: CGFloat = 0.4
+    let maxScale: CGFloat = 2.0
 
     // MARK: - UI State
-    private var selectedPitfolk: PitfolkEntity?
-    private var pendingBuildType: BuildingType?
-    private var isPaused2: Bool = false   // own pause flag (scene.isPaused conflicts)
+    var selectedPitfolk: PitfolkEntity?
+    var pendingBuildType: BuildingType?
+    var isPaused2: Bool = false
 
     // MARK: - Timers
-    private var gatherTimer: TimeInterval = 0
-    private var moralEventTimer: TimeInterval = 0
-    private let moralEventInterval: TimeInterval = 90.0
-    private var lastUpdateTime: TimeInterval = 0
+    var gatherTimer: TimeInterval = 0
+    var moralEventTimer: TimeInterval = 0
+    let moralEventInterval: TimeInterval = 90.0
+    var lastUpdateTime: TimeInterval = 0
 
     // MARK: - Scene Setup
     override func didMove(to view: SKView) {
@@ -114,7 +114,7 @@ class GameScene: SKScene {
 
             // Meta upgrade: one always starts as warrior
             let pf = PitfolkEntity(at: coord, colorIndex: i,
-                                   healthMultiplier: meta.healthMultiplier)
+                                   healthMultiplier: GameStateManager.shared.healthMultiplier)
             if meta.unlockedUpgrades.contains(.startWithWarrior) && i == 0 {
                 pf.setRole(.warrior)
             }
