@@ -2817,7 +2817,7 @@ function renderCookHistory(){
   var recent = h.slice(-5).reverse();
   var html = '<strong>' + total + ' cook' + (total === 1 ? '' : 's') + ' logged</strong><br>';
   recent.forEach(function(c){
-    var acc = {early:'started early',spot_on:'spot on',late_30:'~30 min late',late_1h:'~1 hr late',late_2h:'2+ hrs late'}[c.accuracy] || c.accuracy;
+    var acc = {early_2h:'2+ hrs early',early_1h:'~1 hr early',early_30:'~30 min early',spot_on:'spot on',late_30:'~30 min late',late_1h:'~1 hr late',late_2h:'2+ hrs late'}[c.accuracy] || c.accuracy;
     html += '<span style="color:var(--text-faint);">' + c.date + ' — ' + c.cutLabel + (c.weight ? ' ' + c.weight + ' lb' : '') + ' — ' + acc + '</span><br>';
   });
   el.innerHTML = html;
@@ -2992,7 +2992,7 @@ function renderHFCookHistory(){
   var recent = h.slice(-5).reverse();
   var html = '<strong>' + total + ' cook' + (total === 1 ? '' : 's') + ' logged</strong><br>';
   recent.forEach(function(c){
-    var acc = {early:'finished early',spot_on:'spot on',late_30:'~5 min late',late_1h:'~10 min late',late_2h:'way off'}[c.accuracy] || c.accuracy;
+    var acc = {early_2h:'10+ min early',early_1h:'~5 min early',early_30:'~2 min early',spot_on:'spot on',late_30:'~5 min late',late_1h:'~10 min late',late_2h:'way off'}[c.accuracy] || c.accuracy;
     html += '<span style="color:var(--text-faint);">' + escHtml(c.date) + ' — ' + escHtml(c.cutLabel) + (c.thickness ? ' ' + escHtml(String(c.thickness)) + ' in' : '') + ' — ' + escHtml(acc) + '</span><br>';
   });
   el.innerHTML = html;
@@ -3006,19 +3006,23 @@ function escHtml(s){
 }
 
 var ACC_CLASS = {
-  early:   'acc-early',
-  spot_on: 'acc-spot',
-  late_30: 'acc-late',
-  late_1h: 'acc-late',
-  late_2h: 'acc-late'
+  early_2h: 'acc-early',
+  early_1h: 'acc-early',
+  early_30: 'acc-early',
+  spot_on:  'acc-spot',
+  late_30:  'acc-late',
+  late_1h:  'acc-late',
+  late_2h:  'acc-late'
 };
 
 var ACC_LABEL = {
-  early:   'Started early',
-  spot_on: 'Spot on',
-  late_30: '~30 min late',
-  late_1h: '~1 hr late',
-  late_2h: '2+ hrs late'
+  early_2h: '2+ hrs early',
+  early_1h: '~1 hr early',
+  early_30: '~30 min early',
+  spot_on:  'Spot on',
+  late_30:  '~30 min late',
+  late_1h:  '~1 hr late',
+  late_2h:  '2+ hrs late'
 };
 
 function deleteCookEntry(id){
@@ -3065,7 +3069,7 @@ function renderHistory(){
   /* --- cook rows --- */
   var rows = cooks.map(function(c){
     var accClass = ACC_CLASS[c.accuracy] || 'acc-late';
-    var HF_ACC_LABEL = { early: 'Finished early', spot_on: 'Spot on', late_30: '~5 min late', late_1h: '~10 min late', late_2h: 'Way off' };
+    var HF_ACC_LABEL = { early_2h: '10+ min early', early_1h: '~5 min early', early_30: '~2 min early', spot_on: 'Spot on', late_30: '~5 min late', late_1h: '~10 min late', late_2h: 'Way off' };
     var accLabel = c.mode === 'hot-fast'
       ? (HF_ACC_LABEL[c.accuracy] || c.accuracy)
       : (ACC_LABEL[c.accuracy]    || c.accuracy);
