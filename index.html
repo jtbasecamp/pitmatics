@@ -401,6 +401,43 @@ section.mode.active { display: block; }
 .d-serve { background: #7F47B8; }
 .d-sear  { background: var(--ember); }
 .d-flip { background: #EF9F27; }
+.tli-times {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+.tli-time-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tli-actual-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tli-actual-label {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  padding-top: 2px;
+}
+.tli-actual-input,
+.tli-actual-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  padding: 2px 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-alt);
+  color: var(--text);
+  cursor: pointer;
+}
+.tli-actual-input { width: 80px; }
+.tli-actual-date  { width: 110px; margin-top: 3px; }
 .tli-content { flex: 1; min-width: 0; }
 .tli-title {
   font-size: 14.5px;
@@ -627,6 +664,7 @@ footer a:hover { text-decoration: underline; }
             <option value="chuck_roast">Chuck roast</option>
             <option value="tri_tip">Tri tip</option>
             <option value="beef_ribs">Beef short ribs (plate)</option>
+            <option value="jerky">Beef jerky</option>
             <option value="pork_butt">Pork butt / shoulder</option>
             <option value="spare_ribs">Spare ribs (rack)</option>
             <option value="st_louis_ribs">St. Louis ribs (rack)</option>
@@ -667,6 +705,16 @@ footer a:hover { text-decoration: underline; }
             <option value="thick">Thick &amp; blocky</option>
             <option value="average" selected>Average</option>
             <option value="flat">Thin &amp; flat</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2" id="ls-jerky-row" style="display:none;">
+        <div class="field">
+          <label for="ls-jerky-thickness">Slice thickness</label>
+          <select id="ls-jerky-thickness">
+            <option value="thin">Thin (⅛ in)</option>
+            <option value="standard" selected>Standard (¼ in)</option>
+            <option value="thick">Thick (⅜ in+)</option>
           </select>
         </div>
       </div>
@@ -790,13 +838,14 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="ls-rest-section">
       <div class="section-label">Rest method</div>
       <div class="toggles" id="ls-rest-toggles">
         <button type="button" class="tog on" data-rest="cooler">Dry cooler + towels</button>
         <button type="button" class="tog" data-rest="oven">Holding oven / cambro</button>
         <button type="button" class="tog" data-rest="none">Skip rest</button>
       </div>
+      <div class="ft-tip" id="ls-rest-note" style="display:none;margin-top:8px;"></div>
     </div>
 
     <div class="section" id="ls-time-section">
@@ -879,18 +928,28 @@ footer a:hover { text-decoration: underline; }
             <label><input type="radio" name="ls-fb-accuracy" value="late_1h"> Ran late ~1 hr</label>
             <label><input type="radio" name="ls-fb-accuracy" value="late_2h"> Ran late 2+ hrs</label>
           </div>
+          <div id="ls-fb-accuracy-auto" style="display:none;font-size:11.5px;color:var(--sage);margin-top:4px;"></div>
         </div>
         <div class="fb-row">
           <label for="ls-fb-actual-fire">Actual fire time <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
-          <input type="time" id="ls-fb-actual-fire">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="time" id="ls-fb-actual-fire">
+            <input type="date" id="ls-fb-actual-fire-date" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;background:var(--bg-alt);color:var(--text);">
+          </div>
         </div>
         <div class="fb-row">
           <label for="ls-fb-actual-pull">Actual pull time <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
-          <input type="time" id="ls-fb-actual-pull">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="time" id="ls-fb-actual-pull">
+            <input type="date" id="ls-fb-actual-pull-date" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;background:var(--bg-alt);color:var(--text);">
+          </div>
         </div>
         <div class="fb-row" id="ls-fb-actual-serve-row" style="display:none;">
           <label for="ls-fb-actual-serve">Actual serve time <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
-          <input type="time" id="ls-fb-actual-serve">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input type="time" id="ls-fb-actual-serve">
+            <input type="date" id="ls-fb-actual-serve-date" style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;background:var(--bg-alt);color:var(--text);">
+          </div>
         </div>
         <div class="fb-row" id="ls-fb-wood-row" style="display:none;">
           <label for="ls-fb-wood">Wood species <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
@@ -1094,12 +1153,20 @@ footer a:hover { text-decoration: underline; }
       <div class="section-label">Conditions</div>
       <div class="r2">
         <div class="field">
-          <label for="hf-weather">Weather outside</label>
-          <select id="hf-weather">
-            <option value="hot">Hot &amp; calm (80°F+)</option>
-            <option value="mild" selected>Mild &amp; calm (50–80°F)</option>
-            <option value="cool">Cool &amp; breezy (32–50°F)</option>
-            <option value="cold">Cold &amp; windy (below 32°F)</option>
+          <label for="hf-weather-temp">Outside temp</label>
+          <select id="hf-weather-temp">
+            <option value="hot">Hot (80°F+)</option>
+            <option value="mild" selected>Mild (50–80°F)</option>
+            <option value="cool">Cool (32–50°F)</option>
+            <option value="cold">Cold (below 32°F)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hf-weather-wind">Wind</label>
+          <select id="hf-weather-wind">
+            <option value="calm" selected>Calm</option>
+            <option value="breezy">Breezy</option>
+            <option value="windy">Windy</option>
           </select>
         </div>
       </div>
@@ -1367,6 +1434,182 @@ footer a:hover { text-decoration: underline; }
   function fmtD(dt){ return dt.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }); }
   function addH(dt, h){ return new Date(dt.getTime() + h * 3600000); }
   function addM(dt, m){ return new Date(dt.getTime() + m * 60000); }
+  function fmtDI(dt){ var m=dt.getMonth()+1,d=dt.getDate(); return dt.getFullYear()+'-'+(m<10?'0'+m:m)+'-'+(d<10?'0'+d:d); }
+  function fmtTI(dt){ var h=dt.getHours(),m=dt.getMinutes(); return (h<10?'0'+h:h)+':'+(m<10?'0'+m:m); }
+
+  /* ---- Schedule actual → feedback sync ---- */
+  function fbKey(title) {
+    var t = title.toLowerCase();
+    if (t === 'light the fire') return 'fire';
+    if (t.indexOf('pull off') !== -1 || t.indexOf('pull window') !== -1) return 'pull';
+    if (t.indexOf('serve') !== -1 || t.indexOf('plate') !== -1) return 'serve';
+    return '';
+  }
+
+  function syncActualsToLog(prefix) {
+    var tl = document.getElementById(prefix + '-timeline');
+    if (!tl) return;
+    tl.querySelectorAll('[data-fb-target]').forEach(function(inp) {
+      var target = inp.dataset.fbTarget;
+      if (inp.type === 'time') {
+        var fbTime = document.getElementById(prefix + '-fb-actual-' + target);
+        if (fbTime && inp.value) fbTime.value = inp.value;
+      }
+      if (inp.type === 'date') {
+        var fbDate = document.getElementById(prefix + '-fb-actual-' + target + '-date');
+        if (fbDate && inp.value) fbDate.value = inp.value;
+      }
+    });
+    if (prefix === 'ls' && window.autoComputeLSAccuracy) window.autoComputeLSAccuracy();
+  }
+
+  /* wire up sync on timeline change and when log section opens */
+  document.addEventListener('DOMContentLoaded', function() {
+    ['ls', 'hf'].forEach(function(p) {
+      var tl = document.getElementById(p + '-timeline');
+      if (tl) tl.addEventListener('change', function() { syncActualsToLog(p); saveActuals(p + '-timeline'); });
+      var fb = document.getElementById(p + '-feedback');
+      if (fb) fb.addEventListener('toggle', function() { if (this.open) syncActualsToLog(p); });
+    });
+    var advTl = document.getElementById('adv-timeline');
+    if (advTl) advTl.addEventListener('change', function() { saveActuals('adv-timeline'); });
+  });
+
+  /* ---- Persist form state across page loads ---- */
+  var PM_KEY = 'pitmatics-v1';
+
+  var PM_FIELDS = [
+    'ls-cut','ls-brisket-type','ls-weight','ls-smoker','ls-pit-temp',
+    'ls-pit-temp-low','ls-pit-temp-high','ls-preheat','ls-weather-temp',
+    'ls-weather-wind','ls-grade','ls-trim','ls-shape','ls-inject',
+    'ls-start-temp','ls-racks','ls-serve-date','ls-serve-time','ls-notes','ls-jerky-thickness',
+    'hf-cut','hf-thickness','hf-hot-temp','hf-slow-temp','hf-sear-temp',
+    'hf-start-time','hf-start-temp','hf-smoker','hf-weather-temp','hf-weather-wind','hf-doneness',
+    'adv-start-time','adv-start-date','adv-serve-time','adv-serve-date',
+    'adv-smoker','adv-weather-temp','adv-weather-wind'
+  ];
+
+  function pmSave() {
+    try {
+      var s = {};
+      PM_FIELDS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) s[id] = el.value;
+      });
+      s['ls-wt']       = LS.weightTouched ? '1' : '';
+      s['ls-wrap']     = LS.wrapMode;
+      s['ls-rest']     = LS.restMode;
+      s['ls-mode']     = LS.calcMode;
+      s['ls-pit-mode'] = LS.pitTempMode;
+      s['hf-method']   = HF.method;
+      var activeTab = document.querySelector('.mode-toggle button.active');
+      if (activeTab) s['active-tab'] = activeTab.dataset.mode;
+      localStorage.setItem(PM_KEY, JSON.stringify(s));
+    } catch(e) {}
+  }
+
+  function pmRestore() {
+    var raw; try { raw = localStorage.getItem(PM_KEY); } catch(e) {}
+    if (!raw) return;
+    var s; try { s = JSON.parse(raw); } catch(e) { return; }
+
+    PM_FIELDS.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && s[id] !== undefined) el.value = s[id];
+    });
+    /* re-run cut handlers so per-cut fields show/hide for the restored cut, then re-apply values they reset */
+    LS.onCutChange();
+    HF.onCutChange();
+    if (s['ls-weight'] !== undefined) document.getElementById('ls-weight').value = s['ls-weight'];
+    if (s['ls-wt']) LS.weightTouched = true;
+    if (s['hf-doneness'] !== undefined) {
+      var dSel = document.getElementById('hf-doneness');
+      if ([].some.call(dSel.options, function(o){ return o.value === s['hf-doneness']; })) dSel.value = s['hf-doneness'];
+    }
+    if (s['ls-wrap'])     LS.setWrap(s['ls-wrap']);
+    if (s['ls-rest'])     LS.setRest(s['ls-rest']);
+    if (s['ls-mode'])     LS.setCalcMode(s['ls-mode']);
+    if (s['ls-pit-mode']) LS.setPitTempMode(s['ls-pit-mode']);
+    if (s['hf-method'])   HF.setMethod(s['hf-method']);
+    if (s['active-tab']) {
+      var tabBtn = document.querySelector('.mode-toggle button[data-mode="' + s['active-tab'] + '"]');
+      if (tabBtn) tabBtn.click();
+    }
+  }
+
+  /* save/restore actual time+date inputs across timeline rebuilds */
+  function snapshotActuals(timelineId) {
+    var tl = document.getElementById(timelineId);
+    if (!tl) return {};
+    var snap = {};
+    tl.querySelectorAll('.tli').forEach(function(item) {
+      var titleEl = item.querySelector('.tli-title');
+      var actTime = item.querySelector('.tli-actual-input');
+      var actDate = item.querySelector('.tli-actual-date');
+      if (!titleEl) return;
+      var key = titleEl.textContent.trim();
+      snap[key] = { time: actTime ? actTime.value : '', date: actDate ? actDate.value : '' };
+    });
+    return snap;
+  }
+  function restoreActuals(timelineId, snap) {
+    snap = snap || {};
+    var stored = pmActualsLoad()[timelineId] || {};
+    var tl = document.getElementById(timelineId);
+    if (!tl) return;
+    tl.querySelectorAll('.tli').forEach(function(item) {
+      var titleEl = item.querySelector('.tli-title');
+      var actTime = item.querySelector('.tli-actual-input');
+      var actDate = item.querySelector('.tli-actual-date');
+      if (!titleEl) return;
+      var key = titleEl.textContent.trim();
+      var live = snap[key] || {}, kept = stored[key] || {};
+      var time = live.time || kept.time || '';
+      var date = live.date || kept.date || '';
+      if (actTime && time) actTime.value = time;
+      if (actDate && date) actDate.value = date;
+    });
+  }
+
+  /* persist actuals so a mid-cook reload doesn't lose them */
+  var PM_ACTUALS_KEY = 'pitmatics-actuals-v1';
+  function pmActualsLoad() {
+    try { return JSON.parse(localStorage.getItem(PM_ACTUALS_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function saveActuals(timelineId) {
+    try {
+      var snap = snapshotActuals(timelineId), keep = {};
+      /* only keep steps with an actual time entered — dates alone are render pre-fills */
+      Object.keys(snap).forEach(function(k) { if (snap[k].time) keep[k] = snap[k]; });
+      var store = pmActualsLoad();
+      store[timelineId] = keep;
+      localStorage.setItem(PM_ACTUALS_KEY, JSON.stringify(store));
+    } catch(e) {}
+  }
+  function clearActuals(timelineId) {
+    try {
+      var store = pmActualsLoad();
+      delete store[timelineId];
+      localStorage.setItem(PM_ACTUALS_KEY, JSON.stringify(store));
+    } catch(e) {}
+    var tl = document.getElementById(timelineId);
+    if (tl) tl.querySelectorAll('.tli-actual-input').forEach(function(i){ i.value = ''; });
+  }
+
+  /* pre-fill actual time with planned time on first tap/click */
+  document.addEventListener('focusin', function(e) {
+    if (e.target.classList.contains('tli-actual-input') && !e.target.value && e.target.dataset.plannedTime) {
+      e.target.value = e.target.dataset.plannedTime;
+    }
+  });
+
+  /* save on any field change */
+  document.addEventListener('change', function(e) {
+    if (!e.target.closest('.tl')) pmSave();
+  });
+  document.addEventListener('input', function(e) {
+    if (!e.target.closest('.tl')) pmSave();
+  });
 
   document.querySelectorAll('.mode-toggle button').forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -1391,16 +1634,17 @@ footer a:hover { text-decoration: underline; }
     pitTempMode: 'exact',
     DATA: {
       brisket:   { defWeight:14, pph:[1.0,1.25], restMin:2,    restMax:4,   holdCooler:4, holdOven:10, target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:true,  hasFatCap:true  },
-      pork_butt: { defWeight:8, pph:[1.5,2.0],  restMin:1,    restMax:4,   holdCooler:3, holdOven:8,  target:203, hasStall:true,  stallAt:0.40, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:true,  hasFatCap:true  },
+      pork_butt: { defWeight:8, pph:[1.5,2.0],  restMin:1,    restMax:4,   holdCooler:3, holdOven:8,  target:203, hasStall:true,  stallAt:0.40, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:true  },
       spare_ribs:{ fixed:[5.0,6.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
       baby_backs:{ fixed:[4.0,5.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:190, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      beef_ribs: { defWeight:4, pph:[1.3,1.8],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:false, hasFatCap:true  },
+      beef_ribs: { defWeight:4, pph:[1.3,1.8],  restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:203, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:true,  hasShape:true,  hasInject:false },
+      jerky:     { fixed:[3.0,4.0], restMin:0,  restMax:0,    holdCooler:0, holdOven:0,  target:160, hasStall:false, stallAt:0,    byWeight:false, wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false, isJerky:true, restable:false },
       pork_belly:{ defWeight:5, pph:[1.2,1.8], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:195, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:true,  hasShape:false, hasInject:false },
-      chuck_roast:  { defWeight:3, pph:[1.5,2.0],   restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:false, hasTrim:false, hasShape:true,  hasInject:false, hasFatCap:true  },
+      chuck_roast:  { defWeight:3, pph:[1.5,2.0],   restMin:0.5,  restMax:1,   holdCooler:2, holdOven:5,  target:205, hasStall:true,  stallAt:0.45, byWeight:true,  wrapable:true,  hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
       tri_tip:      { defWeight:2, pph:[1.25,1.75], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:2,  target:135, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:true,  hasTrim:false, hasShape:true,  hasInject:false },
       st_louis_ribs:{ fixed:[4.0,5.0], restMin:0.25, restMax:0.5, holdCooler:1, holdOven:3,  target:200, hasStall:true,  stallAt:0.50, byWeight:false, wrapable:true,  hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_chicken:{ defWeight:4.5, pph:[0.55,0.80], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false },
-      whole_turkey: { defWeight:14, pph:[0.40,0.60], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true  }
+      whole_chicken:{ defWeight:4.5, pph:[0.55,0.80], restMin:0.25, restMax:0.25,holdCooler:1, holdOven:2,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:false, restNote:'Keep the rest short and uncovered — a long cooler or oven hold steams the skin and you lose the crisp.' },
+      whole_turkey: { defWeight:14, pph:[0.40,0.60], restMin:0.5,  restMax:0.5, holdCooler:1, holdOven:3,  target:165, hasStall:false, stallAt:0,    byWeight:true,  wrapable:false, hasGrade:false, hasTrim:false, hasShape:false, hasInject:true,  restNote:'Keep the rest short and uncovered — a long cooler or oven hold steams the skin and you lose the crisp.' }
     },
     tempMult: function(t){
       t = Math.max(200, Math.min(350, parseFloat(t) || 250));
@@ -1410,6 +1654,12 @@ footer a:hover { text-decoration: underline; }
       if (t <= 300) return 0.75 + (t - 275) * (0.60 - 0.75) / 25;
       return Math.max(0.45, 0.60 - (t - 300) * 0.004);
     },
+    /* jerky dries rather than renders — its own gentle temp curve, anchored at 170°F */
+    jerkyTempMult: function(t){
+      t = Math.max(150, Math.min(210, parseFloat(t) || 170));
+      return 1 + (170 - t) * 0.01;
+    },
+    JERKY_THICK_M: {thin:0.75, standard:1.0, thick:1.4},
     WRAP_M:    {none:1.22,foil:0.89,paper:1.0},
     SMOKER_M:  {pellet:1.0,offset:0.95,kamado:0.95,vertical:1.05},
     GRADE_M:   {none:1.0,prime:0.92,choice:1.0,select:1.08},
@@ -1508,6 +1758,24 @@ footer a:hover { text-decoration: underline; }
       $('ls-inject-row').style.display        = d.hasInject             ? '' : 'none';
       $('ls-fatcap-tip').style.display        = d.hasFatCap             ? '' : 'none';
       $('ls-wrap-section').style.display      = d.wrapable              ? '' : 'none';
+      $('ls-rest-section').style.display      = d.restable === false    ? 'none' : '';
+      $('ls-jerky-row').style.display         = d.isJerky               ? '' : 'none';
+      var restNoteEl = $('ls-rest-note');
+      restNoteEl.style.display = d.restNote ? '' : 'none';
+      restNoteEl.textContent   = d.restNote || '';
+      /* jerky runs a much cooler pit — adjust the temp input range and defaults */
+      var ptE = $('ls-pit-temp'), ptL = $('ls-pit-temp-low'), ptH = $('ls-pit-temp-high');
+      if (d.isJerky) {
+        ptE.min = 150; ptL.min = 150; ptH.min = 150;
+        if (parseFloat(ptE.value) > 200) ptE.value = 170;
+        if (parseFloat(ptL.value) > 200) ptL.value = 160;
+        if (parseFloat(ptH.value) > 200) ptH.value = 180;
+      } else {
+        ptE.min = 200; ptL.min = 200; ptH.min = 200;
+        if (parseFloat(ptE.value) < 200) ptE.value = 250;
+        if (parseFloat(ptL.value) < 200) ptL.value = 235;
+        if (parseFloat(ptH.value) < 200) ptH.value = 265;
+      }
       if (d.byWeight && !this.weightTouched && d.defWeight) {
         $('ls-weight').value = d.defWeight;
       }
@@ -1539,7 +1807,7 @@ footer a:hover { text-decoration: underline; }
       var weatherTemp = $('ls-weather-temp').value;
       var weatherWind = $('ls-weather-wind').value;
       var coldAdd = parseFloat($('ls-start-temp').value || '0');
-      var tM   = this.tempMult(pitTemp);
+      var tM   = d.isJerky ? this.jerkyTempMult(pitTemp) : this.tempMult(pitTemp);
       var wM   = d.wrapable ? (this.WRAP_M[this.wrapMode] || 1.0) : 1.0;
       var sM   = this.SMOKER_M[smoker]  || 1.0;
       var gM   = d.hasGrade  ? (this.GRADE_M[$('ls-grade').value]  || 1.0) : 1.0;
@@ -1556,8 +1824,9 @@ footer a:hover { text-decoration: underline; }
       } else {
         var racks = parseInt($('ls-racks').value || '1');
         var rackM = 1 + (racks - 1) * 0.08;
-        cookLow  = d.fixed[0] * tM * wM * sM * weM * rackM + coldAdd;
-        cookHigh = d.fixed[1] * tM * wM * sM * weM * rackM + coldAdd;
+        var jM = d.isJerky ? (this.JERKY_THICK_M[$('ls-jerky-thickness').value] || 1.0) : 1.0;
+        cookLow  = d.fixed[0] * tM * wM * sM * weM * rackM * jM + coldAdd;
+        cookHigh = d.fixed[1] * tM * wM * sM * weM * rackM * jM + coldAdd;
       }
 
       var sDate = $('ls-serve-date').value;
@@ -1568,7 +1837,7 @@ footer a:hover { text-decoration: underline; }
       if (this.calcMode === 'start') {
         var fireTime   = new Date(sDate + 'T' + sTime);
         if (isNaN(fireTime.getTime())) return;
-        var noRest     = this.restMode === 'none';
+        var noRest     = this.restMode === 'none' || d.restable === false;
         var restHours  = noRest ? 0 : d.restMin;
         var safety     = noRest ? 0.15 : 0.5;
         var holdHours  = noRest ? 0 : (this.restMode === 'oven' ? d.holdOven : d.holdCooler);
@@ -1577,8 +1846,8 @@ footer a:hover { text-decoration: underline; }
         var wrapTime      = (d.wrapable && this.wrapMode !== 'none') ? addH(meatOnTime, cookLow * 0.60) : null;
         var pullTimeEarly = addH(meatOnTime, cookLow);
         var pullTimeLate  = addH(meatOnTime, cookHigh);
-        var serveEarly    = addH(pullTimeEarly, noRest ? 0.15 : d.restMin + 0.5);
-        var serveLate     = addH(pullTimeLate,  noRest ? 0.15 : holdHours  + 0.5);
+        var serveEarly    = addH(pullTimeEarly, d.isJerky ? 0.5 : noRest ? 0.15 : d.restMin + 0.5);
+        var serveLate     = addH(pullTimeLate,  d.isJerky ? 0.5 : noRest ? 0.15 : holdHours  + 0.5);
         var fireDay       = fmtD(fireTime);
         var serveDay      = fmtD(serveEarly);
 
@@ -1615,8 +1884,8 @@ footer a:hover { text-decoration: underline; }
         $('ls-r-cook').textContent     = Math.round(dispLow) + '–' + Math.round(dispHigh) + ' hrs';
         $('ls-r-cook-sub').textContent = est ? 'stall included · est. weight' : 'stall included';
         $('ls-weight-est').classList.toggle('hidden', !est);
-        $('ls-r-hold').textContent     = noRest ? 'none' : (holdHours + '+ hrs');
-        $('ls-r-hold-sub').textContent = noRest ? 'straight to serve' : (this.restMode === 'oven' ? 'in holding oven' : 'in dry cooler');
+        $('ls-r-hold').textContent     = d.isJerky ? '~30 min' : noRest ? 'none' : (holdHours + '+ hrs');
+        $('ls-r-hold-sub').textContent = d.isJerky ? 'cool before bagging' : noRest ? 'straight to serve' : (this.restMode === 'oven' ? 'in holding oven' : 'in dry cooler');
 
         /* factor tags — same as serve mode */
         var ft2 = $('ls-factor-tags');
@@ -1628,30 +1897,44 @@ footer a:hover { text-decoration: underline; }
         var facts2 = [{ k:'Smoker', v:smokerLabel2 }, { k:'Temp', v:pitTemp+'°F' }];
         facts2.push({ k:'Air', v:weatherTempLabel2 });
         facts2.push({ k:'Wind', v:weatherWindLabel2 });
-        facts2.push({ k:'Wrap', v: this.wrapMode==='none'?'Naked':this.wrapMode==='foil'?'Texas crutch':'Butcher paper' });
-        facts2.push({ k:'Rest', v: this.restMode==='oven'?'Holding oven':this.restMode==='none'?'No rest':'Dry cooler' });
+        if (d.wrapable) facts2.push({ k:'Wrap', v: this.wrapMode==='none'?'Naked':this.wrapMode==='foil'?'Texas crutch':'Butcher paper' });
+        if (d.restable !== false) facts2.push({ k:'Rest', v: this.restMode==='oven'?'Holding oven':this.restMode==='none'?'No rest':'Dry cooler' });
         facts2.forEach(function(f){ var el=document.createElement('div'); el.className='factor'; el.innerHTML=f.k+': <span>'+f.v+'</span>'; ft2.appendChild(el); });
 
         /* timeline — same events, forward from fireTime */
         var tl2 = $('ls-timeline');
+        var _snap2 = snapshotActuals('ls-timeline');
         tl2.innerHTML = '';
         var events2 = [];
         events2.push({ time:fireTime,    dot:'d-fire',  title:'Light the fire', badge:{text:'you\'re on',cls:'b-ok'}, sub:'Get your smoker up to temp. Target: '+pitTemp+'°F.' });
-        events2.push({ time:meatOnTime,  dot:'d-meat',  title:'Meat on the smoker', badge:{text:'preheat done',cls:'b-info'}, sub:'Once the smoker is stable, get the '+cutLabel2.toLowerCase()+' on.' });
+        events2.push({ time:meatOnTime,  dot:'d-meat',  title:'Meat on the smoker', badge:{text:'preheat done',cls:'b-info'}, sub: d.isJerky
+          ? 'Lay strips in a single layer with space between — or hang them. If your marinade included cure (Prague powder #1) you\'re set; if not, make sure strips hit 160°F internal early in the smoke.'
+          : 'Once the smoker is stable, get the '+cutLabel2.toLowerCase()+' on.' });
+        if (d.isJerky && parseInt($('ls-racks').value || '1') > 1) {
+          events2.push({ time: addH(meatOnTime, cookLow * 0.5), dot:'d-flip', title:'Rotate the racks', badge:{text:'midway',cls:'b-info'}, sub:'Swap rack positions top-to-bottom so everything dries evenly.' });
+        }
         if (stallTime) events2.push({ time:stallTime, dot:'d-stall', title:'Stall begins', badge:{text:'~'+Math.round(cookLow*d.stallAt)+' hrs in',cls:'b-warn'}, sub:'Internal temp flatlines. This is normal — the stall can last 2–4 hrs. Don\'t panic, don\'t crank heat.' });
         if (wrapTime) events2.push({ time:wrapTime, dot:'d-wrap', title:'Wrap', badge:{text:this.wrapMode==='foil'?'Texas crutch':'Butcher paper',cls:'b-info'}, sub:'Probe the flat before wrapping tight. Wrap will push you through the stall.' });
+        if (d.isJerky) {
+          events2.push({ time:pullTimeEarly, dot:'d-pull', title:'Pull window opens', badge:{text:'bend test',cls:'b-ok'}, sub:'A strip should bend 90° and crack without snapping — chewy, not brittle. Start checking the thinnest strips early.' });
+          events2.push({ time:pullTimeEarly, dot:'d-rest', title:'Cool and blot', badge:{text:'~30 min',cls:'b-info'}, sub:'Pat off any surface fat and let strips cool fully before bagging.' });
+          events2.push({ time:serveEarly, dot:'d-serve', title:'Bag it up', badge:{text:'estimated window',cls:'b-ok'}, sub:'Into zip-top bags or jars once fully cool. Window closes around '+fmt(serveLate)+'.' });
+        } else {
         events2.push({ time:pullTimeEarly, dot:'d-pull', title:'Pull window opens', badge:{text:'start checking',cls:'b-ok'}, sub:'Probe for zero resistance — butter through butter. Pull when it\'s ready, not the clock.' });
         if (!noRest) events2.push({ time:pullTimeEarly, dot:'d-rest', title:this.restMode==='oven'?'Into the holding oven':'Into the cooler', badge:{text:holdHours+'+ hr hold',cls:'b-info'}, sub:this.restMode==='oven'?'Set to 150–160°F. Holds safely for '+holdHours+'+ hours.':'Foil tight, old towels, dry cooler. Holds safely for '+holdHours+'+ hours.' });
         events2.push({ time:serveEarly, dot:'d-serve', title:'Ready to serve', badge:{text:'estimated window',cls:'b-ok'}, sub:'Slice and serve. Window closes around '+fmt(serveLate)+'.' });
+        }
         events2.sort(function(a,b){ return a.time-b.time; });
         events2.forEach(function(ev){
-          var dayTag = fmtD(ev.time) !== fireDay ? '<span class="day">'+fmtD(ev.time)+'</span>' : '';
+          var dayTag = '<span class="day">'+fmtD(ev.time)+'</span>';
           var badge  = ev.badge ? '<span class="badge '+ev.badge.cls+'">'+ev.badge.text+'</span>' : '';
           var div = document.createElement('div');
           div.className = 'tli';
-          div.innerHTML = '<div class="tli-time">'+fmt(ev.time)+dayTag+'</div><div class="dot '+ev.dot+'"></div><div class="tli-content"><div class="tli-title">'+ev.title+badge+'</div><div class="tli-sub">'+ev.sub+'</div></div>';
+          var fbk2 = fbKey(ev.title); var fbAttr2 = fbk2 ? ' data-fb-target="'+fbk2+'"' : '';
+          div.innerHTML = '<div class="tli-times"><div class="tli-time-col"><div class="tli-actual-label">planned</div><div class="tli-time">'+fmt(ev.time)+dayTag+'</div></div><div class="tli-actual-col"><div class="tli-actual-label">actual</div><input type="time" class="tli-actual-input"'+fbAttr2+' data-planned-time="'+fmtTI(ev.time)+'" aria-label="Actual time for '+ev.title+'"><input type="date" class="tli-actual-date"'+fbAttr2+' value="'+fmtDI(ev.time)+'" aria-label="Actual date for '+ev.title+'"></div></div><div class="dot '+ev.dot+'"></div><div class="tli-content"><div class="tli-title">'+ev.title+badge+'</div><div class="tli-sub">'+ev.sub+'</div></div>';
           tl2.appendChild(div);
         });
+        restoreActuals('ls-timeline', _snap2);
 
         $('ls-result').classList.remove('hidden');
 
@@ -1661,7 +1944,7 @@ footer a:hover { text-decoration: underline; }
           pitTempMode: this.pitTempMode,
           pitTempLow:  this.pitTempMode === 'range' ? ($('ls-pit-temp-low').value || null) : null,
           pitTempHigh: this.pitTempMode === 'range' ? ($('ls-pit-temp-high').value || null) : null,
-          wrap: this.wrapMode, weatherTemp: weatherTemp, weatherWind: weatherWind,
+          wrap: d.wrapable ? this.wrapMode : 'none', weatherTemp: weatherTemp, weatherWind: weatherWind,
           fireStr: fmt(fireTime),
           cookLow: Math.round(cookLow*10)/10, cookHigh: Math.round(cookHigh*10)/10,
           cookLowStr: (Math.round(cookLow*10)/10).toString(), cookHighStr: (Math.round(cookHigh*10)/10).toString(),
@@ -1676,9 +1959,9 @@ footer a:hover { text-decoration: underline; }
       var serve = new Date(sDate + 'T' + sTime);
       if (isNaN(serve.getTime())) return;
 
-      var noRest = this.restMode === 'none';
+      var noRest = this.restMode === 'none' || d.restable === false;
       var restHours = noRest ? 0 : d.restMin;
-      var safety = noRest ? 0.15 : 0.5;
+      var safety = d.isJerky ? 0.5 : (noRest ? 0.15 : 0.5);
       var totalWorst = cookHigh + restHours + preheat + safety;
       var holdHours = noRest ? 0 : (this.restMode === 'oven' ? d.holdOven : d.holdCooler);
 
@@ -1718,8 +2001,8 @@ footer a:hover { text-decoration: underline; }
       $('ls-r-cook').textContent       = Math.round(dispLow) + '–' + Math.round(dispHigh) + ' hrs';
       $('ls-r-cook-sub').textContent   = est ? 'stall included · est. weight' : 'stall included';
       $('ls-weight-est').classList.toggle('hidden', !est);
-      $('ls-r-hold').textContent       = noRest ? 'none' : (holdHours + '+ hrs');
-      $('ls-r-hold-sub').textContent   = noRest ? 'straight to serve' : (this.restMode === 'oven' ? 'in holding oven' : 'in dry cooler');
+      $('ls-r-hold').textContent       = d.isJerky ? '~30 min' : noRest ? 'none' : (holdHours + '+ hrs');
+      $('ls-r-hold-sub').textContent   = d.isJerky ? 'cool before bagging' : noRest ? 'straight to serve' : (this.restMode === 'oven' ? 'in holding oven' : 'in dry cooler');
 
       var no = $('ls-notice-overnight');
       if (fireDay !== serveDay) {
@@ -1756,8 +2039,8 @@ footer a:hover { text-decoration: underline; }
       if (d.hasTrim && $('ls-trim').value !== 'none') facts.push({ k: 'Trim', v: $('ls-trim').options[$('ls-trim').selectedIndex].text.split(' (')[0] });
       if (d.hasShape) facts.push({ k: 'Shape', v: $('ls-shape').options[$('ls-shape').selectedIndex].text });
       if (d.hasInject && $('ls-inject').value === 'yes') facts.push({ k: 'Injection', v: 'Yes' });
-      facts.push({ k: 'Wrap', v: this.wrapMode === 'none' ? 'Naked' : this.wrapMode === 'foil' ? 'Texas crutch' : 'Butcher paper' });
-      facts.push({ k: 'Rest', v: this.restMode === 'oven' ? 'Holding oven' : this.restMode === 'none' ? 'No rest' : 'Dry cooler' });
+      if (d.wrapable) facts.push({ k: 'Wrap', v: this.wrapMode === 'none' ? 'Naked' : this.wrapMode === 'foil' ? 'Texas crutch' : 'Butcher paper' });
+      if (d.restable !== false) facts.push({ k: 'Rest', v: this.restMode === 'oven' ? 'Holding oven' : this.restMode === 'none' ? 'No rest' : 'Dry cooler' });
       facts.forEach(function(f){
         var el = document.createElement('div');
         el.className = 'factor';
@@ -1783,11 +2066,18 @@ footer a:hover { text-decoration: underline; }
         : 'Probe should slide in with zero resistance. Chase feel, not the number. If it drags, give it more time.';
 
       var tl = $('ls-timeline');
+      var _snapLS = snapshotActuals('ls-timeline');
       tl.innerHTML = '';
       var events = [
         { time: fireTime,   dot: 'd-fire', title: 'Light the fire',     sub: smokerNote + ' Allow ' + Math.round(preheat * 60) + ' min to reach stable ' + pitTemp + '°F.' },
-        { time: meatOnTime, dot: 'd-fire', title: 'Meat on the smoker', sub: 'Place your ' + cutLabel + ' on.' + (gradeNote ? gradeNote : '') + (trimNote ? trimNote : '') + injNote }
+        { time: meatOnTime, dot: 'd-fire', title: 'Meat on the smoker', sub: d.isJerky
+          ? 'Lay strips in a single layer with space between — or hang them. If your marinade included cure (Prague powder #1) you\'re set; if not, make sure strips hit 160°F internal early in the smoke.'
+          : 'Place your ' + cutLabel + ' on.' + (gradeNote ? gradeNote : '') + (trimNote ? trimNote : '') + injNote }
       ];
+      if (d.isJerky) {
+        var racksOn = parseInt($('ls-racks').value || '1');
+        if (racksOn > 1) events.push({ time: addH(meatOnTime, cookLow * 0.5), dot: 'd-flip', title: 'Rotate the racks', badge: { text: 'midway', cls: 'b-info' }, sub: 'Swap rack positions top-to-bottom so everything dries evenly.' });
+      }
       if (d.hasStall && stallTime) {
         var isRibs = (cut === 'spare_ribs' || cut === 'baby_backs' || cut === 'st_louis_ribs');
         var stallSub = isRibs
@@ -1804,6 +2094,11 @@ footer a:hover { text-decoration: underline; }
           : (this.wrapMode === 'foil' ? 'Bark should be deep mahogany and set firm. ' : '') + matNote;
         events.push({ time: wrapTime, dot: 'd-wrap', title: wl, badge: tempWrap ? { text: 'go by temp', cls: 'b-info' } : null, sub: ws });
       }
+      if (d.isJerky) {
+        events.push({ time: pullTime, dot: 'd-pull', title: 'Pull off the smoker', badge: { text: 'bend test', cls: 'b-ok' }, sub: 'A strip should bend 90° and crack without snapping — chewy, not brittle. Start checking the thinnest strips 30 min early.' });
+        events.push({ time: pullTime, dot: 'd-rest', title: 'Cool and blot', badge: { text: '~30 min', cls: 'b-info' }, sub: 'Pat off any surface fat and let strips cool fully — bagging warm jerky traps moisture and shortens shelf life.' });
+        events.push({ time: serve,    dot: 'd-serve', title: 'Bag it up', badge: { text: 'done', cls: 'b-ok' }, sub: 'Into zip-top bags or jars. It keeps 1–2 weeks at room temp, longer refrigerated — if it lasts that long.' });
+      } else {
       events.push({ time: pullTime, dot: 'd-pull', title: 'Pull off the smoker', badge: { text: 'target ' + d.target + '°F', cls: 'b-ok' }, sub: pullNote });
       if (!noRest) {
         events.push({ time: pullTime, dot: 'd-rest', title: this.restMode === 'oven' ? 'Into the holding oven' : 'Into the cooler', badge: { text: holdHours + '+ hr hold', cls: 'b-info' }, sub: restMethodNote });
@@ -1811,16 +2106,19 @@ footer a:hover { text-decoration: underline; }
         events.push({ time: pullTime, dot: 'd-rest', title: 'Skipping the rest', badge: { text: 'no rest', cls: 'b-warn' }, sub: restMethodNote });
       }
       events.push({ time: serve,    dot: 'd-serve', title: 'Slice and serve', badge: { text: 'on time', cls: 'b-ok' }, sub: cut === 'brisket' ? 'Against the grain — point first, then flat. You earned every compliment heading your way.' : 'Pull, slice, or serve. Take the credit.' });
+      }
 
       events.sort(function(a, b){ return a.time - b.time; });
       events.forEach(function(ev){
-        var dayTag = fmtD(ev.time) !== serveDay ? '<span class="day">' + fmtD(ev.time) + '</span>' : '';
+        var dayTag = '<span class="day">' + fmtD(ev.time) + '</span>';
         var badge  = ev.badge ? '<span class="badge ' + ev.badge.cls + '">' + ev.badge.text + '</span>' : '';
         var div = document.createElement('div');
         div.className = 'tli';
-        div.innerHTML = '<div class="tli-time">' + fmt(ev.time) + dayTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        var fbk = fbKey(ev.title); var fbAttr = fbk ? ' data-fb-target="' + fbk + '"' : '';
+        div.innerHTML = '<div class="tli-times"><div class="tli-time-col"><div class="tli-actual-label">planned</div><div class="tli-time">' + fmt(ev.time) + dayTag + '</div></div><div class="tli-actual-col"><div class="tli-actual-label">actual</div><input type="time" class="tli-actual-input"' + fbAttr + ' data-planned-time="' + fmtTI(ev.time) + '" aria-label="Actual time for ' + ev.title + '"><input type="date" class="tli-actual-date"' + fbAttr + ' value="' + fmtDI(ev.time) + '" aria-label="Actual date for ' + ev.title + '"></div></div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
         tl.appendChild(div);
       });
+      restoreActuals('ls-timeline', _snapLS);
 
       var notesEl = $('ls-result-notes');
       var notesVal = ($('ls-notes').value || '').trim();
@@ -1836,7 +2134,7 @@ footer a:hover { text-decoration: underline; }
         pitTempMode: this.pitTempMode,
         pitTempLow:  this.pitTempMode === 'range' ? ($('ls-pit-temp-low').value || null) : null,
         pitTempHigh: this.pitTempMode === 'range' ? ($('ls-pit-temp-high').value || null) : null,
-        wrap: this.wrapMode,
+        wrap: d.wrapable ? this.wrapMode : 'none',
         weatherTemp: weatherTemp,
         weatherWind: weatherWind,
         fireStr: fireDay !== serveDay ? fireDay + ' at ' + fmt(fireTime) : fmt(fireTime),
@@ -1882,7 +2180,8 @@ footer a:hover { text-decoration: underline; }
       return Math.max(0.55, 0.72 - (t - 550) * 0.0015);
     },
     SMOKER_M:       {pellet:1.15,offset:0.95,kamado:0.85,vertical:1.10,kettle:0.92},
-    WEATHER_M:      {none:1.0,hot:0.96,mild:1.0,cool:1.08,cold:1.29},
+    WEATHER_TEMP_M: {hot:0.96, mild:1.0, cool:1.04, cold:1.15},
+    WEATHER_WIND_M: {calm:1.0, breezy:1.04, windy:1.12},
     DONENESS_FACTOR:{rare:0.85,med_rare:1.0,medium:1.18,med_well:1.32,well:1.45},
 
     setMethod: function(m){
@@ -1897,8 +2196,36 @@ footer a:hover { text-decoration: underline; }
     onCutChange: function(){
       var cut = $('hf-cut').value;
       var d = this.DATA[cut];
-      if (!d.allowsAll) { $('hf-doneness').value = d.defaultDone; }
+      this.rebuildDoneness(d);
       this.calc();
+    },
+    /* rebuild doneness options so nothing below the cut's safe temp is offered;
+       levels that clamp to the same effective temp collapse into one honest option */
+    rebuildDoneness: function(d){
+      var sel = $('hf-doneness');
+      var prev = sel.value;
+      var ORDER = ['rare','med_rare','medium','med_well','well'];
+      var self = this;
+      var byEff = {};
+      ORDER.forEach(function(v){
+        var eff = Math.max(self.DONENESS[v], d.minSafe || 0);
+        byEff[eff] = v; /* highest doneness name wins for each effective temp */
+      });
+      var effs = Object.keys(byEff).map(Number).sort(function(a, b){ return a - b; });
+      sel.innerHTML = '';
+      effs.forEach(function(eff){
+        var v = byEff[eff];
+        var name = self.DONENESS_LABEL[v];
+        var label = (effs.length === 1 && eff > self.DONENESS[v])
+          ? 'Cooked through (' + eff + '°F)'
+          : name.charAt(0).toUpperCase() + name.slice(1) + ' (' + eff + '°F)';
+        var opt = document.createElement('option');
+        opt.value = v; opt.textContent = label;
+        sel.appendChild(opt);
+      });
+      var wanted = d.allowsAll && prev ? prev : d.defaultDone;
+      var eff = Math.max(this.DONENESS[wanted] || 0, d.minSafe || 0);
+      sel.value = byEff[eff] || byEff[effs[0]];
     },
     calc: function(){
       var cut = $('hf-cut').value;
@@ -1907,7 +2234,8 @@ footer a:hover { text-decoration: underline; }
       var coldAdd = parseFloat($('hf-start-temp').value || '0');
       var doneness = $('hf-doneness').value;
       var smoker = $('hf-smoker').value;
-      var weather = $('hf-weather').value;
+      var weatherTemp = $('hf-weather-temp').value;
+      var weatherWind = $('hf-weather-wind').value;
       var sTime = $('hf-start-time').value;
       if (!sTime) return;
 
@@ -1915,7 +2243,7 @@ footer a:hover { text-decoration: underline; }
       if (d.minSafe !== null && pullTemp < d.minSafe) { pullTemp = d.minSafe; }
 
       var sMult = this.SMOKER_M[smoker] || 1.0;
-      var weM   = this.WEATHER_M[weather] || 1.0;
+      var weM   = (this.WEATHER_TEMP_M[weatherTemp] || 1.0) * (this.WEATHER_WIND_M[weatherWind] || 1.0);
       var dF    = this.DONENESS_FACTOR[doneness] || 1.0;
 
       var today = new Date();
@@ -2015,6 +2343,7 @@ footer a:hover { text-decoration: underline; }
       });
 
       var tl = $('hf-timeline');
+      var _snapHF = snapshotActuals('hf-timeline');
       tl.innerHTML = '';
       events.forEach(function(ev){
         var t = addM(startTime, ev.offset);
@@ -2022,9 +2351,11 @@ footer a:hover { text-decoration: underline; }
         var offsetTag = ev.offset === 0 ? '' : '<span class="day">' + (ev.offset > 0 ? '+' : '') + Math.round(ev.offset) + ' min</span>';
         var div = document.createElement('div');
         div.className = 'tli';
-        div.innerHTML = '<div class="tli-time">' + fmt(t) + offsetTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        var fbkHF = fbKey(ev.title); var fbAttrHF = fbkHF ? ' data-fb-target="' + fbkHF + '"' : '';
+        div.innerHTML = '<div class="tli-times"><div class="tli-time-col"><div class="tli-actual-label">planned</div><div class="tli-time">' + fmt(t) + offsetTag + '</div></div><div class="tli-actual-col"><div class="tli-actual-label">actual</div><input type="time" class="tli-actual-input"' + fbAttrHF + ' data-planned-time="' + fmtTI(t) + '" aria-label="Actual time for ' + ev.title + '"><input type="date" class="tli-actual-date"' + fbAttrHF + ' value="' + fmtDI(t) + '" aria-label="Actual date for ' + ev.title + '"></div></div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
         tl.appendChild(div);
       });
+      restoreActuals('hf-timeline', _snapHF);
 
       $('hf-result').classList.remove('hidden');
       updateHFFeedbackPre({
@@ -2034,14 +2365,14 @@ footer a:hover { text-decoration: underline; }
         smoker:    $('hf-smoker').options[$('hf-smoker').selectedIndex].text.split(' /')[0],
         method:    methodLabel,
         doneness:  HF.DONENESS_LABEL[doneness],
-        weather:   $('hf-weather').value,
+        weather:   weatherTemp + ' · ' + weatherWind,
         totalStr:  this.method === 'sous' ? '~1.5 min sear' : Math.round(totalMinLow) + '–' + Math.round(totalMinHigh) + ' min'
       });
     }
   };
 
   /* event wiring */
-  ['ls-cut','ls-brisket-type','ls-weight','ls-grade','ls-trim','ls-start-temp','ls-racks','ls-shape','ls-inject','ls-smoker','ls-pit-temp','ls-preheat','ls-weather-temp','ls-weather-wind','ls-serve-date','ls-serve-time','ls-notes'].forEach(function(id){
+  ['ls-cut','ls-brisket-type','ls-weight','ls-grade','ls-trim','ls-start-temp','ls-racks','ls-shape','ls-inject','ls-smoker','ls-pit-temp','ls-preheat','ls-weather-temp','ls-weather-wind','ls-serve-date','ls-serve-time','ls-notes','ls-jerky-thickness'].forEach(function(id){
     var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'ls-cut') LS.onCutChange(); else if (id === 'ls-brisket-type') LS.onCutChange(); else LS.calc(); });
   });
   $('ls-weight').addEventListener('input', function(){ LS.weightTouched = true; LS.calc(); });
@@ -2060,7 +2391,7 @@ footer a:hover { text-decoration: underline; }
     t.addEventListener('click', function(){ LS.setRest(t.dataset.rest); });
   });
 
-  ['hf-cut','hf-thickness','hf-start-temp','hf-doneness','hf-smoker','hf-hot-temp','hf-slow-temp','hf-sear-temp','hf-weather','hf-start-time'].forEach(function(id){
+  ['hf-cut','hf-thickness','hf-start-temp','hf-doneness','hf-smoker','hf-hot-temp','hf-slow-temp','hf-sear-temp','hf-weather-temp','hf-weather-wind','hf-start-time'].forEach(function(id){
     var el = $(id); if (el) el.addEventListener('change', function(){ if (id === 'hf-cut') HF.onCutChange(); else HF.calc(); });
   });
   ['hf-hot-temp','hf-slow-temp','hf-sear-temp'].forEach(function(id){
@@ -2075,6 +2406,8 @@ footer a:hover { text-decoration: underline; }
   window.$ = $;
   window.LS = LS;
   window.HF = HF;
+  window.pmRestore = pmRestore;
+  window.clearActuals = clearActuals;
 
   /* init */
   var d = new Date(); d.setDate(d.getDate() + 1);
@@ -2197,6 +2530,27 @@ footer a:hover { text-decoration: underline; }
             {time:addH(serve,-1.25), dot:'d-pull', title:'Pull off the smoker', badge:{text:'target 203°F',cls:'b-ok'}, sub:'Probe should slide in between the bones with zero resistance. Bark will be nearly black — that\'s correct.'},
             {time:addH(serve,-1), dot:'d-rest', title:'Rest 45-60 min', sub:'Foil loosely. These need time to reabsorb.'},
             {time:serve,   dot:'d-serve', title:'Serve',           badge:{text:'on time',cls:'b-ok'}, sub:'Between the bones. One bone per person is a full meal.'}
+          ];
+        }
+      },
+      {
+        id:'jerky', name:'Beef jerky', type:'low_slow', protein:'beef',
+        cookLow:3.0, cookHigh:4.0, restHours:0.5, preheat:0.5,
+        pitTemp:170, wrap:'none', target:160,
+        smokerM:{pellet:1.0,offset:0.95,kamado:0.95,vertical:1.05,kettle:1.0},
+        weatherM:{hot:0.97,mild:1.0,cool:1.05,cold:1.15},
+        blurb:'The make-ahead flex. Three to four hours at 170°F turns a few pounds of sliced beef into snacks people hover over. And it doesn\'t care when dinner is — it keeps for weeks.',
+        tightBlurb:'Thin slices at a slightly hotter pit can squeak in, but rushed jerky turns brittle. Slice thin and trust the bend test over the clock.',
+        noBlurb:'Not enough time to dry properly — you\'d be serving smoky raw beef, which is a different product with a health warning attached.',
+        overnightBlurb:'Jerky doesn\'t need an overnight — it\'s an afternoon project. If you\'re running a brisket all night anyway, jerky is a great use of the rack space while you wait.',
+        events:function(fire,meatOn,serve){
+          return [
+            {time:fire,    dot:'d-fire', title:'Light the fire',   sub:'Stable at 170°F — low and gentle. This is drying, not cooking.'},
+            {time:meatOn,  dot:'d-fire', title:'Strips on',        sub:'Single layer with space between, or hang them. If your marinade included cure (Prague powder #1) you\'re set; if not, make sure strips hit 160°F internal early in the smoke.'},
+            {time:addH(meatOn,1.75), dot:'d-flip', title:'Rotate the racks', badge:{text:'midway',cls:'b-info'}, sub:'Swap rack positions top-to-bottom so everything dries evenly.'},
+            {time:addH(serve,-0.5), dot:'d-pull', title:'Pull off the smoker', badge:{text:'bend test',cls:'b-ok'}, sub:'A strip should bend 90° and crack without snapping — chewy, not brittle. Start checking the thinnest strips early.'},
+            {time:addH(serve,-0.45), dot:'d-rest', title:'Cool and blot', badge:{text:'~30 min',cls:'b-info'}, sub:'Pat off any surface fat and let strips cool fully — bagging warm jerky traps moisture.'},
+            {time:serve,   dot:'d-serve', title:'Bag it up',        badge:{text:'done',cls:'b-ok'}, sub:'Zip-top bags or jars. Keeps 1-2 weeks at room temp, longer refrigerated — if it lasts that long.'}
           ];
         }
       },
@@ -2457,9 +2811,6 @@ footer a:hover { text-decoration: underline; }
       }
     ],
 
-    SMOKER_M: {pellet:1.0,offset:0.90,kamado:0.85,vertical:1.05,kettle:1.0},
-    WEATHER_M:{none:1.0,hot:0.97,mild:1.0,cool:1.08,cold:1.29},
-
     setProtein: function(p){
       this.proteinPref = p;
       document.querySelectorAll('#adv-protein-toggles .tog').forEach(function(t){
@@ -2486,18 +2837,21 @@ footer a:hover { text-decoration: underline; }
 
     buildTimeline: function(cut, fireTime, meatOnTime, serveTime, smoker, weather){
       var tl = $('adv-timeline');
+      var _snapAdv = snapshotActuals('adv-timeline');
       tl.innerHTML = '';
       var serveDay = fmtD(serveTime);
       var events = cut.events(fireTime, meatOnTime, serveTime);
       events.sort(function(a,b){ return a.time - b.time; });
       events.forEach(function(ev){
-        var dayTag = fmtD(ev.time) !== serveDay ? '<span class="day">(' + fmtD(ev.time) + ')</span>' : '';
+        var dayTag = '<span class="day">' + fmtD(ev.time) + '</span>';
         var badge  = ev.badge ? '<span class="badge ' + ev.badge.cls + '">' + ev.badge.text + '</span>' : '';
         var div = document.createElement('div');
         div.className = 'tli';
-        div.innerHTML = '<div class="tli-time">' + fmt(ev.time) + dayTag + '</div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
+        var fbk = fbKey(ev.title); var fbAttr = fbk ? ' data-fb-target="' + fbk + '"' : '';
+        div.innerHTML = '<div class="tli-times"><div class="tli-time-col"><div class="tli-actual-label">planned</div><div class="tli-time">' + fmt(ev.time) + dayTag + '</div></div><div class="tli-actual-col"><div class="tli-actual-label">actual</div><input type="time" class="tli-actual-input"' + fbAttr + ' data-planned-time="' + fmtTI(ev.time) + '" aria-label="Actual time for ' + ev.title + '"><input type="date" class="tli-actual-date"' + fbAttr + ' value="' + fmtDI(ev.time) + '" aria-label="Actual date for ' + ev.title + '"></div></div><div class="dot ' + ev.dot + '"></div><div class="tli-content"><div class="tli-title">' + ev.title + badge + '</div><div class="tli-sub">' + ev.sub + '</div></div>';
         tl.appendChild(div);
       });
+      restoreActuals('adv-timeline', _snapAdv);
     },
 
     selectCut: function(cut, fireTime, meatOnTime, serveTime){
@@ -2579,7 +2933,7 @@ footer a:hover { text-decoration: underline; }
         var cut = item.cut;
         var fit = item.fit;
         var sM = cut.smokerM[smoker] || 1.0;
-        var wM = cut.weatherM[weather] || 1.0;
+        var wM = (cut.weatherM[weatherTemp] || 1.0) * (ADV.WIND_M[weatherWind] || 1.0);
         var totalWorst = (cut.cookHigh * sM * wM) + cut.restHours + cut.preheat + 0.5;
         var fireTime   = new Date(serveMs - totalWorst * 3600000);
         var meatOnTime = addH(fireTime, cut.preheat);
@@ -2708,12 +3062,123 @@ function updateFeedbackPre(meta){
   if (fbDetails) fbDetails.open = true;
 }
 
+/* ===== Auto-computed accuracy from actual fire/pull times ===== */
+var _lsAccuracySource = 'self-reported';
+
+function autoComputeLSAccuracy(){
+  if (!_lastCalcMeta || !_lastCalcMeta.cookLow) return;
+  var ft = document.getElementById('ls-fb-actual-fire').value;
+  var pt = document.getElementById('ls-fb-actual-pull').value;
+  if (!ft || !pt) return;
+  var todayStr = new Date().toISOString().split('T')[0];
+  var fd = document.getElementById('ls-fb-actual-fire-date').value || todayStr;
+  var pd = document.getElementById('ls-fb-actual-pull-date').value;
+  var fire = new Date(fd + 'T' + ft);
+  var pull = new Date((pd || fd) + 'T' + pt);
+  if (isNaN(fire.getTime()) || isNaN(pull.getTime())) return;
+  /* no pull date given and pull reads before fire: assume it crossed midnight */
+  if (pull <= fire && !pd) pull = new Date(pull.getTime() + 86400000);
+  if (pull <= fire) return;
+  var preheatH = (parseFloat(document.getElementById('ls-preheat').value) || 45) / 60;
+  var actualCook = (pull - fire) / 3600000 - preheatH;
+  if (!(actualCook > 0) || actualCook > 48) return;
+  var over = 0;
+  if (actualCook < _lastCalcMeta.cookLow)  over = actualCook - _lastCalcMeta.cookLow;
+  if (actualCook > _lastCalcMeta.cookHigh) over = actualCook - _lastCalcMeta.cookHigh;
+  var a = Math.abs(over), bucket;
+  if (a <= 0.25)     bucket = 'spot_on';
+  else if (a < 0.75) bucket = over < 0 ? 'early_30' : 'late_30';
+  else if (a < 1.5)  bucket = over < 0 ? 'early_1h' : 'late_1h';
+  else               bucket = over < 0 ? 'early_2h' : 'late_2h';
+  var radio = document.querySelector('input[name="ls-fb-accuracy"][value="' + bucket + '"]');
+  if (radio) { radio.checked = true; _lsAccuracySource = 'computed'; }
+  var hint = document.getElementById('ls-fb-accuracy-auto');
+  if (hint) {
+    hint.style.display = '';
+    hint.textContent = '✓ Auto-calculated from your actual times: ' + (Math.round(actualCook * 10) / 10) +
+      ' hrs on the smoker vs. predicted ' + _lastCalcMeta.cookLow + '–' + _lastCalcMeta.cookHigh +
+      ' hrs. Tap a different option to override.';
+  }
+}
+
+/* recompute when actuals change; manual radio click takes back over */
+['ls-fb-actual-fire','ls-fb-actual-pull','ls-fb-actual-fire-date','ls-fb-actual-pull-date'].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('change', autoComputeLSAccuracy);
+});
+document.querySelectorAll('input[name="ls-fb-accuracy"]').forEach(function(r){
+  r.addEventListener('change', function(e){
+    if (e.isTrusted) {
+      _lsAccuracySource = 'self-reported';
+      var hint = document.getElementById('ls-fb-accuracy-auto');
+      if (hint && hint.style.display !== 'none') hint.textContent = 'Using your override instead of the auto-calculated value.';
+    }
+  });
+});
+
+function pad(str, len) {
+  str = String(str);
+  while (str.length < len) str += ' ';
+  return str;
+}
+
+function fmtActualTime(timeVal, dateVal) {
+  if (!timeVal) return '—';
+  var parts = timeVal.split(':');
+  var h = parseInt(parts[0]), m = parts[1];
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  var str = h + ':' + m + ' ' + ampm;
+  if (dateVal) {
+    try {
+      var d = new Date(dateVal + 'T12:00:00');
+      str += ' · ' + d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    } catch(e) {}
+  }
+  return str;
+}
+
+function buildScheduleEmailSection(timelineId) {
+  var tl = document.getElementById(timelineId);
+  if (!tl) return '';
+  var rows = [];
+  tl.querySelectorAll('.tli').forEach(function(item) {
+    var titleEl = item.querySelector('.tli-title');
+    var timeEl  = item.querySelector('.tli-time');
+    var actTime = item.querySelector('.tli-actual-input');
+    var actDate = item.querySelector('.tli-actual-date');
+    if (!titleEl || !timeEl) return;
+    // Strip badge span from title
+    var title = '';
+    titleEl.childNodes.forEach(function(n) { if (n.nodeType === 3) title += n.textContent; });
+    title = title.trim() || titleEl.textContent.trim();
+    // Planned: base time + day tag
+    var plannedTime = '';
+    timeEl.childNodes.forEach(function(n) { if (n.nodeType === 3) plannedTime += n.textContent; });
+    plannedTime = plannedTime.trim();
+    var daySpan = timeEl.querySelector('.day');
+    var planned = plannedTime + (daySpan ? ' · ' + daySpan.textContent.trim() : '');
+    var actual  = fmtActualTime(actTime ? actTime.value : '', actDate ? actDate.value : '');
+    rows.push({ title: title, planned: planned, actual: actual });
+  });
+  if (!rows.length) return '';
+  var c1 = Math.max.apply(null, rows.map(function(r){ return r.title.length; }))   + 3;
+  var c2 = Math.max.apply(null, rows.map(function(r){ return r.planned.length; })) + 3;
+  var header  = pad('Step', c1) + pad('Planned', c2) + 'Actual';
+  var divider = new Array(c1 + c2 + 22).join('-');
+  var lines   = [header, divider];
+  rows.forEach(function(r) { lines.push(pad(r.title, c1) + pad(r.planned, c2) + r.actual); });
+  return '=== SCHEDULE (planned vs. actual) ===\n' + lines.join('\n') + '\n';
+}
+
 function logCook(){
   if (!_lastCalcMeta) { alert('Run a calculation first, then log your cook after it\'s done.'); return; }
   var accuracy = document.querySelector('input[name="ls-fb-accuracy"]:checked');
   var actualFire = $('ls-fb-actual-fire').value;
   var notes = ($('ls-fb-notes').value || '').trim();
   var share = $('ls-fb-share').checked;
+  var cutData = (window.LS && LS.DATA && LS.DATA[_lastCalcMeta.cut]) || {};
+  var fv = function(id){ var el = document.getElementById(id); return el ? el.value : ''; };
 
   var entry = {
     id: Date.now(),
@@ -2729,7 +3194,16 @@ function logCook(){
     wrap: _lastCalcMeta.wrap,
     weatherTemp: _lastCalcMeta.weatherTemp || '',
     weatherWind: _lastCalcMeta.weatherWind || '',
-    grade: (document.getElementById('ls-grade') ? document.getElementById('ls-grade').value : ''),
+    grade: cutData.hasGrade ? fv('ls-grade') : '',
+    style:          _lastCalcMeta.cut === 'brisket' ? fv('ls-brisket-type') : '',
+    racks:          cutData.byWeight === false && !cutData.isJerky ? fv('ls-racks') : '',
+    sliceThickness: cutData.isJerky ? fv('ls-jerky-thickness') : '',
+    jerkyRacks:     cutData.isJerky ? fv('ls-racks') : '',
+    trim:           cutData.hasTrim   ? fv('ls-trim')   : '',
+    shape:          cutData.hasShape  ? fv('ls-shape')  : '',
+    inject:         cutData.hasInject ? fv('ls-inject') : '',
+    startTemp:      fv('ls-start-temp') === '0.5' ? 'fridge cold' : 'room temp',
+    preheatMin:     fv('ls-preheat'),
     calcMode:             _lastCalcMeta.calcMode || 'serve',
     predictedFireStr:     _lastCalcMeta.fireStr,
     predictedServeWindow: _lastCalcMeta.serveWindowStr || null,
@@ -2739,6 +3213,7 @@ function logCook(){
     actualPullTime:       (document.getElementById('ls-fb-actual-pull') ? document.getElementById('ls-fb-actual-pull').value : ''),
     actualServeTime:      (document.getElementById('ls-fb-actual-serve') ? document.getElementById('ls-fb-actual-serve').value : ''),
     accuracy: accuracy ? accuracy.value : 'spot_on',
+    accuracySource: _lsAccuracySource,
     rating:    (function(){ var r = document.querySelector('input[name="ls-fb-rating"]:checked'); return r ? parseInt(r.value) : null; })(),
     wood:      (document.getElementById('ls-fb-wood')       ? (document.getElementById('ls-fb-wood').value       || '').trim() : ''),
     splitCond: (document.getElementById('ls-fb-split')      ? document.getElementById('ls-fb-split').value       : ''),
@@ -2772,21 +3247,24 @@ function logCook(){
     var subject = encodeURIComponent('Pitmatics cook log — ' + entry.cutLabel);
     var body = encodeURIComponent(
       '=== COOK SETUP ===\n' +
-      'Cut: ' + entry.cutLabel + '\n' +
-      'Weight: ' + (entry.weight || 'N/A') + ' lb\n' +
-      'Smoker: ' + entry.smoker + ' · Temp: ' + entry.pitTemp + '°F\n' +
-      'Wrap: ' + entry.wrap + ' · Temp: ' + entry.weatherTemp + ' · Wind: ' + entry.weatherWind + '\n' +
-      (entry.grade ? 'Grade: ' + entry.grade + '\n' : '') +
+      'Cut: ' + entry.cutLabel + (entry.style ? ' (' + entry.style + ')' : '') + '\n' +
+      (entry.weight ? 'Weight: ' + entry.weight + ' lb\n' : '') +
+      (entry.racks ? 'Racks: ' + entry.racks + '\n' : '') +
+      (entry.sliceThickness ? 'Slice thickness: ' + entry.sliceThickness + ' · Racks: ' + entry.jerkyRacks + '\n' : '') +
+      'Smoker: ' + entry.smoker + ' · Pit temp: ' + (entry.pitTempMode === 'range' ? entry.pitTempLow + '–' + entry.pitTempHigh + '°F (range)' : entry.pitTemp + '°F') + ' · Preheat: ' + entry.preheatMin + ' min\n' +
+      'Starting temp: ' + entry.startTemp + '\n' +
+      'Wrap: ' + entry.wrap + ' · Outside: ' + entry.weatherTemp + ' · Wind: ' + entry.weatherWind + '\n' +
+      (entry.grade && entry.grade !== 'none' ? 'Grade: ' + entry.grade + '\n' : '') +
+      (entry.trim && entry.trim !== 'none' ? 'Fat trim: ' + entry.trim + '\n' : '') +
+      (entry.shape ? 'Shape: ' + entry.shape + '\n' : '') +
+      (entry.inject && entry.inject !== 'none' ? 'Injected: ' + entry.inject + '\n' : '') +
       'Mode: ' + (entry.calcMode === 'start' ? 'Start time' : 'Serve time') + '\n' +
       '\n=== PREDICTED ===\n' +
       'Fire time: ' + entry.predictedFireStr + '\n' +
       (entry.predictedServeWindow ? 'Serve window: ' + entry.predictedServeWindow + '\n' : '') +
       'Cook window: ' + entry.predictedCookLow + '–' + entry.predictedCookHigh + ' hrs\n' +
-      '\n=== ACTUAL ===\n' +
-      'Fire time: ' + (entry.actualFireTime || 'not logged') + '\n' +
-      'Pull time: ' + (entry.actualPullTime || 'not logged') + '\n' +
-      (entry.calcMode === 'start' ? 'Serve time: ' + (entry.actualServeTime || 'not logged') + '\n' : '') +
-      'Accuracy: ' + entry.accuracy + '\n' +
+      '\n' + buildScheduleEmailSection('ls-timeline') +
+      '\nAccuracy: ' + entry.accuracy + (entry.accuracySource === 'computed' ? ' (auto-calculated from actuals)' : '') + '\n' +
       (entry.wood ? 'Wood: ' + entry.wood + (entry.splitCond ? ' (' + entry.splitCond + ')' : '') + '\n' : '') +
       (entry.waterPan ? 'Water pan: ' + entry.waterPan + '\n' : '') +
       (entry.spritz ? 'Spritz: ' + entry.spritz + '\n' : '') +
@@ -2806,6 +3284,7 @@ function logCook(){
     var btn = document.querySelector('#ls-feedback .cta');
     if (btn){ btn.textContent = '✓ Cook logged'; btn.disabled = true; }
   }
+  clearActuals('ls-timeline');
 }
 
 function renderCookHistory(){
@@ -2909,6 +3388,10 @@ function logHFCook(){
     method:           _lastHFCalcMeta.method,
     doneness:         _lastHFCalcMeta.doneness,
     weather:          _lastHFCalcMeta.weather,
+    startTemp: (function(){ var v = document.getElementById('hf-start-temp').value; return v === '0' ? 'room temp' : v === '-0.3' ? 'tempered (45 min out)' : 'fridge cold'; })(),
+    grillTemp: (window.HF && HF.method === 'direct')  ? document.getElementById('hf-hot-temp').value  : '',
+    slowTemp:  (window.HF && HF.method === 'reverse') ? document.getElementById('hf-slow-temp').value : '',
+    searTemp:  (window.HF && HF.method === 'reverse') ? document.getElementById('hf-sear-temp').value : '',
     predictedTotalStr: _lastHFCalcMeta.totalStr,
     actualCookTime:   actualTime,
     accuracy:         accuracy ? accuracy.value : 'spot_on',
@@ -2943,13 +3426,16 @@ function logHFCook(){
       'Cut: ' + entry.cutLabel + '\n' +
       'Thickness: ' + (entry.thickness || 'N/A') + ' in\n' +
       'Method: ' + entry.method + '\n' +
-      'Grill: ' + entry.smoker + '\n' +
+      'Grill: ' + entry.smoker +
+        (entry.grillTemp ? ' · ' + entry.grillTemp + '°F' : '') +
+        (entry.slowTemp ? ' · slow ' + entry.slowTemp + '°F → sear ' + entry.searTemp + '°F' : '') + '\n' +
+      'Starting temp: ' + entry.startTemp + '\n' +
       'Doneness: ' + entry.doneness + '\n' +
       'Weather: ' + entry.weather + '\n' +
       '\n=== PREDICTED ===\n' +
       'Cook time: ' + entry.predictedTotalStr + '\n' +
-      '\n=== ACTUAL ===\n' +
-      'Cook time: ' + (entry.actualCookTime || 'not logged') + '\n' +
+      '\n' + buildScheduleEmailSection('hf-timeline') +
+      '\nActual cook time: ' + (entry.actualCookTime || 'not logged') + '\n' +
       'Accuracy: ' + entry.accuracy + '\n' +
       (entry.wood ? 'Wood: ' + entry.wood + (entry.splitCond ? ' (' + entry.splitCond + ')' : '') + '\n' : '') +
       'Notes: ' + (entry.notes || 'none') + '\n' +
@@ -2968,6 +3454,7 @@ function logHFCook(){
     var btn = document.querySelector('#hf-feedback .cta');
     if (btn){ btn.textContent = '✓ Cook logged'; btn.disabled = true; }
   }
+  clearActuals('hf-timeline');
 }
 
 function shareHF(){
@@ -3218,7 +3705,7 @@ function getStateParams(){
   p.set('m', mode.mode || 'low-slow');
   var lsFields = ['ls-cut','ls-brisket-type','ls-weight','ls-smoker','ls-pit-temp','ls-preheat',
     'ls-weather-temp','ls-weather-wind','ls-grade','ls-trim','ls-shape','ls-inject','ls-start-temp','ls-racks',
-    'ls-serve-date','ls-serve-time','ls-notes'];
+    'ls-serve-date','ls-serve-time','ls-notes','ls-jerky-thickness'];
   lsFields.forEach(function(id){
     var el = $(id); if (el && el.value) p.set(id, el.value);
   });
@@ -3232,7 +3719,7 @@ function getStateParams(){
     if (pth && pth.value) p.set('ls-pit-high', pth.value);
   }
   if (LS.weightTouched) p.set('ls-wt','1');
-  var hfFields = ['hf-cut','hf-thickness','hf-smoker','hf-weather','hf-doneness','hf-start-time','hf-start-temp'];
+  var hfFields = ['hf-cut','hf-thickness','hf-smoker','hf-weather-temp','hf-weather-wind','hf-doneness','hf-start-time','hf-start-temp'];
   hfFields.forEach(function(id){ var el=$(id); if(el && el.value) p.set(id, el.value); });
   p.set('hf-method', HF.method);
   var advFields = ['adv-start-time','adv-start-date','adv-serve-time','adv-serve-date','adv-smoker','adv-weather-temp','adv-weather-wind'];
@@ -3254,9 +3741,14 @@ function loadStateFromURL(){
   });
   ['ls-cut','ls-brisket-type','ls-smoker','ls-pit-temp','ls-preheat','ls-weather-temp','ls-weather-wind',
    'ls-grade','ls-trim','ls-shape','ls-inject','ls-start-temp','ls-racks',
-   'ls-serve-date','ls-serve-time','ls-notes'].forEach(function(id){
+   'ls-serve-date','ls-serve-time','ls-notes','ls-jerky-thickness'].forEach(function(id){
     var v = p.get(id); var el = $(id); if (el && v !== null) el.value = v;
   });
+  /* re-run cut handlers so per-cut fields show/hide correctly, then re-apply values they reset */
+  LS.onCutChange();
+  HF.onCutChange();
+  if (p.has('ls-weight')) $('ls-weight').value = p.get('ls-weight');
+  if (p.has('hf-doneness')) { var dEl = $('hf-doneness'); if ([].some.call(dEl.options, function(o){ return o.value === p.get('hf-doneness'); })) dEl.value = p.get('hf-doneness'); }
   if (p.has('ls-weight')){ $('ls-weight').value = p.get('ls-weight'); }
   if (p.get('ls-wt')) LS.weightTouched = true;
   if (p.has('ls-wrap')) LS.setWrap(p.get('ls-wrap'));
@@ -3265,7 +3757,7 @@ function loadStateFromURL(){
   if (p.has('ls-pit-low'))  { var el = $('ls-pit-temp-low');  if (el) el.value = p.get('ls-pit-low'); }
   if (p.has('ls-pit-high')) { var el2 = $('ls-pit-temp-high'); if (el2) el2.value = p.get('ls-pit-high'); }
   if (p.has('ls-pit-mode')) LS.setPitTempMode(p.get('ls-pit-mode'));
-  ['hf-cut','hf-thickness','hf-smoker','hf-weather','hf-doneness','hf-start-time','hf-start-temp'].forEach(function(id){
+  ['hf-cut','hf-thickness','hf-smoker','hf-weather-temp','hf-weather-wind','hf-doneness','hf-start-time','hf-start-temp'].forEach(function(id){
     var v = p.get(id); var el=$(id); if(el && v!==null) el.value=v;
   });
   if (p.has('hf-method')) HF.setMethod(p.get('hf-method'));
@@ -3306,7 +3798,8 @@ function toggleTheme(){
   }
 })();
 
-/* restore state from a shared URL, then show any saved cook history */
+/* restore saved form state, then overlay any shared URL params */
+pmRestore();
 loadStateFromURL();
 renderCookHistory();
 renderHFCookHistory();
