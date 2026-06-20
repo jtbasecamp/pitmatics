@@ -626,6 +626,23 @@ footer a:hover { text-decoration: underline; }
 .calc-mode-btn { flex:1; border:none; border-radius:9px; padding:10px 8px; font-size:13px; font-weight:600; cursor:pointer; transition:background 0.15s,color 0.15s; background:none; color:var(--text-muted); }
 .calc-mode-btn.active { background:var(--ember); color:#fff; }
 .calc-mode-btn:not(.active):hover { color:var(--text); }
+/* ===== Add custom cut modal ===== */
+.cut-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9000; align-items:flex-start; justify-content:center; padding:24px 16px; overflow-y:auto; }
+.cut-modal-overlay.open { display:flex; }
+.cut-modal { background:var(--card); border:0.5px solid var(--border); border-radius:18px; padding:24px; width:100%; max-width:400px; margin:auto; }
+.cut-modal h2 { font-size:17px; font-weight:700; margin:0 0 20px; }
+.cm-row { margin-bottom:14px; }
+.cm-row > label { display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:5px; }
+.cm-two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cm-sub-label { display:block; font-size:11px; color:var(--text-faint); margin-bottom:4px; }
+.cm-toggles { display:flex; gap:6px; }
+.cm-toggles button { flex:1; padding:8px 4px; font-size:13px; font-family:inherit; border:0.5px solid var(--border); border-radius:8px; background:var(--bg-alt); color:var(--text-muted); cursor:pointer; transition:background 0.15s; }
+.cm-toggles button.on { background:var(--ember); border-color:var(--ember); color:#fff; font-weight:600; }
+.cm-actions { display:flex; gap:8px; margin-top:22px; }
+.cm-actions button { flex:1; }
+.cm-primary { background:var(--ember) !important; color:#fff !important; border-color:var(--ember) !important; }
+.ls-custom-delete { font-size:12px; color:var(--text-faint); background:none; border:none; cursor:pointer; padding:2px 0; margin-top:2px; font-family:inherit; display:block; }
+.ls-custom-delete:hover { color:#E8612A; }
 </style>
 </head>
 <body>
@@ -672,7 +689,10 @@ footer a:hover { text-decoration: underline; }
             <option value="pork_belly">Pork belly</option>
             <option value="whole_chicken">Whole chicken</option>
             <option value="whole_turkey">Whole turkey</option>
+            <optgroup label="My cuts" id="ls-cut-custom-group"></optgroup>
+            <option value="__add_new__">＋ Add your own…</option>
           </select>
+          <button type="button" id="ls-custom-cut-delete" class="ls-custom-delete" style="display:none;" onclick="deleteCustomCut()">🗑 Remove this cut</button>
         </div>
         <div class="field" id="ls-weight-field">
           <label for="ls-weight" style="white-space:nowrap;">Weight (lbs) <span id="ls-weight-est" class="badge b-info hidden">est.</span></label>
@@ -909,6 +929,10 @@ footer a:hover { text-decoration: underline; }
         <button type="button" class="ctl-btn" style="flex:1;" onclick="window.print()">🖨️ Print schedule</button>
         <button type="button" class="ctl-btn" style="flex:1;" id="ls-share-btn" onclick="shareLS()">🔗 Share this cook</button>
       </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button type="button" class="ctl-btn" style="flex:1;" onclick="triggerPhotoCapture('ls','camera')">📷 Camera</button>
+        <button type="button" class="ctl-btn" style="flex:1;" onclick="triggerPhotoCapture('ls','file')">📁 Upload</button>
+      </div>
     </div>
 
     <details class="section finetune" id="ls-feedback" style="margin-top:1rem;">
@@ -993,12 +1017,13 @@ footer a:hover { text-decoration: underline; }
           <summary class="ft-summary">Personal notes <span class="ft-opt">optional — photo, rating, rub, sauce</span></summary>
           <div class="ft-body" style="padding-top:8px;">
             <div class="fb-row">
-              <label>Photo <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <button type="button" class="ctl-btn" id="ls-fb-photo-btn" onclick="triggerPhotoCapture('ls')" style="font-size:13px;">📷 Add photo</button>
-                <input type="file" id="ls-fb-photo-input" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoSelect(this,'ls')">
-                <img id="ls-fb-photo-preview" style="display:none;width:80px;height:60px;object-fit:cover;border-radius:8px;border:0.5px solid var(--border);" alt="Cook photo">
-                <button type="button" id="ls-fb-photo-clear" class="ctl-btn" style="display:none;font-size:12px;padding:5px 9px;" onclick="clearCookPhoto('ls')">✕ Remove</button>
+              <label>Photos <span style="font-weight:400;color:var(--text-faint);">optional — add as many as you like</span></label>
+              <div id="ls-fb-photo-gallery" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;"></div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="ctl-btn" onclick="triggerPhotoCapture('ls','camera')" style="font-size:13px;">📷 Camera</button>
+                <button type="button" class="ctl-btn" onclick="triggerPhotoCapture('ls','file')" style="font-size:13px;">📁 Upload</button>
+                <input type="file" id="ls-fb-photo-input-camera" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoSelect(this,'ls')">
+                <input type="file" id="ls-fb-photo-input-file" accept="image/*" multiple style="display:none;" onchange="handlePhotoSelect(this,'ls')">
               </div>
             </div>
             <div class="fb-row">
@@ -1203,6 +1228,10 @@ footer a:hover { text-decoration: underline; }
         <button type="button" class="ctl-btn" style="flex:1;" onclick="window.print()">🖨️ Print schedule</button>
         <button type="button" class="ctl-btn" style="flex:1;" id="hf-share-btn" onclick="shareHF()">🔗 Share this cook</button>
       </div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button type="button" class="ctl-btn" style="flex:1;" onclick="triggerPhotoCapture('hf','camera')">📷 Camera</button>
+        <button type="button" class="ctl-btn" style="flex:1;" onclick="triggerPhotoCapture('hf','file')">📁 Upload</button>
+      </div>
     </div>
 
     <details class="section finetune" id="hf-feedback" style="margin-top:1rem;">
@@ -1257,12 +1286,13 @@ footer a:hover { text-decoration: underline; }
           <summary class="ft-summary">Personal notes <span class="ft-opt">optional — photo, rating, rub, sauce</span></summary>
           <div class="ft-body" style="padding-top:8px;">
             <div class="fb-row">
-              <label>Photo <span style="font-weight:400;color:var(--text-faint);">optional</span></label>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <button type="button" class="ctl-btn" id="hf-fb-photo-btn" onclick="triggerPhotoCapture('hf')" style="font-size:13px;">📷 Add photo</button>
-                <input type="file" id="hf-fb-photo-input" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoSelect(this,'hf')">
-                <img id="hf-fb-photo-preview" style="display:none;width:80px;height:60px;object-fit:cover;border-radius:8px;border:0.5px solid var(--border);" alt="Cook photo">
-                <button type="button" id="hf-fb-photo-clear" class="ctl-btn" style="display:none;font-size:12px;padding:5px 9px;" onclick="clearCookPhoto('hf')">✕ Remove</button>
+              <label>Photos <span style="font-weight:400;color:var(--text-faint);">optional — add as many as you like</span></label>
+              <div id="hf-fb-photo-gallery" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;"></div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="ctl-btn" onclick="triggerPhotoCapture('hf','camera')" style="font-size:13px;">📷 Camera</button>
+                <button type="button" class="ctl-btn" onclick="triggerPhotoCapture('hf','file')" style="font-size:13px;">📁 Upload</button>
+                <input type="file" id="hf-fb-photo-input-camera" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoSelect(this,'hf')">
+                <input type="file" id="hf-fb-photo-input-file" accept="image/*" multiple style="display:none;" onchange="handlePhotoSelect(this,'hf')">
               </div>
             </div>
             <div class="fb-row">
@@ -1502,6 +1532,8 @@ footer a:hover { text-decoration: underline; }
       s['ls-mode']     = LS.calcMode;
       s['ls-pit-mode'] = LS.pitTempMode;
       s['hf-method']   = HF.method;
+      s['adv-protein'] = ADV.proteinPref;
+      s['adv-style']   = ADV.stylePref;
       var activeTab = document.querySelector('.mode-toggle button.active');
       if (activeTab) s['active-tab'] = activeTab.dataset.mode;
       localStorage.setItem(PM_KEY, JSON.stringify(s));
@@ -1531,6 +1563,8 @@ footer a:hover { text-decoration: underline; }
     if (s['ls-mode'])     LS.setCalcMode(s['ls-mode']);
     if (s['ls-pit-mode']) LS.setPitTempMode(s['ls-pit-mode']);
     if (s['hf-method'])   HF.setMethod(s['hf-method']);
+    if (s['adv-protein']) ADV.setProtein(s['adv-protein']);
+    if (s['adv-style'])   ADV.setStyle(s['adv-style']);
     if (s['active-tab']) {
       var tabBtn = document.querySelector('.mode-toggle button[data-mode="' + s['active-tab'] + '"]');
       if (tabBtn) tabBtn.click();
@@ -1622,6 +1656,7 @@ footer a:hover { text-decoration: underline; }
         s.classList.toggle('active', s.id === mode);
       });
       if (mode === 'history') renderHistory();
+      pmSave();
     });
   });
 
@@ -1695,6 +1730,7 @@ footer a:hover { text-decoration: underline; }
       document.getElementById('ls-pit-temp-exact').style.display = this.pitTempMode === 'exact' ? '' : 'none';
       document.getElementById('ls-pit-temp-range').style.display = this.pitTempMode === 'range' ? '' : 'none';
       this.calc();
+      pmSave();
     },
     setCalcMode: function(mode){
       this.calcMode = (mode === 'start') ? 'start' : 'serve';
@@ -1702,19 +1738,12 @@ footer a:hover { text-decoration: underline; }
         btn.classList.toggle('active', btn.dataset.calcmode === mode);
       });
       this.updateTimeLabels();
-      /* move time section: top of form in start mode, before feedback in serve mode */
-      var lsSect  = document.getElementById('low-slow');
+      /* always move time section directly under the banner buttons */
       var timeSect = document.getElementById('ls-time-section');
       var banner   = document.querySelector('#low-slow .calc-mode-banner');
-      var feedback = document.getElementById('ls-feedback');
-      if (lsSect && timeSect && banner && feedback) {
-        if (this.calcMode === 'start') {
-          banner.after(timeSect);
-        } else {
-          lsSect.insertBefore(timeSect, feedback);
-        }
-      }
+      if (timeSect && banner) banner.after(timeSect);
       this.calc();
+      pmSave();
     },
     updateTimeLabels: function(){
       var isStart = this.calcMode === 'start';
@@ -1731,6 +1760,7 @@ footer a:hover { text-decoration: underline; }
         t.classList.toggle('on', t.dataset.wrap === m);
       });
       this.calc();
+      pmSave();
     },
     setRest: function(m){
       this.restMode = m;
@@ -1738,11 +1768,21 @@ footer a:hover { text-decoration: underline; }
         t.classList.toggle('on', t.dataset.rest === m);
       });
       this.calc();
+      pmSave();
     },
     onCutChange: function(){
       this.weightTouched = false;
       var cut = $('ls-cut').value;
+      if (cut === '__add_new__') {
+        $('ls-cut').value = _lsPrevCut || 'brisket';
+        showAddCutModal();
+        return;
+      }
+      _lsPrevCut = cut;
+      var deleteBtn = document.getElementById('ls-custom-cut-delete');
+      if (deleteBtn) deleteBtn.style.display = cut.indexOf('custom_') === 0 ? '' : 'none';
       var d = this.DATA[cut];
+      if (!d) return;
       $('ls-brisket-type-row').style.display  = (cut === 'brisket')      ? '' : 'none';
       if (cut === 'brisket' && !this.weightTouched) {
         $('ls-weight').value = $('ls-brisket-type').value === 'flat' ? 8 : 14;
@@ -2192,6 +2232,7 @@ footer a:hover { text-decoration: underline; }
       $('hf-reverse-fields').style.display = m === 'reverse' ? '' : 'none';
       $('hf-hot-temp-field').style.display = m === 'direct' ? '' : 'none';
       this.calc();
+      pmSave();
     },
     onCutChange: function(){
       var cut = $('hf-cut').value;
@@ -2406,6 +2447,8 @@ footer a:hover { text-decoration: underline; }
   window.$ = $;
   window.LS = LS;
   window.HF = HF;
+  window.ADV = ADV;
+  window.pmSave = pmSave;
   window.pmRestore = pmRestore;
   window.clearActuals = clearActuals;
 
@@ -2816,12 +2859,14 @@ footer a:hover { text-decoration: underline; }
       document.querySelectorAll('#adv-protein-toggles .tog').forEach(function(t){
         t.classList.toggle('on', t.dataset.protein === p);
       });
+      pmSave();
     },
     setStyle: function(s){
       this.stylePref = s;
       document.querySelectorAll('#adv-style-toggles .tog').forEach(function(t){
         t.classList.toggle('on', t.dataset.style === s);
       });
+      pmSave();
     },
 
     getFit: function(cut, windowHrs, smoker, weatherTemp, weatherWind){
@@ -3227,12 +3272,12 @@ function logCook(){
     wentWell:  (document.getElementById('ls-fb-went-well').value || '').trim(),
     improve:   (document.getElementById('ls-fb-improve').value   || '').trim(),
     notes: notes,
-    photo: _pendingPhoto['ls'] || null,
+    photos: _pendingPhotos['ls'].slice(),
     appVersion: '1.1'
   };
   saveCookLog(entry);
   renderCookHistory();
-  clearCookPhoto('ls');
+  _pendingPhotos['ls'] = []; renderPhotoGallery('ls');
   var actualPullEl = document.getElementById('ls-fb-actual-pull'); if (actualPullEl) actualPullEl.value = '';
   var actualServeEl = document.getElementById('ls-fb-actual-serve'); if (actualServeEl) actualServeEl.value = '';
   ['ls-fb-wood','ls-fb-spritz','ls-fb-binder','ls-fb-source','ls-fb-rub','ls-fb-sauce','ls-fb-went-well','ls-fb-improve'].forEach(function(id){
@@ -3303,30 +3348,43 @@ function renderCookHistory(){
 }
 
 /* ===== Photo capture helpers ===== */
-var _pendingPhoto = { ls: null, hf: null };
+var _pendingPhotos = { ls: [], hf: [] };
 
-function triggerPhotoCapture(prefix){
-  document.getElementById(prefix + '-fb-photo-input').click();
+function triggerPhotoCapture(prefix, mode){
+  var inputId = prefix + '-fb-photo-input-' + (mode === 'camera' ? 'camera' : 'file');
+  var el = document.getElementById(inputId);
+  if (el) { el.value = ''; el.click(); }
 }
 
 function handlePhotoSelect(input, prefix){
-  if (!input.files || !input.files[0]) return;
-  resizeCookPhoto(input.files[0], function(dataUrl){
-    _pendingPhoto[prefix] = dataUrl;
-    var prev = document.getElementById(prefix + '-fb-photo-preview');
-    prev.src = dataUrl;
-    prev.style.display = '';
-    document.getElementById(prefix + '-fb-photo-btn').textContent = '📷 Change photo';
-    document.getElementById(prefix + '-fb-photo-clear').style.display = '';
+  if (!input.files || !input.files.length) return;
+  var files = Array.prototype.slice.call(input.files);
+  var pending = files.length;
+  files.forEach(function(file){
+    resizeCookPhoto(file, function(dataUrl){
+      _pendingPhotos[prefix].push(dataUrl);
+      pending--;
+      if (pending === 0) renderPhotoGallery(prefix);
+    });
   });
 }
 
-function clearCookPhoto(prefix){
-  _pendingPhoto[prefix] = null;
-  document.getElementById(prefix + '-fb-photo-preview').style.display = 'none';
-  document.getElementById(prefix + '-fb-photo-clear').style.display = 'none';
-  document.getElementById(prefix + '-fb-photo-btn').textContent = '📷 Add photo';
-  document.getElementById(prefix + '-fb-photo-input').value = '';
+function removePendingPhoto(prefix, idx){
+  _pendingPhotos[prefix].splice(idx, 1);
+  renderPhotoGallery(prefix);
+}
+
+function renderPhotoGallery(prefix){
+  var gallery = document.getElementById(prefix + '-fb-photo-gallery');
+  if (!gallery) return;
+  var photos = _pendingPhotos[prefix];
+  if (!photos.length) { gallery.innerHTML = ''; return; }
+  gallery.innerHTML = photos.map(function(src, i){
+    return '<div style="position:relative;display:inline-block;">' +
+      '<img src="' + src + '" style="width:80px;height:60px;object-fit:cover;border-radius:8px;border:0.5px solid var(--border);display:block;" alt="Cook photo">' +
+      '<button type="button" onclick="removePendingPhoto(\'' + prefix + '\',' + i + ')" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:none;background:var(--ember);color:#fff;font-size:10px;line-height:18px;text-align:center;cursor:pointer;padding:0;">✕</button>' +
+    '</div>';
+  }).join('');
 }
 
 function resizeCookPhoto(file, callback){
@@ -3406,12 +3464,12 @@ function logHFCook(){
     wentWell:  (document.getElementById('hf-fb-went-well').value || '').trim(),
     improve:   (document.getElementById('hf-fb-improve').value   || '').trim(),
     notes:            notes,
-    photo:            _pendingPhoto['hf'] || null,
+    photos:           _pendingPhotos['hf'].slice(),
     appVersion:       '1.1'
   };
   saveCookLog(entry);
   renderHFCookHistory();
-  clearCookPhoto('hf');
+  _pendingPhotos['hf'] = []; renderPhotoGallery('hf');
   ['hf-fb-wood','hf-fb-binder','hf-fb-source','hf-fb-rub','hf-fb-sauce','hf-fb-went-well','hf-fb-improve'].forEach(function(id){
     var el = document.getElementById(id); if (el) el.value = '';
   });
@@ -3663,11 +3721,11 @@ function renderHistory(){
     }
 
     var photoHtml = '';
-    if (c.photo && c.photo.startsWith('data:image/')) {
-      photoHtml =
-        '<div style="margin-top:10px;">' +
-          '<img src="' + c.photo + '" style="width:100%;max-width:320px;border-radius:10px;border:0.5px solid var(--border);display:block;" alt="Cook photo">' +
-        '</div>';
+    var _photos = c.photos && c.photos.length ? c.photos : (c.photo && c.photo.startsWith('data:image/') ? [c.photo] : []);
+    if (_photos.length) {
+      photoHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">' +
+        _photos.map(function(src){ return '<img src="' + src + '" style="width:120px;height:90px;object-fit:cover;border-radius:8px;border:0.5px solid var(--border);" alt="Cook photo">'; }).join('') +
+      '</div>';
     }
 
     return (
@@ -3798,12 +3856,183 @@ function toggleTheme(){
   }
 })();
 
+/* ===== Custom cuts ===== */
+var CUSTOM_CUTS_KEY = 'pitmatics_custom_cuts_v1';
+var _lsPrevCut = 'brisket';
+var _cmState = { wrap: false, stall: true };
+
+function getCustomCuts(){ try { return JSON.parse(localStorage.getItem(CUSTOM_CUTS_KEY) || '[]'); } catch(e){ return []; } }
+function saveCustomCuts(cuts){ try { localStorage.setItem(CUSTOM_CUTS_KEY, JSON.stringify(cuts)); } catch(e){} }
+
+function buildCustomCutData(c){
+  var rest = parseFloat(c.restMin) || 0;
+  return {
+    fixed:      [parseFloat(c.fixedLow), parseFloat(c.fixedHigh)],
+    restMin:    rest,
+    restMax:    rest * 2,
+    holdCooler: Math.max(rest * 2, 1),
+    holdOven:   Math.max(rest * 4, 2),
+    target:     c.target || 195,
+    hasStall:   !!c.hasStall,
+    stallAt:    0.45,
+    byWeight:   false,
+    wrapable:   !!c.wrapable,
+    hasGrade:   false, hasTrim: false, hasShape: false, hasInject: false,
+    _isCustom:  true,
+    _id:        c.id
+  };
+}
+
+function injectCustomCut(c){
+  LS.DATA[c.id] = buildCustomCutData(c);
+  var grp = document.getElementById('ls-cut-custom-group');
+  if (grp && !document.querySelector('#ls-cut option[value="' + c.id + '"]')) {
+    var opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.name;
+    grp.appendChild(opt);
+  }
+}
+
+function loadCustomCuts(){
+  getCustomCuts().forEach(function(c){ injectCustomCut(c); });
+}
+
+function showAddCutModal(){
+  _cmState = { wrap: false, stall: true };
+  document.getElementById('cm-name').value   = '';
+  document.getElementById('cm-low').value    = '';
+  document.getElementById('cm-high').value   = '';
+  document.getElementById('cm-target').value = '';
+  document.getElementById('cm-rest').value   = '0.5';
+  cmSetWrap(false);
+  cmSetStall(true);
+  document.getElementById('add-cut-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('cm-name').focus(); }, 50);
+}
+
+function hideAddCutModal(){
+  document.getElementById('add-cut-modal').classList.remove('open');
+}
+
+function cmSetWrap(v){
+  _cmState.wrap = v;
+  var btns = document.querySelectorAll('#cm-wrap-toggles button');
+  btns[0].classList.toggle('on', !v);
+  btns[1].classList.toggle('on',  v);
+}
+
+function cmSetStall(v){
+  _cmState.stall = v;
+  var btns = document.querySelectorAll('#cm-stall-toggles button');
+  btns[0].classList.toggle('on', !v);
+  btns[1].classList.toggle('on',  v);
+}
+
+function saveNewCut(){
+  var name   = (document.getElementById('cm-name').value || '').trim();
+  var low    = parseFloat(document.getElementById('cm-low').value);
+  var high   = parseFloat(document.getElementById('cm-high').value);
+  var target = parseInt(document.getElementById('cm-target').value);
+  var rest   = parseFloat(document.getElementById('cm-rest').value);
+
+  if (!name)             { alert('Give your cut a name.'); return; }
+  if (!low || low <= 0)  { alert('Enter a low cook time.'); return; }
+  if (!high || high < low){ alert('High cook time must be ≥ low.'); return; }
+  if (!target || target < 130 || target > 215) { alert('Enter a valid target temp (130–215°F).'); return; }
+
+  var id = 'custom_' + Date.now();
+  var cut = { id: id, name: name, fixedLow: low, fixedHigh: high, target: target, restMin: rest, wrapable: _cmState.wrap, hasStall: _cmState.stall };
+  var cuts = getCustomCuts();
+  cuts.push(cut);
+  saveCustomCuts(cuts);
+  injectCustomCut(cut);
+
+  hideAddCutModal();
+  var sel = document.getElementById('ls-cut');
+  sel.value = id;
+  _lsPrevCut = id;
+  LS.onCutChange();
+  pmSave();
+}
+
+function deleteCustomCut(){
+  var cut = document.getElementById('ls-cut').value;
+  if (cut.indexOf('custom_') !== 0) return;
+  var cuts = getCustomCuts().filter(function(c){ return c.id !== cut; });
+  saveCustomCuts(cuts);
+  delete LS.DATA[cut];
+  var opt = document.querySelector('#ls-cut option[value="' + cut + '"]');
+  if (opt) opt.remove();
+  var sel = document.getElementById('ls-cut');
+  sel.value = 'brisket';
+  _lsPrevCut = 'brisket';
+  LS.onCutChange();
+  pmSave();
+}
+
 /* restore saved form state, then overlay any shared URL params */
+loadCustomCuts();
 pmRestore();
 loadStateFromURL();
 renderCookHistory();
 renderHFCookHistory();
 </script>
+
+<!-- ===== Add custom cut modal ===== -->
+<div class="cut-modal-overlay" id="add-cut-modal" onclick="if(event.target===this)hideAddCutModal()">
+  <div class="cut-modal">
+    <h2>Add your own cut</h2>
+    <div class="cm-row">
+      <label for="cm-name">What are you smoking?</label>
+      <input type="text" id="cm-name" placeholder="e.g. Lamb shoulder, venison roast, duck…" maxlength="50">
+    </div>
+    <div class="cm-row">
+      <label>Cook time range</label>
+      <div class="cm-two">
+        <div>
+          <span class="cm-sub-label">Low (hrs)</span>
+          <input type="number" id="cm-low" min="0.5" max="30" step="0.5" placeholder="4">
+        </div>
+        <div>
+          <span class="cm-sub-label">High (hrs)</span>
+          <input type="number" id="cm-high" min="0.5" max="30" step="0.5" placeholder="6">
+        </div>
+      </div>
+    </div>
+    <div class="cm-row">
+      <label for="cm-target">Target internal temp (°F)</label>
+      <input type="number" id="cm-target" min="130" max="215" step="1" placeholder="e.g. 195">
+    </div>
+    <div class="cm-row">
+      <label for="cm-rest">Rest time</label>
+      <select id="cm-rest">
+        <option value="0">None</option>
+        <option value="0.25">15 minutes</option>
+        <option value="0.5" selected>30 minutes</option>
+        <option value="1">1 hour</option>
+        <option value="2">2 hours</option>
+      </select>
+    </div>
+    <div class="cm-row">
+      <label>Wrap during cook?</label>
+      <div class="cm-toggles" id="cm-wrap-toggles">
+        <button type="button" class="on" onclick="cmSetWrap(false)">No</button>
+        <button type="button" onclick="cmSetWrap(true)">Yes</button>
+      </div>
+    </div>
+    <div class="cm-row">
+      <label>Expect a stall?</label>
+      <div class="cm-toggles" id="cm-stall-toggles">
+        <button type="button" onclick="cmSetStall(false)">No</button>
+        <button type="button" class="on" onclick="cmSetStall(true)">Yes</button>
+      </div>
+    </div>
+    <div class="cm-actions">
+      <button type="button" class="ctl-btn" onclick="hideAddCutModal()">Cancel</button>
+      <button type="button" class="ctl-btn cm-primary" onclick="saveNewCut()">Save cut</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
-
